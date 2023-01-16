@@ -3,9 +3,7 @@ defmodule Nostr.Crypto do
   Crypto related stuff
   """
 
-  @dialyzer {:no_return, encrypt: 3, decrypt: 3, shared_secret: 2}
-  @dialyzer {:no_unused, d64: 1, e64: 1}
-
+  @spec encrypt(String.t(), binary(), binary()) :: binary()
   def encrypt(message, seckey, pubkey) do
     iv = :crypto.strong_rand_bytes(16)
 
@@ -18,17 +16,18 @@ defmodule Nostr.Crypto do
     e64(cipher_text) <> "?iv=" <> e64(iv)
   end
 
+  @spec decrypt(binary(), binary(), binary()) :: String.t()
   def decrypt(message, seckey, pubkey) do
     [message, iv] = String.split(message, "?iv=")
 
     :crypto.crypto_one_time(:aes_256_cbc, shared_secret(seckey, pubkey), d64(iv), d64(message),
-      encrypt: false
-      # padding: :pkcs_padding
+      encrypt: false,
+      padding: :pkcs_padding
     )
   end
 
   defp shared_secret(seckey, pubkey) when is_binary(seckey) and is_binary(pubkey) do
-    Secp256k1.ecdh(d16(seckey), <<0x02::size(8), d16(pubkey)::binary>>)
+    Secp256k1.ecdh(d16(seckey), d16("02" <> pubkey))
   end
 
   defp d16(data), do: Base.decode16!(data, case: :lower)

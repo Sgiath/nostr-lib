@@ -40,6 +40,7 @@ defmodule Nostr.MixProject do
       # Documentation
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false}
     ]
   end
