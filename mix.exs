@@ -18,7 +18,7 @@ defmodule Nostr.MixProject do
       # Documentation
       name: "Nostr Lib",
       source_url: "https://github.com/Sgiath/nostr-lib",
-      homepage_url: "https://nostr.sgiath.dev",
+      homepage_url: "https://sgiath.dev/nostr",
       description: description(),
       package: package(),
       docs: docs()
@@ -34,6 +34,7 @@ defmodule Nostr.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
+      # TODO: change to hex version once secp256k1 library is published
       {:secp256k1, github: "Sgiath/secp256k1"},
 
       # Documentation
@@ -69,7 +70,26 @@ defmodule Nostr.MixProject do
       ],
       main: "overview",
       formatters: ["html"],
-      extras: ["README.md"]
+      extra_section: "Guides",
+      extras: extras(),
+      groups_for_extras: groups_for_extras()
+    ]
+  end
+
+  defp extras do
+    [
+      # Introduction
+      "docs/introduction/overview.md",
+      "docs/introduction/installation.md",
+      # Guides
+      "docs/guides/basic-usage.md"
+    ]
+  end
+
+  defp groups_for_extras do
+    [
+      Introduction: ~r/docs\/introduction\/.?/,
+      Guides: ~r/docs\/guides\/.?/
     ]
   end
 end
