@@ -27,7 +27,7 @@ defmodule Nostr.Crypto do
   end
 
   defp shared_secret(seckey, pubkey) when is_binary(seckey) and is_binary(pubkey) do
-    Secp256k1.ecdh(d16(seckey), d16("02" <> pubkey))
+    :crypto.compute_key(:ecdh, d16("02" <> pubkey), d16(seckey), :secp256k1)
   end
 
   defp d16(data), do: Base.decode16!(data, case: :lower)
