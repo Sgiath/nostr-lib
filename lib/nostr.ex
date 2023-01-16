@@ -1,18 +1,5 @@
 defmodule Nostr do
   @moduledoc """
-  Documentation for `Nostr`.
+  Documentation for `Nostr` library
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Nostr.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end

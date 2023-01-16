@@ -33,7 +33,13 @@ defmodule Nostr.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.29", only: :dev, runtime: false}
+      {:jason, "~> 1.4"},
+      {:secp256k1, github: "Sgiath/secp256k1"},
+
+      # Documentation
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.1", only: :dev, runtime: false}
     ]
   end
 
