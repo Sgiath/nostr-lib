@@ -18,4 +18,52 @@ defmodule Nostr.Event.Parser do
       sig: event.sig
     }
   end
+
+  def parse_specific(%Nostr.Event{kind: 0} = event) do
+    Nostr.Event.Metadata.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 1} = event) do
+    Nostr.Event.Note.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 2} = event) do
+    Nostr.Event.RecommendRelay.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 3} = event) do
+    Nostr.Event.Contacts.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 4} = event) do
+    Nostr.Event.DirectMessage.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 5} = event) do
+    Nostr.Event.Deletion.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 7} = event) do
+    Nostr.Event.Reaction.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 40} = event) do
+    Nostr.Event.ChannelCreation.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 41} = event) do
+    Nostr.Event.ChannelMetadata.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 42} = event) do
+    Nostr.Event.ChannelMessage.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 22242} = event) do
+    Nostr.Event.ClientAuth.parse(event)
+  end
+
+  def parse_specific(event) do
+    %Nostr.Event.Unknown{event: event}
+  end
 end

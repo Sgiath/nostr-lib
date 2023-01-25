@@ -3,6 +3,13 @@ defmodule Nostr.Crypto do
   Crypto related stuff
   """
 
+  def pubkey(seckey) do
+    seckey
+    |> d16()
+    |> Secp256k1.pubkey(:xonly)
+    |> e16()
+  end
+
   @spec encrypt(String.t(), binary(), binary()) :: binary()
   def encrypt(message, seckey, pubkey) do
     iv = :crypto.strong_rand_bytes(16)
@@ -33,6 +40,6 @@ defmodule Nostr.Crypto do
   defp d16(data), do: Base.decode16!(data, case: :lower)
   defp d64(data), do: Base.decode64!(data)
 
-  # defp e16(data), do: Base.encode16(data, case: :lower)
+  defp e16(data), do: Base.encode16(data, case: :lower)
   defp e64(data), do: Base.encode64(data)
 end

@@ -26,6 +26,12 @@ defmodule Nostr.Event do
     if Validator.valid?(event), do: event
   end
 
+  def parse_specific(event) when is_map(event) do
+    event
+    |> parse()
+    |> Parser.parse_specific()
+  end
+
   def compute_id(event) do
     :sha256
     |> :crypto.hash(serialize(event))
