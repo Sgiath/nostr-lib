@@ -47,48 +47,59 @@ defmodule Nostr.Message do
   end
 
   # Parsing
-  def parse(msg) when is_binary(msg), do: msg |> Jason.decode!(keys: :atoms) |> parse()
+  def parse(msg) when is_binary(msg), do: msg |> Jason.decode!(keys: :atoms) |> do_parse(:general)
+
+  def parse_specific(msg) when is_binary(msg),
+    do: msg |> Jason.decode!(keys: :atoms) |> do_parse(:specific)
 
   # Client to relay
-  def parse(["EVENT", event]) when is_map(event) do
+  defp do_parse(["EVENT", event], :general) when is_map(event) do
     {:event, Nostr.Event.parse(event)}
   end
 
-  def parse(["REQ", sub_id, filter]) when is_binary(sub_id) and is_map(filter) do
+  defp do_parse(["EVENT", event], :specific) when is_map(event) do
+    {:event, Nostr.Event.parse_specific(event)}
+  end
+
+  defp do_parse(["REQ", sub_id, filter], _type) when is_binary(sub_id) and is_map(filter) do
     {:req, sub_id, Nostr.Filter.parse(filter)}
   end
 
-  def parse(["CLOSE", sub_id]) when is_binary(sub_id) do
+  defp do_parse(["CLOSE", sub_id], _type) when is_binary(sub_id) do
     {:close, sub_id}
   end
 
-  def parse(["AUTH", event]) when is_map(event) do
+  defp do_parse(["AUTH", event], _type) when is_map(event) do
     {:auth, Nostr.Event.parse(event)}
   end
 
   # Relay to client
-  def parse(["EVENT", sub_id, event]) when is_binary(sub_id) and is_map(event) do
+  defp do_parse(["EVENT", sub_id, event], :general) when is_binary(sub_id) and is_map(event) do
     {:event, sub_id, Nostr.Event.parse(event)}
   end
 
-  def parse(["NOTICE", message]) when is_binary(message) do
+  defp do_parse(["EVENT", sub_id, event], :specific) when is_binary(sub_id) and is_map(event) do
+    {:event, sub_id, Nostr.Event.parse_specific(event)}
+  end
+
+  defp do_parse(["NOTICE", message], _type) when is_binary(message) do
     {:notice, message}
   end
 
-  def parse(["EOSE", sub_id]) when is_binary(sub_id) do
+  defp do_parse(["EOSE", sub_id], _type) when is_binary(sub_id) do
     {:eose, sub_id}
   end
 
-  def parse(["OK", event_id, success?, message])
-      when is_binary(event_id) and is_boolean(success?) and is_binary(message) do
+  defp do_parse(["OK", event_id, success?, message], _type)
+       when is_binary(event_id) and is_boolean(success?) and is_binary(message) do
     {:ok, event_id, success?, message}
   end
 
-  def parse(["AUTH", sub_id]) when is_binary(sub_id) do
+  defp do_parse(["AUTH", sub_id], _type) when is_binary(sub_id) do
     {:auth, sub_id}
   end
 
-  def parse(message) do
+  defp do_parse(message, _type) do
     Logger.warning("Parsing unknown message: #{inspect(message)}")
     :error
   end

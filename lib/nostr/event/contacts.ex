@@ -10,9 +10,9 @@ defmodule Nostr.Event.Contacts do
   defstruct [:event, :user, :contacts]
 
   @type contact() :: %{
-          user: <<_::32, _::_*8>>,
-          relay: URI.t(),
-          petname: String.t()
+          :user => <<_::32, _::_*8>>,
+          optional(:relay) => URI.t(),
+          optional(:petname) => String.t()
         }
 
   @type t() :: %__MODULE__{
@@ -37,10 +37,14 @@ defmodule Nostr.Event.Contacts do
   end
 
   defp parse_contact(%Nostr.Tag{type: :p, data: pubkey, info: [relay, petname]}) do
-    %{
-      user: pubkey,
-      relay: URI.parse(relay),
-      petname: petname
-    }
+    %{user: pubkey, relay: URI.parse(relay), petname: petname}
+  end
+
+  defp parse_contact(%Nostr.Tag{type: :p, data: pubkey, info: [relay]}) do
+    %{user: pubkey, relay: URI.parse(relay)}
+  end
+
+  defp parse_contact(%Nostr.Tag{type: :p, data: pubkey, info: []}) do
+    %{user: pubkey}
   end
 end

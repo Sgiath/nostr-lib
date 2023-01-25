@@ -28,7 +28,7 @@ defmodule Nostr.Event.Metadata do
           user: event.pubkey,
           name: Map.get(content, :name),
           about: Map.get(content, :about),
-          picture: Map.get(content, :picture),
+          picture: Map.get(content, :picture) |> URI.parse(),
           nip05: Map.get(content, :nip05),
           other: Map.drop(content, [:name, :about, :picture, :nip05])
         }
