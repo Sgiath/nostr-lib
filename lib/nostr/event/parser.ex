@@ -2,9 +2,10 @@ defmodule Nostr.Event.Parser do
   @moduledoc false
 
   def parse(event) when is_binary(event) do
-    event
-    |> Jason.decode!(keys: :atoms)
-    |> parse()
+    case Jason.decode!(event, keys: :atoms) do
+      {:ok, event} -> parse(event)
+      {:error, %Jason.DecodeError{}} -> {:error, "Cannot decode event", event}
+    end
   end
 
   def parse(event) when is_map(event) do
@@ -59,11 +60,35 @@ defmodule Nostr.Event.Parser do
     Nostr.Event.ChannelMessage.parse(event)
   end
 
+  def parse_specific(%Nostr.Event{kind: 43} = event) do
+    Nostr.Event.ChannelHideMessage.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: 44} = event) do
+    Nostr.Event.ChannelMuteUser.parse(event)
+  end
+
   def parse_specific(%Nostr.Event{kind: 22242} = event) do
     Nostr.Event.ClientAuth.parse(event)
   end
 
-  def parse_specific(event) do
+  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 1000 and kind < 10_000 do
+    Nostr.Event.Regular.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 10_000 and kind < 20_000 do
+    Nostr.Event.Replaceable.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 20_000 and kind < 30_000 do
+    Nostr.Event.Ephemeral.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 30_000 and kind < 40_000 do
+    Nostr.Event.ParameterizedReplaceable.parse(event)
+  end
+
+  def parse_specific(%Nostr.Event{} = event) do
     %Nostr.Event.Unknown{event: event}
   end
 end

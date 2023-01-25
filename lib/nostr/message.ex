@@ -5,20 +5,39 @@ defmodule Nostr.Message do
 
   require Logger
 
+  @spec create_event(Nostr.Event.t() | %{event: Nostr.Event.t()}) :: {:event, Nostr.Event.t()}
   def create_event(%{event: %Nostr.Event{} = event}), do: {:event, event}
   def create_event(%Nostr.Event{} = event), do: {:event, event}
+
+  @spec request(Nostr.Filter.t() | [Nostr.Filter.t()], binary()) ::
+          {:req, binary(), Nostr.Filter.t() | [Nostr.Filter.t()]}
   def request(%Nostr.Filter{} = filter, sub_id), do: {:req, sub_id, filter}
   def request(filters, sub_id), do: {:req, sub_id, filters}
+
+  @spec close(binary()) :: {:close, binary()}
   def close(sub_id), do: {:close, sub_id}
+
+  @spec event(Nostr.Event.t() | %{event: Nostr.Event.t()}, binary()) ::
+          {:event, binary(), Nostr.Event.t()}
   def event(%{event: %Nostr.Event{} = event}, sub_id), do: {:event, sub_id, event}
   def event(%Nostr.Event{} = event, sub_id), do: {:event, sub_id, event}
+
+  @spec notice(String.t()) :: {:notice, String.t()}
   def notice(message), do: {:notice, message}
+
+  @spec eose(binary()) :: {:eose, binary()}
   def eose(sub_id), do: {:eose, sub_id}
+
+  @spec ok(binary(), boolean(), String.t()) :: {:ok, binary(), boolean(), String.t()}
   def ok(event_id, success?, message), do: {:ok, event_id, success?, message}
+
+  @spec auth(Nostr.Event.t() | %{event: Nostr.Event.t()} | binary()) ::
+          {:auth, Nostr.Event.t() | binary()}
   def auth(%{event: %Nostr.Event{} = event}), do: {:auth, event}
   def auth(%Nostr.Event{} = event), do: {:auth, event}
   def auth(challenge), do: {:auth, challenge}
 
+  @spec serialize(tuple()) :: binary()
   def serialize(message) when is_tuple(message) do
     message
     |> Tuple.to_list()

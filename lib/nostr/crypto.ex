@@ -3,6 +3,16 @@ defmodule Nostr.Crypto do
   Crypto related stuff
   """
 
+  @doc """
+  Get pubkey (hex encoded) from seckey (hex encoded)
+
+  ## Example:
+
+      iex> Nostr.Crypto.pubkey("1111111111111111111111111111111111111111111111111111111111111111")
+      "4f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa"
+
+  """
+  @spec pubkey(seckey :: binary()) :: pubkey :: binary()
   def pubkey(seckey) do
     seckey
     |> d16()
@@ -10,6 +20,9 @@ defmodule Nostr.Crypto do
     |> e16()
   end
 
+  @doc """
+  Encrypt message with ECDH from seckey and pubkey and append randomly generated IV
+  """
   @spec encrypt(String.t(), binary(), binary()) :: binary()
   def encrypt(message, seckey, pubkey) do
     iv = :crypto.strong_rand_bytes(16)
@@ -23,6 +36,9 @@ defmodule Nostr.Crypto do
     e64(cipher_text) <> "?iv=" <> e64(iv)
   end
 
+  @doc """
+  Decrypt message with ECDH from seckey and pubkey (automatically extracts IV from message)
+  """
   @spec decrypt(binary(), binary(), binary()) :: String.t()
   def decrypt(message, seckey, pubkey) do
     [message, iv] = String.split(message, "?iv=")

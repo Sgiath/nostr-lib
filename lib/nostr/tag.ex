@@ -12,6 +12,7 @@ defmodule Nostr.Tag do
           info: [String.t()]
         }
 
+  @spec parse(tag :: nonempty_maybe_improper_list()) :: __MODULE__.t()
   def parse([type, data | info]) do
     %__MODULE__{
       type: String.to_atom(type),

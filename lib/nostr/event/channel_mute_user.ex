@@ -1,28 +1,28 @@
-defmodule Nostr.Event.ChannelHideMessage do
+defmodule Nostr.Event.ChannelMuteUser do
   @moduledoc """
-  Channel hide message
+  Channel mute user
 
   Defined in NIP 28
   https://github.com/nostr-protocol/nips/blob/master/28.md
   """
   @moduledoc tags: [:event, :nip28], nip: 28
 
-  defstruct [:event, :reason, :message_id, :other]
+  defstruct [:event, :user, :reason, :other]
 
   @type t() :: %__MODULE__{
           event: Nostr.Event.t(),
-          message_id: <<_::32, _::_*8>>,
+          user: <<_::32, _::_*8>>,
           reason: String.t(),
           other: map()
         }
 
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
-  def parse(%Nostr.Event{kind: 43} = event) do
-    with {:ok, message_id} <- get_message_id(event),
+  def parse(%Nostr.Event{kind: 44} = event) do
+    with {:ok, pubkey} <- get_user(event),
          {:ok, content} <- Jason.decode(event.content, keys: :atoms) do
       %__MODULE__{
         event: event,
-        message_id: message_id,
+        user: pubkey,
         reason: Map.get(content, :reason),
         other: Map.drop(content, [:reason])
       }
@@ -32,9 +32,9 @@ defmodule Nostr.Event.ChannelHideMessage do
     end
   end
 
-  defp get_message_id(%Nostr.Event{tags: tags}) do
-    case Enum.find(tags, &(&1.type == :e)) do
-      %Nostr.Tag{data: message_id} -> {:ok, message_id}
+  defp get_user(%Nostr.Event{tags: tags}) do
+    case Enum.find(tags, &(&1.type == :p)) do
+      %Nostr.Tag{data: pubkey} -> {:ok, pubkey}
       nil -> {:error, "Cannot find message ID to hide"}
     end
   end

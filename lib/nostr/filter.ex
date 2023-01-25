@@ -3,22 +3,27 @@ defmodule Nostr.Filter do
   Nostr filter
   """
 
-  defstruct [:ids, :authors, :kinds, :"#e", :"#p", :since, :until, :limit]
+  defstruct [:ids, :authors, :kinds, :"#e", :"#p", :"#d", :since, :until, :limit]
 
   @type t() :: %__MODULE__{
-          ids: [<<_::32, _::_*8>>],
-          authors: [<<_::32, _::_*8>>],
-          kinds: [non_neg_integer()],
-          "#e": [<<_::32, _::_*8>>],
-          "#p": [<<_::32, _::_*8>>],
-          since: non_neg_integer(),
-          until: non_neg_integer(),
-          limit: non_neg_integer()
+          ids: nil | [<<_::32, _::_*8>>],
+          authors: nil | [<<_::32, _::_*8>>],
+          kinds: nil | [non_neg_integer()],
+          "#e": nil | [<<_::32, _::_*8>>],
+          "#p": nil | [<<_::32, _::_*8>>],
+          "#d": nil | [binary()],
+          since: nil | non_neg_integer(),
+          until: nil | non_neg_integer(),
+          limit: nil | non_neg_integer()
         }
 
+  @doc """
+  Parse filter from raw list to `Nostr.Tag` struct
+  """
+  @spec parse(map) :: __MODULE__.t()
   def parse(filter) when is_map(filter) do
     filter
-    |> Map.take([:ids, :authors, :kinds, :"#e", :"#p", :since, :until, :limit])
+    |> Map.take([:ids, :authors, :kinds, :"#e", :"#p", :"#d", :since, :until, :limit])
     |> Map.update(:since, nil, &DateTime.from_unix!/1)
     |> Map.update(:until, nil, &DateTime.from_unix!/1)
     |> Enum.into(%__MODULE__{})
