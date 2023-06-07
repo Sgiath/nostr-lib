@@ -1,42 +1,88 @@
 defmodule Nostr.Message do
   @moduledoc """
-  Nostr message
+  Nostr message is represented as tuple in Elixir. This module provides functions to generate
+  messages, serialize or parse them.
   """
 
   require Logger
 
+  @type t() ::
+          {:event, Nostr.Event.t()}
+          | {:event, binary(), Nostr.Event.t()}
+          | {:req, binary(), Nostr.Filter.t()}
+          | {:close, binary()}
+          | {:eose, binary()}
+          | {:notice, String.t()}
+          | {:ok, binary(), boolean(), String.t()}
+          | {:auth, Nostr.Event.t() | binary()}
+
+  @doc """
+  Generate post new event message
+  """
+  @doc sender: :client
   @spec create_event(Nostr.Event.t() | %{event: Nostr.Event.t()}) :: {:event, Nostr.Event.t()}
   def create_event(%{event: %Nostr.Event{} = event}), do: {:event, event}
   def create_event(%Nostr.Event{} = event), do: {:event, event}
 
+  @doc """
+  Generate request message
+  """
+  @doc sender: :client
   @spec request(Nostr.Filter.t() | [Nostr.Filter.t()], binary()) ::
           {:req, binary(), Nostr.Filter.t() | [Nostr.Filter.t()]}
   def request(%Nostr.Filter{} = filter, sub_id), do: {:req, sub_id, filter}
   def request(filters, sub_id), do: {:req, sub_id, filters}
 
+  @doc """
+  Generate close message
+  """
+  @doc sender: :client
   @spec close(binary()) :: {:close, binary()}
   def close(sub_id), do: {:close, sub_id}
 
+  @doc """
+  Generate event message
+  """
+  @doc sender: :relay
   @spec event(Nostr.Event.t() | %{event: Nostr.Event.t()}, binary()) ::
           {:event, binary(), Nostr.Event.t()}
   def event(%{event: %Nostr.Event{} = event}, sub_id), do: {:event, sub_id, event}
   def event(%Nostr.Event{} = event, sub_id), do: {:event, sub_id, event}
 
+  @doc """
+  Generate notice message
+  """
+  @doc sender: :relay
   @spec notice(String.t()) :: {:notice, String.t()}
   def notice(message), do: {:notice, message}
 
+  @doc """
+  Generate eose message
+  """
+  @doc sender: :relay
   @spec eose(binary()) :: {:eose, binary()}
   def eose(sub_id), do: {:eose, sub_id}
 
+  @doc """
+  Generate OK message
+  """
+  @doc sender: :relay
   @spec ok(binary(), boolean(), String.t()) :: {:ok, binary(), boolean(), String.t()}
   def ok(event_id, success?, message), do: {:ok, event_id, success?, message}
 
+  @doc """
+  Generate auth message
+  """
+  @doc sender: :relay
   @spec auth(Nostr.Event.t() | %{event: Nostr.Event.t()} | binary()) ::
           {:auth, Nostr.Event.t() | binary()}
   def auth(%{event: %Nostr.Event{} = event}), do: {:auth, event}
   def auth(%Nostr.Event{} = event), do: {:auth, event}
   def auth(challenge), do: {:auth, challenge}
 
+  @doc """
+  Serialize Elixir tuple message to on-the-wire binary
+  """
   @spec serialize(tuple()) :: binary()
   def serialize(message) when is_tuple(message) do
     message
@@ -46,9 +92,17 @@ defmodule Nostr.Message do
     |> Jason.encode!()
   end
 
-  # Parsing
+  @doc """
+  Parse binary message to Elixir tuple, if message contains event it will be returned as general
+  `Nostr.Event.t()` struct
+  """
+  @spec parse(msg :: String.t()) :: t()
   def parse(msg) when is_binary(msg), do: msg |> Jason.decode!(keys: :atoms) |> do_parse(:general)
 
+  @doc """
+  Parse binary message to Elixir tuple, if message contains event it will be returned as specific
+  `Nostr.Event.t()` struct dependent of type of Event
+  """
   def parse_specific(msg) when is_binary(msg),
     do: msg |> Jason.decode!(keys: :atoms) |> do_parse(:specific)
 

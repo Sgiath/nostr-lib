@@ -11,15 +11,18 @@ defmodule Nostr.MixProject do
 
       # Elixir
       elixir: "~> 1.14",
-      start_permanent: Mix.env() == :prod,
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
       consolidate_protocols: Mix.env() != :test,
       deps: deps(),
 
       # Documentation
       name: "Nostr Lib",
       source_url: "https://github.com/Sgiath/nostr-lib",
-      homepage_url: "https://sgiath.dev/nostr",
-      description: description(),
+      homepage_url: "https://sgiath.dev/libraries#nostr_lib",
+      description: """
+      Library which implements Nostr specs
+      """,
       package: package(),
       docs: docs()
     ]
@@ -34,22 +37,19 @@ defmodule Nostr.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      # TODO: change to hex version once secp256k1 library is published
-      {:secp256k1, github: "Sgiath/secp256k1"},
+      {:lib_secp256k1, "~> 0.3"},
 
-      # Documentation
+      # Development
+      {:ex_check, "~> 0.15", only: [:dev], runtime: false},
+      {:credo, "~> 1.7", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.29", only: :dev, runtime: false},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
-      {:mix_test_watch, "~> 1.1", only: :dev, runtime: false}
+      {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev], runtime: false}
     ]
   end
 
   # Documentation
-
-  defp description do
-    "Library which implements Nostr specs"
-  end
 
   defp package do
     [
@@ -66,14 +66,16 @@ defmodule Nostr.MixProject do
 
   defp docs do
     [
-      authors: [
-        "Sgiath <nostr@sgiath.dev>"
-      ],
+      authors: ["Sgiath <nostr@sgiath.dev>"],
       main: "overview",
+      api_reference: false,
       formatters: ["html"],
+      source_ref: "v#{@version}",
+      source_url: "https://github.com/Sgiath/nostr-lib",
       extra_section: "Guides",
       extras: extras(),
-      groups_for_extras: groups_for_extras()
+      groups_for_extras: groups_for_extras(),
+      groups_for_modules: group_for_modules()
     ]
   end
 
@@ -89,8 +91,43 @@ defmodule Nostr.MixProject do
 
   defp groups_for_extras do
     [
-      Introduction: ~r/docs\/introduction\/.?/,
-      Guides: ~r/docs\/guides\/.?/
+      Introduction: ~r"docs/introduction/.?",
+      Guides: ~r"docs/guides/.?"
+    ]
+  end
+
+  defp groups_for_modules do
+    [
+      "Specific Events": [
+        # NIP-01
+        Nostr.Event.Metadata,
+        Nostr.Event.Note,
+        Nostr.Event.RecommendRelay,
+        # NIP-02
+        Nostr.Event.Contacts,
+        # NIP-04
+        Nostr.Event.DirectMessage,
+        # NIP-09
+        Nostr.Event.Deletion,
+        # NIP-16
+        Nostr.Event.Ephemeral,
+        Nostr.Event.Regular,
+        Nostr.Event.Replaceable,
+        # NIP-25
+        Nostr.Event.Reaction,
+        # NIP-28
+        Nostr.Event.ChannelCreation,
+        Nostr.Event.ChannelHideMessage,
+        Nostr.Event.ChannelMessage,
+        Nostr.Event.ChannelMetadata,
+        Nostr.Event.ChannelMuteUser,
+        # NIP-33
+        Nostr.Event.ParameterizedReplaceable,
+        # NIP-42
+        Nostr.Event.ClientAuth,
+        # Other
+        Nostr.Event.Unknown
+      ]
     ]
   end
 end

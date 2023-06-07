@@ -23,7 +23,7 @@ defmodule Nostr.Event.ChannelHideMessage do
       %__MODULE__{
         event: event,
         message_id: message_id,
-        reason: Map.get(content, :reason),
+        reason: content.reason,
         other: Map.drop(content, [:reason])
       }
     else

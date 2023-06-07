@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.1.0 (2023-06-07)
 
 - Nostr message
 - Nostr event

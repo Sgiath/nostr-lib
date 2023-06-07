@@ -16,7 +16,7 @@ defmodule Nostr.Event do
           kind: non_neg_integer(),
           tags: [Nostr.Tag.t()],
           created_at: DateTime.t(),
-          content: String.t(),
+          content: binary(),
           sig: <<_::64, _::_*8>>
         }
 

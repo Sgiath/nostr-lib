@@ -1,6 +1,8 @@
 defmodule Nostr.Event.Parser do
   @moduledoc false
 
+  alias Nostr.Event
+
   def parse(event) when is_binary(event) do
     case Jason.decode!(event, keys: :atoms) do
       {:ok, event} -> parse(event)
@@ -20,75 +22,75 @@ defmodule Nostr.Event.Parser do
     }
   end
 
-  def parse_specific(%Nostr.Event{kind: 0} = event) do
-    Nostr.Event.Metadata.parse(event)
+  def parse_specific(%Event{kind: 0} = event) do
+    Event.Metadata.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 1} = event) do
-    Nostr.Event.Note.parse(event)
+  def parse_specific(%Event{kind: 1} = event) do
+    Event.Note.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 2} = event) do
-    Nostr.Event.RecommendRelay.parse(event)
+  def parse_specific(%Event{kind: 2} = event) do
+    Event.RecommendRelay.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 3} = event) do
-    Nostr.Event.Contacts.parse(event)
+  def parse_specific(%Event{kind: 3} = event) do
+    Event.Contacts.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 4} = event) do
-    Nostr.Event.DirectMessage.parse(event)
+  def parse_specific(%Event{kind: 4} = event) do
+    Event.DirectMessage.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 5} = event) do
-    Nostr.Event.Deletion.parse(event)
+  def parse_specific(%Event{kind: 5} = event) do
+    Event.Deletion.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 7} = event) do
-    Nostr.Event.Reaction.parse(event)
+  def parse_specific(%Event{kind: 7} = event) do
+    Event.Reaction.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 40} = event) do
-    Nostr.Event.ChannelCreation.parse(event)
+  def parse_specific(%Event{kind: 40} = event) do
+    Event.ChannelCreation.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 41} = event) do
-    Nostr.Event.ChannelMetadata.parse(event)
+  def parse_specific(%Event{kind: 41} = event) do
+    Event.ChannelMetadata.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 42} = event) do
-    Nostr.Event.ChannelMessage.parse(event)
+  def parse_specific(%Event{kind: 42} = event) do
+    Event.ChannelMessage.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 43} = event) do
-    Nostr.Event.ChannelHideMessage.parse(event)
+  def parse_specific(%Event{kind: 43} = event) do
+    Event.ChannelHideMessage.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 44} = event) do
-    Nostr.Event.ChannelMuteUser.parse(event)
+  def parse_specific(%Event{kind: 44} = event) do
+    Event.ChannelMuteUser.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: 22242} = event) do
-    Nostr.Event.ClientAuth.parse(event)
+  def parse_specific(%Event{kind: 22_242} = event) do
+    Event.ClientAuth.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 1000 and kind < 10_000 do
-    Nostr.Event.Regular.parse(event)
+  def parse_specific(%Event{kind: kind} = event) when kind >= 1000 and kind < 10_000 do
+    Event.Regular.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 10_000 and kind < 20_000 do
-    Nostr.Event.Replaceable.parse(event)
+  def parse_specific(%Event{kind: kind} = event) when kind >= 10_000 and kind < 20_000 do
+    Event.Replaceable.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 20_000 and kind < 30_000 do
-    Nostr.Event.Ephemeral.parse(event)
+  def parse_specific(%Event{kind: kind} = event) when kind >= 20_000 and kind < 30_000 do
+    Event.Ephemeral.parse(event)
   end
 
-  def parse_specific(%Nostr.Event{kind: kind} = event) when kind >= 30_000 and kind < 40_000 do
-    Nostr.Event.ParameterizedReplaceable.parse(event)
+  def parse_specific(%Event{kind: kind} = event) when kind >= 30_000 and kind < 40_000 do
+    Event.ParameterizedReplaceable.parse(event)
   end
 
   def parse_specific(%Nostr.Event{} = event) do
-    %Nostr.Event.Unknown{event: event}
+    %Event.Unknown{event: event}
   end
 end

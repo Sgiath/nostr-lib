@@ -27,9 +27,9 @@ defmodule Nostr.Event.ChannelMetadata do
         event: event,
         channel: channel,
         relay: URI.parse(relay),
-        name: Map.get(content, :name),
-        about: Map.get(content, :about),
-        picture: Map.get(content, :picture),
+        name: content.name,
+        about: content.about,
+        picture: content.picture,
         other: Map.drop(content, [:name, :about, :picture])
       }
     else

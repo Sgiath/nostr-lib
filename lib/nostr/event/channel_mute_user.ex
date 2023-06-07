@@ -23,7 +23,7 @@ defmodule Nostr.Event.ChannelMuteUser do
       %__MODULE__{
         event: event,
         user: pubkey,
-        reason: Map.get(content, :reason),
+        reason: content.reason,
         other: Map.drop(content, [:reason])
       }
     else
@@ -35,7 +35,7 @@ defmodule Nostr.Event.ChannelMuteUser do
   defp get_user(%Nostr.Event{tags: tags}) do
     case Enum.find(tags, &(&1.type == :p)) do
       %Nostr.Tag{data: pubkey} -> {:ok, pubkey}
-      nil -> {:error, "Cannot find message ID to hide"}
+      nil -> {:error, "Cannot find user to mute"}
     end
   end
 end

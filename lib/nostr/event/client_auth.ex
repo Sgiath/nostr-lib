@@ -16,7 +16,7 @@ defmodule Nostr.Event.ClientAuth do
         }
 
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
-  def parse(%Nostr.Event{kind: 22242} = event) do
+  def parse(%Nostr.Event{kind: 22_242} = event) do
     %__MODULE__{
       event: event,
       relay: get_tag(event, :relay),
