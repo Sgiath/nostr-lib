@@ -17,7 +17,7 @@ defmodule Nostr.Event.Note do
           reply_to_authors: [<<_::32, _::_*8>>]
         }
 
-  @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
+  @spec parse(event :: Nostr.Event.t()) :: t()
   def parse(%Nostr.Event{kind: 1} = event) do
     %__MODULE__{
       event: event,
@@ -26,6 +26,24 @@ defmodule Nostr.Event.Note do
       reply_to: get_reply_events(event),
       reply_to_authors: get_reply_pubkeys(event)
     }
+  end
+
+  @doc """
+  Create new Note Nostr event
+
+  ## Arguments:
+
+    - `note` textual note used as content
+    - `opts` other optional event arguments (`pubkey`, `created_at`, `tags`)
+
+  """
+  @spec create(note :: String.t(), opts :: Keyword.t()) :: t()
+  def create(note, opts \\ []) do
+    opts = Keyword.put(opts, :content, note)
+
+    1
+    |> Nostr.Event.create(opts)
+    |> parse()
   end
 
   defp get_reply_events(%Nostr.Event{tags: tags}) do

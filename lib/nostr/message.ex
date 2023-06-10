@@ -30,7 +30,6 @@ defmodule Nostr.Message do
   @doc sender: :client
   @spec request(Nostr.Filter.t() | [Nostr.Filter.t()], binary()) ::
           {:req, binary(), Nostr.Filter.t() | [Nostr.Filter.t()]}
-  def request(%Nostr.Filter{} = filter, sub_id), do: {:req, sub_id, filter}
   def request(filters, sub_id), do: {:req, sub_id, filters}
 
   @doc """
@@ -39,6 +38,12 @@ defmodule Nostr.Message do
   @doc sender: :client
   @spec close(binary()) :: {:close, binary()}
   def close(sub_id), do: {:close, sub_id}
+
+  @spec count(pos_integer() | Nostr.Filter.t() | [Nostr.Filter.t()], binary()) ::
+          {:count, binary(), %{count: pos_integer()} | Nostr.Filter.t() | [Nostr.Filter.t()]}
+  def count(count, sub_id) when is_integer(count), do: {:count, sub_id, %{count: count}}
+  def count(%Nostr.Filter{} = filter, sub_id), do: {:count, sub_id, filter}
+  def count(filters, sub_id) when is_list(filters), do: {:count, sub_id, filters}
 
   @doc """
   Generate event message

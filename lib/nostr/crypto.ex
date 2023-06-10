@@ -12,11 +12,22 @@ defmodule Nostr.Crypto do
       "4f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa"
 
   """
-  @spec pubkey(seckey :: binary()) :: pubkey :: binary()
+  @spec pubkey(seckey :: binary()) :: binary()
   def pubkey(seckey) do
     seckey
     |> d16()
     |> Secp256k1.pubkey(:xonly)
+    |> e16()
+  end
+
+  @doc """
+  Sign binary data (hex encoded) with seckey (hex encoded)
+  """
+  @spec sign(data :: binary(), seckey :: binary()) :: binary()
+  def sign(data, seckey) do
+    data
+    |> d16()
+    |> Secp256k1.schnorr_sign(d16(seckey))
     |> e16()
   end
 

@@ -11,8 +11,8 @@ defmodule Nostr.MixProject do
 
       # Elixir
       elixir: "~> 1.14",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :test,
       deps: deps(),
 
@@ -38,6 +38,7 @@ defmodule Nostr.MixProject do
     [
       {:jason, "~> 1.4"},
       {:lib_secp256k1, "~> 0.3"},
+      {:ex_bech32, "~> 0.5"},
 
       # Development
       {:ex_check, "~> 0.15", only: [:dev], runtime: false},
@@ -75,7 +76,7 @@ defmodule Nostr.MixProject do
       extra_section: "Guides",
       extras: extras(),
       groups_for_extras: groups_for_extras(),
-      groups_for_modules: group_for_modules()
+      groups_for_modules: groups_for_modules()
     ]
   end
 

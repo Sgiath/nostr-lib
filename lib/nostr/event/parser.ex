@@ -46,8 +46,16 @@ defmodule Nostr.Event.Parser do
     Event.Deletion.parse(event)
   end
 
+  def parse_specific(%Event{kind: 6} = event) do
+    Event.Repost.parse(event)
+  end
+
   def parse_specific(%Event{kind: 7} = event) do
     Event.Reaction.parse(event)
+  end
+
+  def parse_specific(%Event{kind: 8} = event) do
+    Event.BadgeAward.parse(event)
   end
 
   def parse_specific(%Event{kind: 40} = event) do
@@ -68,6 +76,14 @@ defmodule Nostr.Event.Parser do
 
   def parse_specific(%Event{kind: 44} = event) do
     Event.ChannelMuteUser.parse(event)
+  end
+
+  def parse_specific(%Event{kind: 1063} = event) do
+    Event.FileMetadata.parse(event)
+  end
+
+  def parse_specific(%Event{kind: 1984} = event) do
+    Event.Report.parse(event)
   end
 
   def parse_specific(%Event{kind: 22_242} = event) do
