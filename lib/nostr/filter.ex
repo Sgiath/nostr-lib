@@ -3,7 +3,7 @@ defmodule Nostr.Filter do
   Nostr filter
   """
 
-  defstruct [:ids, :authors, :kinds, :"#e", :"#p", :"#a", :"#d", :since, :until, :limit]
+  defstruct [:ids, :authors, :kinds, :"#e", :"#p", :"#a", :"#d", :since, :until, :limit, :search]
 
   @type t() :: %__MODULE__{
           ids: nil | [<<_::32, _::_*8>>],
@@ -15,9 +15,10 @@ defmodule Nostr.Filter do
           "#a": nil | [<<_::32, _::_*8>>],
           # badge name
           "#d": nil | [binary()],
-          since: nil | non_neg_integer(),
-          until: nil | non_neg_integer(),
-          limit: nil | non_neg_integer()
+          since: nil | DateTime.t(),
+          until: nil | DateTime.t(),
+          limit: nil | non_neg_integer(),
+          search: nil | String.t()
         }
 
   @doc """
@@ -26,7 +27,7 @@ defmodule Nostr.Filter do
   @spec parse(map) :: __MODULE__.t()
   def parse(filter) when is_map(filter) do
     filter
-    |> Map.take([:ids, :authors, :kinds, :"#e", :"#p", :"#a", :"#d", :since, :until, :limit])
+    |> Map.take([:ids, :authors, :kinds, :"#e", :"#p", :"#a", :"#d", :since, :until, :limit, :search])
     |> Map.update(:since, nil, &DateTime.from_unix!/1)
     |> Map.update(:until, nil, &DateTime.from_unix!/1)
     |> Enum.into(%__MODULE__{})

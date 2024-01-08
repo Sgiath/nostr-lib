@@ -1,7 +1,7 @@
 defmodule Nostr.TLV.Decoder do
   @moduledoc false
 
-  @compile {:inline, accumulate_tag: 2, is_constructed_tag: 1}
+  @compile {:inline, accumulate_tag: 2, constructed_tag?: 1}
 
   alias Nostr.TLV
 
@@ -16,11 +16,11 @@ defmodule Nostr.TLV.Decoder do
 
   defp decode_tag(<<tag::unsigned-big-integer-size(8), rest::binary>>)
        when (tag &&& 0x1F) != 0x1F do
-    {tag, is_constructed_tag(tag), rest}
+    {tag, constructed_tag?(tag), rest}
   end
 
   defp decode_tag(<<tag::unsigned-big-integer-size(8), rest::binary>>) do
-    decode_tag_number(tag, is_constructed_tag(tag), rest)
+    decode_tag_number(tag, constructed_tag?(tag), rest)
   end
 
   defp decode_tag(_binary), do: :no_tlv
@@ -37,7 +37,7 @@ defmodule Nostr.TLV.Decoder do
   defp decode_tag_number(_acc, _constructed, _binary), do: :no_tlv
 
   defp accumulate_tag(acc, tag), do: acc <<< 8 ||| tag
-  defp is_constructed_tag(tag), do: (tag &&& 0x20) == 0x20
+  defp constructed_tag?(tag), do: (tag &&& 0x20) == 0x20
 
   defp decode_length(true, <<len::unsigned-big-integer-size(8), rest::binary>>)
        when len == 0x80 do

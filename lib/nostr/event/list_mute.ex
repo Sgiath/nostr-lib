@@ -11,7 +11,7 @@ defmodule Nostr.Event.ListMute do
 
   @type t() :: %__MODULE__{
           event: Nostr.Event.t(),
-          users: [<<_::32, _::_*8>>],
+          public_mute: [<<_::32, _::_*8>>],
           private_mute: :not_loaded | [<<_::32, _::_*8>>]
         }
 
