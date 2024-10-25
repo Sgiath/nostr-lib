@@ -1,7 +1,7 @@
 defmodule Nostr.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.1.1"
 
   def project do
     [
@@ -37,16 +37,16 @@ defmodule Nostr.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      {:lib_secp256k1, "~> 0.4"},
-      {:ex_bech32, "~> 0.5"},
+      {:lib_secp256k1, "~> 0.5"},
+      {:ex_bech32, "< 0.6.0"},
 
       # Development
-      {:ex_check, "~> 0.15", only: [:dev], runtime: false},
+      {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.31", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
-      {:mix_test_watch, "~> 1.1", only: [:dev], runtime: false}
+      {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false}
     ]
   end
 
