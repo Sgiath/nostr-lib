@@ -20,18 +20,18 @@ defmodule Nostr.Event.ChannelCreation do
 
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 40} = event) do
-    case Jason.decode(event.content, keys: :atoms) do
+    case JSON.decode(event.content) do
       {:ok, content} ->
         %__MODULE__{
           event: event,
           channel: event.id,
-          name: content.name,
-          about: content.about,
-          picture: URI.parse(content.picture),
-          other: Map.drop(content, [:name, :about, :picture])
+          name: content["name"],
+          about: content["about"],
+          picture: URI.parse(content["picture"]),
+          other: Map.drop(content, ["name", "about", "picture"])
         }
 
-      {:error, %Jason.DecodeError{}} ->
+      {:error, %JSON.DecodeError{}} ->
         {:error, "Cannot decode content field", event}
     end
   end

@@ -4,21 +4,21 @@ defmodule Nostr.Event.Parser do
   alias Nostr.Event
 
   def parse(event) when is_binary(event) do
-    case Jason.decode!(event, keys: :atoms) do
+    case JSON.decode!(event) do
       {:ok, event} -> parse(event)
-      {:error, %Jason.DecodeError{}} -> {:error, "Cannot decode event", event}
+      {:error, %JSON.DecodeError{}} -> {:error, "Cannot decode event", event}
     end
   end
 
   def parse(event) when is_map(event) do
     %Nostr.Event{
-      id: event.id,
-      pubkey: event.pubkey,
-      kind: event.kind,
-      tags: Enum.map(event.tags, &Nostr.Tag.parse/1),
-      created_at: DateTime.from_unix!(event.created_at),
-      content: event.content,
-      sig: event.sig
+      id: event["id"],
+      pubkey: event["pubkey"],
+      kind: event["kind"],
+      tags: Enum.map(event["tags"], &Nostr.Tag.parse/1),
+      created_at: DateTime.from_unix!(event["created_at"]),
+      content: event["content"],
+      sig: event["sig"]
     }
   end
 

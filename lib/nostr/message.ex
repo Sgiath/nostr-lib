@@ -94,7 +94,7 @@ defmodule Nostr.Message do
     |> Tuple.to_list()
     |> List.flatten()
     |> then(fn [name | rest] -> [name |> Atom.to_string() |> String.upcase() | rest] end)
-    |> Jason.encode!()
+    |> JSON.encode!()
   end
 
   @doc """
@@ -102,14 +102,14 @@ defmodule Nostr.Message do
   `Nostr.Event.t()` struct
   """
   @spec parse(msg :: String.t()) :: t()
-  def parse(msg) when is_binary(msg), do: msg |> Jason.decode!(keys: :atoms) |> do_parse(:general)
+  def parse(msg) when is_binary(msg), do: msg |> JSON.decode!() |> do_parse(:general)
 
   @doc """
   Parse binary message to Elixir tuple, if message contains event it will be returned as specific
   `Nostr.Event.t()` struct dependent of type of Event
   """
   def parse_specific(msg) when is_binary(msg),
-    do: msg |> Jason.decode!(keys: :atoms) |> do_parse(:specific)
+    do: msg |> JSON.decode!() |> do_parse(:specific)
 
   # Client to relay
   defp do_parse(["EVENT", event], :general) when is_map(event) do
@@ -156,6 +156,10 @@ defmodule Nostr.Message do
 
   defp do_parse(["AUTH", sub_id], _type) when is_binary(sub_id) do
     {:auth, sub_id}
+  end
+
+  defp do_parse(["CLOSED", sub_id, message], _type) when is_binary(sub_id) do
+    {:closed, sub_id, message}
   end
 
   defp do_parse(message, _type) do

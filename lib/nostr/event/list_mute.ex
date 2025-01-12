@@ -36,7 +36,7 @@ defmodule Nostr.Event.ListMute do
     private_pubkeys =
       content
       |> Nostr.Crypto.decrypt(seckey, pubkey)
-      |> Jason.decode!(keys: :atoms)
+      |> JSON.decode!()
       |> Enum.map(&Nostr.Tag.parse/1)
       |> Enum.filter(fn %Nostr.Tag{type: type} -> type == :p end)
       |> Enum.map(fn %Nostr.Tag{type: :p, data: pubkey} -> pubkey end)

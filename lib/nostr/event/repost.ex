@@ -54,7 +54,7 @@ defmodule Nostr.Event.Repost do
 
   defp get_content(%Nostr.Event{content: content}) do
     content
-    |> Jason.decode!()
+    |> JSON.decode!()
     |> Nostr.Event.parse()
   end
 end

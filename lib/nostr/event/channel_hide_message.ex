@@ -19,15 +19,15 @@ defmodule Nostr.Event.ChannelHideMessage do
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 43} = event) do
     with {:ok, message_id} <- get_message_id(event),
-         {:ok, content} <- Jason.decode(event.content, keys: :atoms) do
+         {:ok, content} <- JSON.decode(event.content) do
       %__MODULE__{
         event: event,
         message_id: message_id,
-        reason: content.reason,
-        other: Map.drop(content, [:reason])
+        reason: content["reason"],
+        other: Map.drop(content, ["reason"])
       }
     else
-      {:error, %Jason.DecodeError{}} -> {:error, "Cannot decode content field", event}
+      {:error, %JSON.DecodeError{}} -> {:error, "Cannot decode content field", event}
       {:error, error} -> {:error, error, event}
     end
   end

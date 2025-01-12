@@ -27,22 +27,34 @@ defmodule Nostr.Filter do
   @spec parse(map) :: __MODULE__.t()
   def parse(filter) when is_map(filter) do
     filter
-    |> Map.take([:ids, :authors, :kinds, :"#e", :"#p", :"#a", :"#d", :since, :until, :limit, :search])
+    |> Map.take([
+      :ids,
+      :authors,
+      :kinds,
+      :"#e",
+      :"#p",
+      :"#a",
+      :"#d",
+      :since,
+      :until,
+      :limit,
+      :search
+    ])
     |> Map.update(:since, nil, &DateTime.from_unix!/1)
     |> Map.update(:until, nil, &DateTime.from_unix!/1)
     |> Enum.into(%__MODULE__{})
   end
 end
 
-defimpl Jason.Encoder, for: Nostr.Filter do
-  def encode(%Nostr.Filter{} = filter, opts) do
+defimpl JSON.Encoder, for: Nostr.Filter do
+  def encode(%Nostr.Filter{} = filter, encoder) do
     filter
     |> Map.update!(:since, &encode_unix/1)
     |> Map.update!(:until, &encode_unix/1)
     |> Map.from_struct()
     |> Enum.reject(fn {_key, val} -> is_nil(val) end)
     |> Enum.into(%{})
-    |> Jason.Encode.map(opts)
+    |> :elixir_json.encode_map(encoder)
   end
 
   defp encode_unix(nil), do: nil

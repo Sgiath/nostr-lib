@@ -24,19 +24,19 @@ defmodule Nostr.Event.Metadata do
   """
   @spec parse(event :: Nostr.Event.t()) :: t()
   def parse(%Nostr.Event{kind: 0} = event) do
-    case Jason.decode(event.content, keys: :atoms) do
+    case JSON.decode(event.content) do
       {:ok, content} ->
         %__MODULE__{
           event: event,
-          user: event.pubkey,
-          name: Map.get(content, :name),
-          about: Map.get(content, :about),
-          picture: Map.get(content, :picture) |> URI.parse(),
-          nip05: Map.get(content, :nip05),
-          other: Map.drop(content, [:name, :about, :picture, :nip05])
+          user: event["pubkey"],
+          name: Map.get(content, "name"),
+          about: Map.get(content, "about"),
+          picture: Map.get(content, "picture") |> URI.parse(),
+          nip05: Map.get(content, "nip05"),
+          other: Map.drop(content, ["name", "about", "picture", "nip05"])
         }
 
-      {:error, %Jason.DecodeError{}} ->
+      {:error, %JSON.DecodeError{}} ->
         {:error, "Cannot decode content field", event}
     end
   end
@@ -67,7 +67,7 @@ defmodule Nostr.Event.Metadata do
 
   def create(name, about, picture, nip05, opts) do
     content =
-      Jason.encode!(%{
+      JSON.encode!(%{
         name: name,
         about: about,
         picture: picture,

@@ -22,18 +22,18 @@ defmodule Nostr.Event.ChannelMetadata do
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 41} = event) do
     with {:ok, channel, relay} <- get_channel_info(event),
-         {:ok, content} <- Jason.decode(event.content, keys: :atoms) do
+         {:ok, content} <- JSON.decode(event.content) do
       %__MODULE__{
         event: event,
         channel: channel,
         relay: URI.parse(relay),
-        name: content.name,
-        about: content.about,
-        picture: content.picture,
-        other: Map.drop(content, [:name, :about, :picture])
+        name: content["name"],
+        about: content["about"],
+        picture: content["picture"],
+        other: Map.drop(content, ["name", "about", "picture"])
       }
     else
-      {:error, %Jason.DecodeError{}} -> {:error, "Cannot decode content field", event}
+      {:error, %JSON.DecodeError{}} -> {:error, "Cannot decode content field", event}
       {:error, error} -> {:error, error, event}
     end
   end

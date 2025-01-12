@@ -10,7 +10,7 @@ defmodule Nostr.MixProject do
       version: @version,
 
       # Elixir
-      elixir: "~> 1.14",
+      elixir: "~> 1.18",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :test,
@@ -36,15 +36,13 @@ defmodule Nostr.MixProject do
 
   defp deps do
     [
-      {:jason, "~> 1.4"},
       {:lib_secp256k1, "~> 0.5"},
       {:ex_bech32, "< 0.6.0"},
 
       # Development
       {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.34", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.36", only: :dev, runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false}
     ]

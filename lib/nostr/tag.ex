@@ -54,8 +54,8 @@ defmodule Nostr.Tag do
   end
 end
 
-defimpl Jason.Encoder, for: Nostr.Tag do
-  def encode(%Nostr.Tag{} = tag, opts) do
-    Jason.Encode.list([Atom.to_string(tag.type), tag.data | tag.info], opts)
+defimpl JSON.Encoder, for: Nostr.Tag do
+  def encode(%Nostr.Tag{} = tag, encoder) do
+    :elixir_json.encode_list([Atom.to_string(tag.type), tag.data | tag.info], encoder)
   end
 end

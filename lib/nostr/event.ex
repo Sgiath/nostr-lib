@@ -61,7 +61,7 @@ defmodule Nostr.Event do
         created_at: created_at,
         content: content
       }) do
-    Jason.encode!([0, pubkey, DateTime.to_unix(created_at), kind, tags, content])
+    JSON.encode!([0, pubkey, DateTime.to_unix(created_at), kind, tags, content])
   end
 
   @doc """
@@ -141,9 +141,9 @@ defmodule Nostr.Event do
   end
 end
 
-defimpl Jason.Encoder, for: Nostr.Event do
-  def encode(%Nostr.Event{} = event, opts) do
-    Jason.Encode.map(
+defimpl JSON.Encoder, for: Nostr.Event do
+  def encode(%Nostr.Event{} = event, encoder) do
+    :elixir_json.encode_map(
       %{
         id: event.id,
         pubkey: event.pubkey,
@@ -153,7 +153,7 @@ defimpl Jason.Encoder, for: Nostr.Event do
         content: event.content,
         sig: event.sig
       },
-      opts
+      encoder
     )
   end
 end
