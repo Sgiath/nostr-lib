@@ -26,17 +26,23 @@ defmodule Nostr.Event.Metadata do
   def parse(%Nostr.Event{kind: 0} = event) do
     case JSON.decode(event.content) do
       {:ok, content} ->
+        picture =
+          case Map.get(content, "picture") do
+            nil -> nil
+            url when is_binary(url) -> URI.parse(url)
+          end
+
         %__MODULE__{
           event: event,
           user: event.pubkey,
           name: Map.get(content, "name"),
           about: Map.get(content, "about"),
-          picture: Map.get(content, "picture") |> URI.parse(),
+          picture: picture,
           nip05: Map.get(content, "nip05"),
           other: Map.drop(content, ["name", "about", "picture", "nip05"])
         }
 
-      {:error, %JSON.DecodeError{}} ->
+      {:error, _} ->
         {:error, "Cannot decode content field", event}
     end
   end

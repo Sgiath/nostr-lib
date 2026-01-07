@@ -16,6 +16,7 @@ defmodule Nostr.Event.ChannelMuteUser do
           other: map()
         }
 
+  @doc "Parses a kind 44 event into a `ChannelMuteUser` struct with user and reason."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 44} = event) do
     with {:ok, pubkey} <- get_user(event),

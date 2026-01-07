@@ -17,6 +17,7 @@ defmodule Nostr.Event.Note do
           reply_to_authors: [<<_::32, _::_*8>>]
         }
 
+  @doc "Parses a kind 1 event into a `Note` struct, extracting reply references."
   @spec parse(event :: Nostr.Event.t()) :: t()
   def parse(%Nostr.Event{kind: 1} = event) do
     %__MODULE__{

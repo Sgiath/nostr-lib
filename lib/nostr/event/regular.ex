@@ -13,6 +13,7 @@ defmodule Nostr.Event.Regular do
           event: Nostr.Event.t()
         }
 
+  @doc "Parses a kind 1000-9999 event into a `Regular` struct (stored by relays)."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: kind} = event) when kind >= 1000 and kind < 10_000 do
     %__MODULE__{event: event}

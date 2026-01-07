@@ -98,6 +98,7 @@ defmodule Nostr.Event do
       }
 
   """
+  @spec create(non_neg_integer(), Keyword.t()) :: t()
   def create(kind, opts \\ []) when is_integer(kind) do
     %__MODULE__{
       kind: kind,
@@ -116,6 +117,7 @@ defmodule Nostr.Event do
 
   It auto-populates event ID or check the ID is correct before signing
   """
+  @spec sign(t() | %{event: t()}, binary()) :: t() | %{event: t()}
   def sign(%__MODULE__{pubkey: nil} = event, seckey) do
     sign(%__MODULE__{event | pubkey: Nostr.Crypto.pubkey(seckey)}, seckey)
   end

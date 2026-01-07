@@ -16,6 +16,7 @@ defmodule Nostr.Event.ChannelHideMessage do
           other: map()
         }
 
+  @doc "Parses a kind 43 event into a `ChannelHideMessage` struct with reason."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 43} = event) do
     with {:ok, message_id} <- get_message_id(event),

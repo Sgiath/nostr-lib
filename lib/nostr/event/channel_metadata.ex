@@ -1,6 +1,6 @@
 defmodule Nostr.Event.ChannelMetadata do
   @moduledoc """
-  Channel creation
+  Channel metadata update
 
   Defined in NIP 28
   https://github.com/nostr-protocol/nips/blob/master/28.md
@@ -19,6 +19,7 @@ defmodule Nostr.Event.ChannelMetadata do
           other: map()
         }
 
+  @doc "Parses a kind 41 event into a `ChannelMetadata` struct with updated channel info."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 41} = event) do
     with {:ok, channel, relay} <- get_channel_info(event),

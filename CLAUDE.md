@@ -17,6 +17,21 @@ mix credo             # Run linter (strict mode, 98 char line limit)
 mix docs              # Generate documentation
 ```
 
+## Specification Reference
+
+The `nips/` directory contains the official Nostr Implementation Proposals (NIPs) as a git submodule. These markdown files are the authoritative specification this library implements. When implementing or modifying features, always consult the relevant NIP file:
+
+- `nips/01.md` - Basic protocol: events, signatures, tags, filters, relay messages
+- `nips/02.md` - Follow list (kind 3)
+- `nips/04.md` - Encrypted direct messages (kind 4)
+- `nips/09.md` - Event deletion (kind 5)
+- `nips/19.md` - Bech32 encoding (npub, nsec, note, nprofile, nevent, naddr)
+- `nips/25.md` - Reactions (kind 7)
+- `nips/28.md` - Public chat channels (kinds 40-44)
+- `nips/42.md` - Authentication (kind 22242)
+
+Use `nips/README.md` for the full index of all NIPs and their status.
+
 ## Architecture
 
 This is a low-level Elixir library implementing the Nostr protocol specification. It provides structures, parsing, serialization, and cryptographic functions for Nostr.

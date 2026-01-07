@@ -1,7 +1,7 @@
 defmodule Nostr.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.2.0"
 
   def project do
     [
@@ -11,6 +11,7 @@ defmodule Nostr.MixProject do
 
       # Elixir
       elixir: "~> 1.18",
+      elixirc_paths: elixirc_paths(Mix.env()),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :test,
@@ -40,6 +41,9 @@ defmodule Nostr.MixProject do
       preferred_envs: [precommit: :test]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
     [

@@ -15,6 +15,7 @@ defmodule Nostr.Event.Deletion do
           to_delete: [<<_::32, _::_*8>>]
         }
 
+  @doc "Parses a kind 5 event into a `Deletion` struct, extracting event IDs to delete."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 5} = event) do
     %__MODULE__{

@@ -36,6 +36,7 @@ defmodule Nostr.Event.FileMetadata do
           blur_hash: nil | binary()
         }
 
+  @doc "Parses a kind 1063 event into a `FileMetadata` struct with file information."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 1063} = event) do
     %__MODULE__{

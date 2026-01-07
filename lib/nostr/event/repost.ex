@@ -21,6 +21,7 @@ defmodule Nostr.Event.Repost do
           content: nil | Nostr.Event.t()
         }
 
+  @doc "Parses a kind 6 event into a `Repost` struct. Logs a deprecation warning."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 6} = event) do
     Logger.warning("Repost event is deprecated. Use NIP-27 instead")

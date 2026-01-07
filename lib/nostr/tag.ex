@@ -1,6 +1,16 @@
 defmodule Nostr.Tag do
   @moduledoc """
-  Nostr Event tag
+  Nostr Event tag.
+
+  Tags are metadata attached to events. Common tag types:
+  - `:e` - references another event (event ID)
+  - `:p` - references a pubkey (user mention)
+  - `:a` - references a parameterized replaceable event
+  - `:d` - identifier for parameterized replaceable events
+  - `:relay` - relay URL
+  - `:challenge` - authentication challenge
+
+  The wire format is a JSON array: `["type", "data", ...additional_info]`
   """
 
   @enforce_keys [:type, :data]
@@ -13,7 +23,10 @@ defmodule Nostr.Tag do
         }
 
   @doc """
-  Parse JSON list into Elixir struct
+  Parses a JSON tag array `["type", "data", ...info]` into a `Tag` struct.
+
+  The first element becomes the type (converted to atom), second is data,
+  and any remaining elements go into the info list.
   """
   @spec parse(tag :: nonempty_maybe_improper_list()) :: t()
   def parse([type, data | info]) do

@@ -1,6 +1,6 @@
 defmodule Nostr.Event.ChannelMessage do
   @moduledoc """
-  Channel creation
+  Channel message
 
   Defined in NIP 28
   https://github.com/nostr-protocol/nips/blob/master/28.md
@@ -18,6 +18,7 @@ defmodule Nostr.Event.ChannelMessage do
           relay: URI.t()
         }
 
+  @doc "Parses a kind 42 event into a `ChannelMessage` struct."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 42} = event) do
     with {:ok, channel, relay, type} <- get_channel_info(event),

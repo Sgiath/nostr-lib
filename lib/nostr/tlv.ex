@@ -3,14 +3,6 @@ defmodule Nostr.TLV do
   Provides functions to decode, encode and work with ASN.1 BER-TLV structures. It supports tags
   encoded on multiple bytes, length encoded on multiple bytes, indefinite length and both
   primitive and constructed TLVs.
-
-  ## Example:
-
-      iex> data = "nprofile1qqsrhuxx8l9ex335q7he0f09aej04zpazpl0ne2cgukyawd24mayt8gpp4mhxue69uhhytnc9e3k7mgpz4mhxue69uhkg6nzv9ejuumpv34kytnrdaksjlyr9p"
-      iex> bytes = Nostr.Bech32.nprofile_to_bytes(data)
-      iex> Nostr.TLV.decode(bytes)
-      {}
-
   """
 
   @typedoc """

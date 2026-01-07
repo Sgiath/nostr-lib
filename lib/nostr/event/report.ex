@@ -23,6 +23,7 @@ defmodule Nostr.Event.Report do
           description: nil | String.t()
         }
 
+  @doc "Parses a kind 1984 event into a `Report` struct. Logs a warning (report events should be ignored)."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 1984} = event) do
     Logger.warning("Report events should be ignored")

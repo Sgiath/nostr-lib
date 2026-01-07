@@ -17,6 +17,7 @@ defmodule Nostr.Event.Reaction do
           reaction: String.t()
         }
 
+  @doc "Parses a kind 7 event into a `Reaction` struct, extracting the reacted post and author."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 7} = event) do
     with {:ok, author} <- get_author(event),

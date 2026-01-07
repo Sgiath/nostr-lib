@@ -18,6 +18,7 @@ defmodule Nostr.Event.ChannelCreation do
           other: map()
         }
 
+  @doc "Parses a kind 40 event into a `ChannelCreation` struct with channel metadata."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 40} = event) do
     case JSON.decode(event.content) do

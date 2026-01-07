@@ -15,6 +15,7 @@ defmodule Nostr.Event.ListMute do
           private_mute: :not_loaded | [<<_::32, _::_*8>>]
         }
 
+  @doc "Parses a kind 10000 event into a `ListMute` struct. Private list remains encrypted."
   @spec parse(event :: Nostr.Event.t()) :: t()
   def parse(%Nostr.Event{kind: 10_000} = event) do
     %__MODULE__{
@@ -24,6 +25,11 @@ defmodule Nostr.Event.ListMute do
     }
   end
 
+  @doc """
+  Decrypts the private mute list using your secret key.
+
+  The secret key must match the event's pubkey (you can only decrypt your own mute list).
+  """
   @spec decrypt_private_list(event :: t(), seckey :: <<_::32, _::_*8>>) :: t()
   def decrypt_private_list(
         %__MODULE__{event: %Nostr.Event{pubkey: pubkey, content: content}} = event,
@@ -45,19 +51,20 @@ defmodule Nostr.Event.ListMute do
   end
 
   @doc """
-  Create new Note Nostr event
+  Creates a new mute list event (kind 10000).
 
-  ## Arguments:
+  ## Arguments
 
-    - `note` textual note used as content
-    - `opts` other optional event arguments (`pubkey`, `created_at`, `tags`)
+    - `public_keys` - list of pubkeys to mute publicly
+    - `opts` - optional event arguments (`pubkey`, `created_at`, `content` for encrypted private list)
 
   """
-  @spec create(note :: String.t(), opts :: Keyword.t()) :: t()
-  def create(note, opts \\ []) do
-    opts = Keyword.put(opts, :content, note)
+  @spec create(public_keys :: [binary()], opts :: Keyword.t()) :: t()
+  def create(public_keys, opts \\ []) do
+    tags = Enum.map(public_keys, &Nostr.Tag.create(:p, &1))
+    opts = Keyword.put(opts, :tags, tags)
 
-    1
+    10_000
     |> Nostr.Event.create(opts)
     |> parse()
   end

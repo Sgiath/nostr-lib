@@ -15,8 +15,9 @@ defmodule Nostr.Event.BadgeAward do
           awardees: [<<_::32, _::_*8>>]
         }
 
+  @doc "Parses a kind 8 event into a `BadgeAward` struct, extracting badge and awardees."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
-  def parse(%Nostr.Event{kind: 1} = event) do
+  def parse(%Nostr.Event{kind: 8} = event) do
     %__MODULE__{
       event: event,
       badge: get_badge(event),

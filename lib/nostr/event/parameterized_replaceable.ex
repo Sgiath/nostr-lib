@@ -15,6 +15,7 @@ defmodule Nostr.Event.ParameterizedReplaceable do
           d: String.t()
         }
 
+  @doc "Parses a kind 30000-39999 event into a `ParameterizedReplaceable` struct (keyed by pubkey+kind+d tag)."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: kind} = event) when kind >= 30_000 and kind < 40_000 do
     %__MODULE__{

@@ -21,6 +21,7 @@ defmodule Nostr.Event.Contacts do
           contacts: [contact()]
         }
 
+  @doc "Parses a kind 3 event into a `Contacts` struct, extracting the contact list."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 3} = event) do
     %__MODULE__{

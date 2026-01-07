@@ -14,6 +14,7 @@ defmodule Nostr.Event.Replaceable do
           user: <<_::32, _::_*8>>
         }
 
+  @doc "Parses a kind 10000-19999 event into a `Replaceable` struct (newer replaces older per pubkey+kind)."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: kind} = event) when kind >= 10_000 and kind < 20_000 do
     %__MODULE__{event: event, user: event.pubkey}

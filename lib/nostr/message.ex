@@ -9,12 +9,14 @@ defmodule Nostr.Message do
   @type t() ::
           {:event, Nostr.Event.t()}
           | {:event, binary(), Nostr.Event.t()}
-          | {:req, binary(), Nostr.Filter.t()}
+          | {:req, binary(), [Nostr.Filter.t()]}
           | {:close, binary()}
           | {:eose, binary()}
           | {:notice, String.t()}
           | {:ok, binary(), boolean(), String.t()}
           | {:auth, Nostr.Event.t() | binary()}
+          | {:count, String.t(), Nostr.Filter.t() | [Nostr.Filter.t()] | %{count: integer()}}
+          | {:closed, String.t(), String.t()}
 
   @doc """
   Generate post new event message
@@ -29,8 +31,9 @@ defmodule Nostr.Message do
   """
   @doc sender: :client
   @spec request(Nostr.Filter.t() | [Nostr.Filter.t()], binary()) ::
-          {:req, binary(), Nostr.Filter.t() | [Nostr.Filter.t()]}
-  def request(filters, sub_id), do: {:req, sub_id, filters}
+          {:req, binary(), [Nostr.Filter.t()]}
+  def request(%Nostr.Filter{} = filter, sub_id), do: {:req, sub_id, [filter]}
+  def request(filters, sub_id) when is_list(filters), do: {:req, sub_id, filters}
 
   @doc """
   Generate close message
@@ -39,6 +42,11 @@ defmodule Nostr.Message do
   @spec close(binary()) :: {:close, binary()}
   def close(sub_id), do: {:close, sub_id}
 
+  @doc """
+  Generate count message (NIP-45).
+
+  Can be used to request counts from relay (with filters) or respond with counts (with integer).
+  """
   @spec count(pos_integer() | Nostr.Filter.t() | [Nostr.Filter.t()], binary()) ::
           {:count, binary(), %{count: pos_integer()} | Nostr.Filter.t() | [Nostr.Filter.t()]}
   def count(count, sub_id) when is_integer(count), do: {:count, sub_id, %{count: count}}
@@ -76,6 +84,13 @@ defmodule Nostr.Message do
   def ok(event_id, success?, message), do: {:ok, event_id, success?, message}
 
   @doc """
+  Generate CLOSED message (NIP-01)
+  """
+  @doc sender: :relay
+  @spec closed(String.t(), String.t()) :: {:closed, String.t(), String.t()}
+  def closed(sub_id, message), do: {:closed, sub_id, message}
+
+  @doc """
   Generate auth message
   """
   @doc sender: :relay
@@ -108,6 +123,7 @@ defmodule Nostr.Message do
   Parse binary message to Elixir tuple, if message contains event it will be returned as specific
   `Nostr.Event.t()` struct dependent of type of Event
   """
+  @spec parse_specific(String.t()) :: t() | struct()
   def parse_specific(msg) when is_binary(msg),
     do: msg |> JSON.decode!() |> do_parse(:specific)
 
@@ -120,8 +136,10 @@ defmodule Nostr.Message do
     {:event, Nostr.Event.parse_specific(event)}
   end
 
-  defp do_parse(["REQ", sub_id, filter], _type) when is_binary(sub_id) and is_map(filter) do
-    {:req, sub_id, Nostr.Filter.parse(filter)}
+  defp do_parse(["REQ", sub_id | filters], _type)
+       when is_binary(sub_id) and length(filters) > 0 do
+    parsed = Enum.map(filters, &Nostr.Filter.parse/1)
+    {:req, sub_id, parsed}
   end
 
   defp do_parse(["CLOSE", sub_id], _type) when is_binary(sub_id) do
@@ -160,6 +178,11 @@ defmodule Nostr.Message do
 
   defp do_parse(["CLOSED", sub_id, message], _type) when is_binary(sub_id) do
     {:closed, sub_id, message}
+  end
+
+  defp do_parse(["COUNT", sub_id, %{"count" => count}], _type)
+       when is_binary(sub_id) and is_integer(count) do
+    {:count, sub_id, %{count: count}}
   end
 
   defp do_parse(message, _type) do

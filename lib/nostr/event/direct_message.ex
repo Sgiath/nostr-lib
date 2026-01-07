@@ -2,10 +2,14 @@ defmodule Nostr.Event.DirectMessage do
   @moduledoc """
   Direct encrypted message
 
+  DEPRECATED in favor of NIP-17 (Private Direct Messages)
+
   Defined in NIP 04
   https://github.com/nostr-protocol/nips/blob/master/04.md
   """
-  @moduledoc tags: [:event, :nip04], nip: 04
+  @moduledoc tags: [:event, :nip04], nip: 04, deprecated: "NIP-17"
+
+  require Logger
 
   defstruct [:event, :from, :to, :cipher_text, :plain_text]
 
@@ -17,8 +21,11 @@ defmodule Nostr.Event.DirectMessage do
           plain_text: :not_decrypted | String.t()
         }
 
+  @doc "Parses a kind 4 event into a `DirectMessage` struct. Message remains encrypted. Logs a deprecation warning."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 4} = event) do
+    Logger.warning("DirectMessage event (kind 4, NIP-04) is deprecated. Use NIP-17 instead")
+
     %__MODULE__{
       event: event,
       from: event.pubkey,
@@ -30,6 +37,16 @@ defmodule Nostr.Event.DirectMessage do
 
   defp parse_to(%Nostr.Event{tags: [%Nostr.Tag{type: :p, data: to} | _rest]}), do: to
 
+  @doc """
+  Decrypts the message content using the provided secret key.
+
+  Works whether you're the sender or recipient - automatically determines
+  which pubkey to use for ECDH shared secret derivation.
+
+  Returns the message with `plain_text` populated, or `:not_decrypted` if
+  the secret key doesn't match sender or recipient.
+  """
+  @spec decrypt(t(), binary()) :: t()
   def decrypt(%__MODULE__{} = msg, seckey) do
     case Nostr.Crypto.pubkey(seckey) do
       p when p == msg.from ->

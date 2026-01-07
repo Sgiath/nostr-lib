@@ -15,6 +15,7 @@ defmodule Nostr.Event.ClientAuth do
           relay: URI.t()
         }
 
+  @doc "Parses a kind 22242 event into a `ClientAuth` struct with relay and challenge."
   @spec parse(event :: Nostr.Event.t()) :: __MODULE__.t()
   def parse(%Nostr.Event{kind: 22_242} = event) do
     %__MODULE__{
