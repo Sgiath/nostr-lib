@@ -6,6 +6,7 @@
 - update dependencies [@jurraca](https://github.com/jurraca)
 - change bech32 library [@jurraca](https://github.com/jurraca)
 - add unit tests and improve documentation
+- add NIP-44 implementation
 
 ## v0.1.0 (2023-06-07)
 
