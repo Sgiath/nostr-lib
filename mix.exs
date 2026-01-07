@@ -36,7 +36,7 @@ defmodule Nostr.MixProject do
 
   defp deps do
     [
-      {:lib_secp256k1, "~> 0.5"},
+      {:lib_secp256k1, "~> 0.7.0"},
       {:ex_bech32, "< 0.6.0"},
 
       # Development
