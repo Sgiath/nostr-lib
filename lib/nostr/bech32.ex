@@ -25,9 +25,11 @@ defmodule Nostr.Bech32 do
   def decode(data) do
     case Bechamel.decode(data) do
       {:ok, _hrp, bin} ->
-         hex_bin = Base.encode16(bin, case: :lower)
-         {:ok, hex_bin}
-      {:error, reason} -> {:error, reason}
+        hex_bin = Base.encode16(bin, case: :lower)
+        {:ok, hex_bin}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 

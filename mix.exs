@@ -14,6 +14,7 @@ defmodule Nostr.MixProject do
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :test,
+      aliases: aliases(),
       deps: deps(),
 
       # Documentation
@@ -34,6 +35,12 @@ defmodule Nostr.MixProject do
     ]
   end
 
+  def cli do
+    [
+      preferred_envs: [precommit: :test]
+    ]
+  end
+
   defp deps do
     [
       {:lib_secp256k1, "~> 0.7"},
@@ -42,9 +49,15 @@ defmodule Nostr.MixProject do
       # Development
       {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.36", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.39", only: :dev, runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
-      {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false}
+      {:mix_test_watch, "~> 1.4", only: [:dev], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 

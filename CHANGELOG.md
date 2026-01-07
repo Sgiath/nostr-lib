@@ -3,6 +3,8 @@
 ## unreleased
 
 - minimal version of Elixir is 1.18 (due to JSON module usage)
+- update dependencies [@jurraca](https://github.com/jurraca)
+- change bech32 library [@jurraca](https://github.com/jurraca)
 
 ## v0.1.0 (2023-06-07)
 

@@ -29,7 +29,7 @@ defmodule Nostr.Event.ListMute do
         %__MODULE__{event: %Nostr.Event{pubkey: pubkey, content: content}} = event,
         seckey
       ) do
-    unless pubkey == Nostr.Crypto.pubkey(seckey) do
+    if pubkey != Nostr.Crypto.pubkey(seckey) do
       raise "seckey doesn't match the event pubkey"
     end
 

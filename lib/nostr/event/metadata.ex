@@ -28,7 +28,7 @@ defmodule Nostr.Event.Metadata do
       {:ok, content} ->
         %__MODULE__{
           event: event,
-          user: event["pubkey"],
+          user: event.pubkey,
           name: Map.get(content, "name"),
           about: Map.get(content, "about"),
           picture: Map.get(content, "picture") |> URI.parse(),

@@ -125,11 +125,11 @@ defmodule Nostr.Event do
   end
 
   def sign(%__MODULE__{id: id, pubkey: pubkey} = event, seckey) do
-    unless id == compute_id(event) do
+    if id != compute_id(event) do
       raise "Event ID isn't correct"
     end
 
-    unless pubkey == Nostr.Crypto.pubkey(seckey) do
+    if pubkey != Nostr.Crypto.pubkey(seckey) do
       raise "Event pubkey doesn't match the seckey"
     end
 
