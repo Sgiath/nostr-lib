@@ -12,6 +12,7 @@
 - add NIP-57 (lightning zaps) with BOLT-11 invoice parsing
 - add NIP-51 (lists) with comprehensive event types (bookmarks, follow sets, relay sets, etc.)
 - add NIP-65 (relay list metadata)
+- add NIP-23 (long-form content/articles)
 
 ## v0.1.0 (2023-06-07)
 
