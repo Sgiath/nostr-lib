@@ -99,6 +99,7 @@ filter = %Nostr.Filter{
 | [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7, 17 |
 | [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
 | [NIP-32](https://github.com/nostr-protocol/nips/blob/master/32.md) | Full | Labeling | 1985 |
+| [NIP-37](https://github.com/nostr-protocol/nips/blob/master/37.md) | Full | Draft events | 31234 |
 | [NIP-38](https://github.com/nostr-protocol/nips/blob/master/38.md) | Full | User statuses | 30315 |
 | [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full | Relay authentication | 22242 |
 | [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
