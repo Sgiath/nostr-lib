@@ -19,6 +19,7 @@
 - add NIP-03 (OpenTimestamps attestations)
 - add NIP-37 (draft events)
 - add NIP-25 external reaction (kind 17)
+- add NIP-52 (calendar events)
 
 ## v0.1.0 (2023-06-07)
 

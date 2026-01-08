@@ -105,6 +105,7 @@ filter = %Nostr.Filter{
 | [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
 | [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial | Event counting | - |
 | [NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md) | Full | Lists | 10001-10030, 30000-30030 |
+| [NIP-52](https://github.com/nostr-protocol/nips/blob/master/52.md) | Full | Calendar | 31924 |
 | [NIP-56](https://github.com/nostr-protocol/nips/blob/master/56.md) | Full | Reporting | 1984 |
 | [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) | Full | Lightning zaps | 9734, 9735 |
 | [NIP-58](https://github.com/nostr-protocol/nips/blob/master/58.md) | Full | Badges | 8 |
