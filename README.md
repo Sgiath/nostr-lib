@@ -14,6 +14,7 @@ applications.
 - Schnorr signature support (secp256k1)
 - NIP-44 encryption (versioned encrypted payloads)
 - NIP-19 bech32 encoding (npub, nsec, note, nprofile, nevent, naddr)
+- NIP-59 gift wrap protocol for private messaging
 - WebSocket message protocol handling
 - Subscription filter building
 
@@ -88,6 +89,7 @@ filter = %Nostr.Filter{
 | [NIP-04](https://github.com/nostr-protocol/nips/blob/master/04.md) | Deprecated | Encrypted DMs (use NIP-17) | 4 |
 | [NIP-09](https://github.com/nostr-protocol/nips/blob/master/09.md) | Full | Event deletion | 5 |
 | [NIP-16](https://github.com/nostr-protocol/nips/blob/master/16.md) | Full | Event kind ranges | 1000-39999 |
+| [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md) | Full | Private direct messages | 14, 15, 10050 |
 | [NIP-18](https://github.com/nostr-protocol/nips/blob/master/18.md) | Deprecated | Reposts | 6 |
 | [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7 |
 | [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
@@ -96,6 +98,7 @@ filter = %Nostr.Filter{
 | [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial | Event counting | - |
 | [NIP-56](https://github.com/nostr-protocol/nips/blob/master/56.md) | Full | Reporting | 1984 |
 | [NIP-58](https://github.com/nostr-protocol/nips/blob/master/58.md) | Full | Badges | 8 |
+| [NIP-59](https://github.com/nostr-protocol/nips/blob/master/59.md) | Full | Gift wrap | 13, 1059 |
 | [NIP-94](https://github.com/nostr-protocol/nips/blob/master/94.md) | Full | File metadata | 1063 |
 
 ## Core Modules
@@ -108,6 +111,7 @@ filter = %Nostr.Filter{
 | `Nostr.Filter` | Subscription filter building |
 | `Nostr.Bech32` | NIP-19 bech32 encoding/decoding |
 | `Nostr.NIP44` | Versioned encrypted payloads |
+| `Nostr.NIP17` | Private message convenience functions |
 
 ## Event Types
 
@@ -123,9 +127,14 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 6 | `Repost` | Reposts (deprecated) |
 | 7 | `Reaction` | Reactions to events |
 | 8 | `BadgeAward` | Badge awards |
+| 13 | `Seal` | Sealed/encrypted events |
+| 14 | `PrivateMessage` | Private chat messages |
+| 15 | `FileMessage` | Encrypted file messages |
 | 40-44 | `Channel*` | Public chat channels |
+| 1059 | `GiftWrap` | Gift wrapped events |
 | 1063 | `FileMetadata` | File metadata |
 | 1984 | `Report` | Content reports |
+| 10050 | `DMRelayList` | DM relay preferences |
 | 22242 | `ClientAuth` | Client authentication |
 
 ## Related Packages

@@ -7,6 +7,7 @@
 - change bech32 library [@jurraca](https://github.com/jurraca)
 - add unit tests and improve documentation
 - improve NIP-44 implementation
+- add NIP-59 (gift wrap) and NIP-17 (private direct messages) implementation
 
 ## v0.1.0 (2023-06-07)
 
