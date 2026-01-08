@@ -86,6 +86,7 @@ filter = %Nostr.Filter{
 |-----|--------|-------------|-------------|
 | [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md) | Full | Basic protocol | 0, 1 |
 | [NIP-02](https://github.com/nostr-protocol/nips/blob/master/02.md) | Full | Follow list | 3 |
+| [NIP-03](https://github.com/nostr-protocol/nips/blob/master/03.md) | Full | OpenTimestamps | 1040 |
 | [NIP-04](https://github.com/nostr-protocol/nips/blob/master/04.md) | Deprecated | Encrypted DMs (use NIP-17) | 4 |
 | [NIP-09](https://github.com/nostr-protocol/nips/blob/master/09.md) | Full | Event deletion | 5 |
 | [NIP-16](https://github.com/nostr-protocol/nips/blob/master/16.md) | Full | Event kind ranges | 1000-39999 |
@@ -140,6 +141,7 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 14 | `PrivateMessage` | Private chat messages |
 | 15 | `FileMessage` | Encrypted file messages |
 | 40-44 | `Channel*` | Public chat channels |
+| 1040 | `OpenTimestamps` | Timestamp attestations |
 | 1059 | `GiftWrap` | Gift wrapped events |
 | 1063 | `FileMetadata` | File metadata |
 | 1111 | `Comment` | Threaded comments |

@@ -16,6 +16,7 @@
 - add NIP-22 (comments)
 - add NIP-32 (labeling)
 - add NIP-38 (user statuses)
+- add NIP-03 (OpenTimestamps attestations)
 
 ## v0.1.0 (2023-06-07)
 
