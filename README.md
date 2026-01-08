@@ -99,6 +99,7 @@ filter = %Nostr.Filter{
 | [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
 | [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial | Event counting | - |
 | [NIP-56](https://github.com/nostr-protocol/nips/blob/master/56.md) | Full | Reporting | 1984 |
+| [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) | Full | Lightning zaps | 9734, 9735 |
 | [NIP-58](https://github.com/nostr-protocol/nips/blob/master/58.md) | Full | Badges | 8 |
 | [NIP-59](https://github.com/nostr-protocol/nips/blob/master/59.md) | Full | Gift wrap | 13, 1059 |
 | [NIP-94](https://github.com/nostr-protocol/nips/blob/master/94.md) | Full | File metadata | 1063 |
@@ -136,6 +137,8 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 1059 | `GiftWrap` | Gift wrapped events |
 | 1063 | `FileMetadata` | File metadata |
 | 1984 | `Report` | Content reports |
+| 9734 | `ZapRequest` | Lightning zap requests |
+| 9735 | `ZapReceipt` | Lightning zap receipts |
 | 10050 | `DMRelayList` | DM relay preferences |
 | 22242 | `ClientAuth` | Client authentication |
 
