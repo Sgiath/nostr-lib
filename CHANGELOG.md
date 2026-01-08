@@ -15,6 +15,7 @@
 - add NIP-23 (long-form content/articles)
 - add NIP-22 (comments)
 - add NIP-32 (labeling)
+- add NIP-38 (user statuses)
 
 ## v0.1.0 (2023-06-07)
 
