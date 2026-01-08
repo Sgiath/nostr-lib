@@ -103,6 +103,7 @@ filter = %Nostr.Filter{
 | [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) | Full | Lightning zaps | 9734, 9735 |
 | [NIP-58](https://github.com/nostr-protocol/nips/blob/master/58.md) | Full | Badges | 8 |
 | [NIP-59](https://github.com/nostr-protocol/nips/blob/master/59.md) | Full | Gift wrap | 13, 1059 |
+| [NIP-65](https://github.com/nostr-protocol/nips/blob/master/65.md) | Full | Relay list metadata | 10002 |
 | [NIP-94](https://github.com/nostr-protocol/nips/blob/master/94.md) | Full | File metadata | 1063 |
 
 ## Core Modules
@@ -140,6 +141,7 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 1984 | `Report` | Content reports |
 | 9734 | `ZapRequest` | Lightning zap requests |
 | 9735 | `ZapReceipt` | Lightning zap receipts |
+| 10002 | `RelayList` | Relay list metadata |
 | 10050 | `DMRelayList` | DM relay preferences |
 | 22242 | `ClientAuth` | Client authentication |
 

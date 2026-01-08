@@ -11,6 +11,7 @@
 - add NIP-19 (shareable identifiers with TLV) and NIP-21 (nostr: URI scheme)
 - add NIP-57 (lightning zaps) with BOLT-11 invoice parsing
 - add NIP-51 (lists) with comprehensive event types (bookmarks, follow sets, relay sets, etc.)
+- add NIP-65 (relay list metadata)
 
 ## v0.1.0 (2023-06-07)
 
