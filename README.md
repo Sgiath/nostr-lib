@@ -141,6 +141,7 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 13 | `Seal` | Sealed/encrypted events |
 | 14 | `PrivateMessage` | Private chat messages |
 | 15 | `FileMessage` | Encrypted file messages |
+| 17 | `ExternalReaction` | Reactions to external content |
 | 40-44 | `Channel*` | Public chat channels |
 | 1040 | `OpenTimestamps` | Timestamp attestations |
 | 1059 | `GiftWrap` | Gift wrapped events |
