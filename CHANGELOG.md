@@ -13,6 +13,7 @@
 - add NIP-51 (lists) with comprehensive event types (bookmarks, follow sets, relay sets, etc.)
 - add NIP-65 (relay list metadata)
 - add NIP-23 (long-form content/articles)
+- add NIP-22 (comments)
 
 ## v0.1.0 (2023-06-07)
 

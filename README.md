@@ -93,8 +93,9 @@ filter = %Nostr.Filter{
 | [NIP-18](https://github.com/nostr-protocol/nips/blob/master/18.md) | Deprecated | Reposts | 6 |
 | [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) | Full | Bech32 encoding | - |
 | [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md) | Full | nostr: URI scheme | - |
+| [NIP-22](https://github.com/nostr-protocol/nips/blob/master/22.md) | Full | Comments | 1111 |
 | [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) | Full | Long-form content | 30023, 30024 |
-| [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7 |
+| [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7, 17 |
 | [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
 | [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full | Relay authentication | 22242 |
 | [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
@@ -139,6 +140,7 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 40-44 | `Channel*` | Public chat channels |
 | 1059 | `GiftWrap` | Gift wrapped events |
 | 1063 | `FileMetadata` | File metadata |
+| 1111 | `Comment` | Threaded comments |
 | 1984 | `Report` | Content reports |
 | 9734 | `ZapRequest` | Lightning zap requests |
 | 9735 | `ZapReceipt` | Lightning zap receipts |
