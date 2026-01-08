@@ -97,6 +97,7 @@ filter = %Nostr.Filter{
 | [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) | Full | Long-form content | 30023, 30024 |
 | [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7, 17 |
 | [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
+| [NIP-32](https://github.com/nostr-protocol/nips/blob/master/32.md) | Full | Labeling | 1985 |
 | [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full | Relay authentication | 22242 |
 | [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
 | [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial | Event counting | - |
@@ -142,6 +143,7 @@ Each event kind has a dedicated module in `Nostr.Event.*`:
 | 1063 | `FileMetadata` | File metadata |
 | 1111 | `Comment` | Threaded comments |
 | 1984 | `Report` | Content reports |
+| 1985 | `Label` | Content labels |
 | 9734 | `ZapRequest` | Lightning zap requests |
 | 9735 | `ZapReceipt` | Lightning zap receipts |
 | 10002 | `RelayList` | Relay list metadata |

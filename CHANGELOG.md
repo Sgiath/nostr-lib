@@ -14,6 +14,7 @@
 - add NIP-65 (relay list metadata)
 - add NIP-23 (long-form content/articles)
 - add NIP-22 (comments)
+- add NIP-32 (labeling)
 
 ## v0.1.0 (2023-06-07)
 
