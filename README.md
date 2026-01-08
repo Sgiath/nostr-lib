@@ -91,6 +91,8 @@ filter = %Nostr.Filter{
 | [NIP-16](https://github.com/nostr-protocol/nips/blob/master/16.md) | Full | Event kind ranges | 1000-39999 |
 | [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md) | Full | Private direct messages | 14, 15, 10050 |
 | [NIP-18](https://github.com/nostr-protocol/nips/blob/master/18.md) | Deprecated | Reposts | 6 |
+| [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) | Full | Bech32 encoding | - |
+| [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md) | Full | nostr: URI scheme | - |
 | [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7 |
 | [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
 | [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full | Relay authentication | 22242 |

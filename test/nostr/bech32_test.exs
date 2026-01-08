@@ -39,7 +39,7 @@ defmodule Nostr.Bech32Test do
     end
 
     test "roundtrip encode/decode preserves data" do
-      for prefix <- ["npub", "nsec", "note", "nprofile"] do
+      for prefix <- ["npub", "nsec", "note"] do
         {:ok, encoded} = Nostr.Bech32.encode(prefix, Fixtures.pubkey())
         {:ok, decoded} = Nostr.Bech32.decode(encoded)
         assert decoded == Fixtures.pubkey()
@@ -81,13 +81,6 @@ defmodule Nostr.Bech32Test do
       event_id = "0000000000000000000000000000000000000000000000000000000000000001"
       {:ok, note} = Nostr.Bech32.hex_to_note(event_id)
       assert String.starts_with?(note, "note1")
-    end
-  end
-
-  describe "hex_to_nprofile/1" do
-    test "encodes profile id to nprofile" do
-      {:ok, nprofile} = Nostr.Bech32.hex_to_nprofile(Fixtures.pubkey())
-      assert String.starts_with?(nprofile, "nprofile1")
     end
   end
 
@@ -136,22 +129,6 @@ defmodule Nostr.Bech32Test do
 
       assert_raise FunctionClauseError, fn ->
         Nostr.Bech32.note_to_hex(npub)
-      end
-    end
-  end
-
-  describe "nprofile_to_hex/1" do
-    test "decodes nprofile to hex" do
-      {:ok, nprofile} = Nostr.Bech32.hex_to_nprofile(Fixtures.pubkey())
-      {:ok, hex} = Nostr.Bech32.nprofile_to_hex(nprofile)
-      assert hex == Fixtures.pubkey()
-    end
-
-    test "only accepts nprofile prefix" do
-      {:ok, npub} = Nostr.Bech32.hex_to_npub(Fixtures.pubkey())
-
-      assert_raise FunctionClauseError, fn ->
-        Nostr.Bech32.nprofile_to_hex(npub)
       end
     end
   end
