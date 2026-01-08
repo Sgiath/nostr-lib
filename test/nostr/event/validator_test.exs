@@ -61,8 +61,10 @@ defmodule Nostr.Event.ValidatorTest do
 
     test "returns false for invalid signature" do
       event = Fixtures.signed_event()
-      # Flip a character in the signature
-      bad_sig = String.slice(event.sig, 0..-2//1) <> "0"
+      # Flip the last character in the signature (use different char than original)
+      last_char = String.last(event.sig)
+      new_char = if last_char == "0", do: "1", else: "0"
+      bad_sig = String.slice(event.sig, 0..-2//1) <> new_char
       tampered = %{event | sig: bad_sig}
       refute Validator.valid?(tampered)
     end

@@ -22,6 +22,7 @@
 - add NIP-52 (calendar events)
 - add NIP-05 (DNS identifiers), NIP-30 (custom emoji), NIP-36 (sensitive content), NIP-39 (external identities), NIP-49 (private key encryption)
 - refactor: improve existing event type implementations
+- refactor: update event parser to handle all new event kinds
 
 ## v0.1.0 (2023-06-07)
 
