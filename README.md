@@ -88,6 +88,7 @@ filter = %Nostr.Filter{
 | [NIP-02](https://github.com/nostr-protocol/nips/blob/master/02.md) | Full | Follow list | 3 |
 | [NIP-03](https://github.com/nostr-protocol/nips/blob/master/03.md) | Full | OpenTimestamps | 1040 |
 | [NIP-04](https://github.com/nostr-protocol/nips/blob/master/04.md) | Deprecated | Encrypted DMs (use NIP-17) | 4 |
+| [NIP-05](https://github.com/nostr-protocol/nips/blob/master/05.md) | Full | DNS-based identifiers | - |
 | [NIP-09](https://github.com/nostr-protocol/nips/blob/master/09.md) | Full | Event deletion | 5 |
 | [NIP-16](https://github.com/nostr-protocol/nips/blob/master/16.md) | Full | Event kind ranges | 1000-39999 |
 | [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md) | Full | Private direct messages | 14, 15, 10050 |
@@ -98,12 +99,16 @@ filter = %Nostr.Filter{
 | [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) | Full | Long-form content | 30023, 30024 |
 | [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7, 17 |
 | [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
+| [NIP-30](https://github.com/nostr-protocol/nips/blob/master/30.md) | Full | Custom emoji | - |
 | [NIP-32](https://github.com/nostr-protocol/nips/blob/master/32.md) | Full | Labeling | 1985 |
+| [NIP-36](https://github.com/nostr-protocol/nips/blob/master/36.md) | Full | Sensitive content | - |
 | [NIP-37](https://github.com/nostr-protocol/nips/blob/master/37.md) | Full | Draft events | 31234 |
 | [NIP-38](https://github.com/nostr-protocol/nips/blob/master/38.md) | Full | User statuses | 30315 |
+| [NIP-39](https://github.com/nostr-protocol/nips/blob/master/39.md) | Full | External identities | - |
 | [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full | Relay authentication | 22242 |
 | [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
 | [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial | Event counting | - |
+| [NIP-49](https://github.com/nostr-protocol/nips/blob/master/49.md) | Full | Private key encryption | - |
 | [NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md) | Full | Lists | 10001-10030, 30000-30030 |
 | [NIP-52](https://github.com/nostr-protocol/nips/blob/master/52.md) | Full | Calendar | 31924 |
 | [NIP-56](https://github.com/nostr-protocol/nips/blob/master/56.md) | Full | Reporting | 1984 |
@@ -124,6 +129,7 @@ filter = %Nostr.Filter{
 | `Nostr.Bech32` | NIP-19 bech32 encoding/decoding |
 | `Nostr.NIP44` | Versioned encrypted payloads |
 | `Nostr.NIP17` | Private message convenience functions |
+| `Nostr.NIP05` | DNS-based identifier verification |
 
 ## Event Types
 

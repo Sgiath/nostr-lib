@@ -20,6 +20,7 @@
 - add NIP-37 (draft events)
 - add NIP-25 external reaction (kind 17)
 - add NIP-52 (calendar events)
+- add NIP-05 (DNS identifiers), NIP-30 (custom emoji), NIP-36 (sensitive content), NIP-39 (external identities), NIP-49 (private key encryption)
 
 ## v0.1.0 (2023-06-07)
 
