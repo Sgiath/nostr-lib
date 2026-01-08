@@ -82,11 +82,12 @@ defmodule Nostr.FilterTest do
       }
 
       filter = Nostr.Filter.parse(raw)
+
       assert filter.tags == %{
-        "#t" => ["nostr", "bitcoin"],
-        "#g" => ["u4pruydqqvj"],
-        "#r" => ["https://example.com"]
-      }
+               "#t" => ["nostr", "bitcoin"],
+               "#g" => ["u4pruydqqvj"],
+               "#r" => ["https://example.com"]
+             }
     end
 
     test "parses filter with mixed known and arbitrary tags" do

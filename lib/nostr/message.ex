@@ -91,9 +91,10 @@ defmodule Nostr.Message do
   def closed(sub_id, message), do: {:closed, sub_id, message}
 
   @doc """
-  Generate auth message
+  Generate AUTH message (NIP-42).
+
+  Can be used by relay (with challenge string) or by client (with signed event).
   """
-  @doc sender: :relay
   @spec auth(Nostr.Event.t() | %{event: Nostr.Event.t()} | binary()) ::
           {:auth, Nostr.Event.t() | binary()}
   def auth(%{event: %Nostr.Event{} = event}), do: {:auth, event}
@@ -137,7 +138,7 @@ defmodule Nostr.Message do
   end
 
   defp do_parse(["REQ", sub_id | filters], _type)
-       when is_binary(sub_id) and length(filters) > 0 do
+       when is_binary(sub_id) and filters != [] do
     parsed = Enum.map(filters, &Nostr.Filter.parse/1)
     {:req, sub_id, parsed}
   end
@@ -146,8 +147,12 @@ defmodule Nostr.Message do
     {:close, sub_id}
   end
 
-  defp do_parse(["AUTH", event], _type) when is_map(event) do
+  defp do_parse(["AUTH", event], :general) when is_map(event) do
     {:auth, Nostr.Event.parse(event)}
+  end
+
+  defp do_parse(["AUTH", event], :specific) when is_map(event) do
+    {:auth, Nostr.Event.parse_specific(event)}
   end
 
   # Relay to client

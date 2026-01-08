@@ -260,6 +260,21 @@ defmodule Nostr.MessageTest do
       assert challenge == "challenge_string"
     end
 
+    test "parses AUTH event message from client" do
+      tags = [
+        Nostr.Tag.create(:relay, "wss://relay.example.com"),
+        Nostr.Tag.create(:challenge, "test_challenge")
+      ]
+
+      event = Fixtures.signed_event(kind: 22_242, tags: tags)
+      json = ~s(["AUTH",#{JSON.encode!(event)}])
+
+      {:auth, parsed} = Nostr.Message.parse(json)
+      assert %Nostr.Event{} = parsed
+      assert parsed.kind == 22_242
+      assert parsed.id == event.id
+    end
+
     test "parses CLOSED message" do
       json = ~s(["CLOSED","sub123","subscription closed"])
 
@@ -328,6 +343,21 @@ defmodule Nostr.MessageTest do
       assert sub_id == "sub123"
       assert %Nostr.Event.Note{} = parsed
       assert parsed.note == "Hello"
+    end
+
+    test "parses AUTH event as ClientAuth type" do
+      tags = [
+        Nostr.Tag.create(:relay, "wss://relay.example.com"),
+        Nostr.Tag.create(:challenge, "test_challenge")
+      ]
+
+      event = Fixtures.signed_event(kind: 22_242, tags: tags)
+      json = ~s(["AUTH",#{JSON.encode!(event)}])
+
+      {:auth, parsed} = Nostr.Message.parse_specific(json)
+      assert %Nostr.Event.ClientAuth{} = parsed
+      assert parsed.relay == "wss://relay.example.com"
+      assert parsed.challenge == "test_challenge"
     end
   end
 end

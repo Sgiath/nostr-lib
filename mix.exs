@@ -49,6 +49,9 @@ defmodule Nostr.MixProject do
     [
       {:lib_secp256k1, "~> 0.7"},
       {:bechamel, "~> 1.0"},
+      {:scrypt, "~> 2.1"},
+      {:req, "~> 0.5", optional: true},
+      {:plug, "~> 1.0", only: :test},
 
       # Development
       {:ex_check, "~> 0.16", only: [:dev], runtime: false},
@@ -101,7 +104,8 @@ defmodule Nostr.MixProject do
       "docs/introduction/overview.md",
       "docs/introduction/installation.md",
       # Guides
-      "docs/guides/basic-usage.md"
+      "docs/guides/basic-usage.md",
+      "docs/guides/private-direct-messages.md"
     ]
   end
 
@@ -119,16 +123,26 @@ defmodule Nostr.MixProject do
         Nostr.Event.Metadata,
         Nostr.Event.Note,
         Nostr.Event.RecommendRelay,
-        # NIP-02
-        Nostr.Event.Contacts,
-        # NIP-04
-        Nostr.Event.DirectMessage,
-        # NIP-09
-        Nostr.Event.Deletion,
-        # NIP-16
         Nostr.Event.Ephemeral,
         Nostr.Event.Regular,
         Nostr.Event.Replaceable,
+        # NIP-02
+        Nostr.Event.Contacts,
+        # NIP-03
+        Nostr.Event.OpenTimestamps,
+        # NIP-04 (deprecated)
+        Nostr.Event.DirectMessage,
+        # NIP-09
+        Nostr.Event.Deletion,
+        # NIP-17
+        Nostr.Event.DMRelayList,
+        Nostr.Event.FileMessage,
+        Nostr.Event.PrivateMessage,
+        # NIP-37
+        Nostr.Event.DraftWrap,
+        Nostr.Event.PrivateContentRelayList,
+        # NIP-18 (deprecated)
+        Nostr.Event.Repost,
         # NIP-25
         Nostr.Event.Reaction,
         # NIP-28
@@ -141,6 +155,18 @@ defmodule Nostr.MixProject do
         Nostr.Event.ParameterizedReplaceable,
         # NIP-42
         Nostr.Event.ClientAuth,
+        # NIP-51
+        Nostr.Event.ListMute,
+        # NIP-56
+        Nostr.Event.Report,
+        # NIP-58
+        Nostr.Event.BadgeAward,
+        # NIP-59
+        Nostr.Event.GiftWrap,
+        Nostr.Event.Rumor,
+        Nostr.Event.Seal,
+        # NIP-94
+        Nostr.Event.FileMetadata,
         # Other
         Nostr.Event.Unknown
       ]

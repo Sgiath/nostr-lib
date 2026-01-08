@@ -3,7 +3,20 @@ defmodule Nostr.Filter do
   Nostr filter
   """
 
-  defstruct [:ids, :authors, :kinds, :"#e", :"#p", :"#a", :"#d", :since, :until, :limit, :search, :tags]
+  defstruct [
+    :ids,
+    :authors,
+    :kinds,
+    :"#e",
+    :"#p",
+    :"#a",
+    :"#d",
+    :since,
+    :until,
+    :limit,
+    :search,
+    :tags
+  ]
 
   @type t() :: %__MODULE__{
           ids: nil | [<<_::32, _::_*8>>],

@@ -1,11 +1,17 @@
 defmodule Nostr.Bech32 do
   @moduledoc """
-  Bech32 encoded entities
+  Bech32 encoded entities for bare keys and IDs.
 
-  Defined in NIP-19
-  https://github.com/nostr-protocol/nips/blob/master/19.md
+  Defined in NIP-19: https://github.com/nostr-protocol/nips/blob/master/19.md
 
-  ## Example:
+  This module handles simple 32-byte entities:
+  - `npub` - public keys
+  - `nsec` - private keys
+  - `note` - event IDs
+
+  For shareable identifiers with TLV metadata (nprofile, nevent, naddr), use `Nostr.NIP19`.
+
+  ## Examples
 
       iex> Nostr.Bech32.encode("npub", "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d")
       {:ok, "npub180cvv07tjdrrgpa0j7j7tmnyl2yr6yr7l8j4s3evf6u64th6gkwsyjh6w6"}
@@ -77,10 +83,6 @@ defmodule Nostr.Bech32 do
   @spec hex_to_note(hex()) :: {:ok, bech32()} | {:error, :invalid_hex}
   def hex_to_note(event_id), do: encode("note", event_id)
 
-  @doc "Encodes a hex profile identifier as a bech32 `nprofile` string."
-  @spec hex_to_nprofile(hex()) :: {:ok, bech32()} | {:error, :invalid_hex}
-  def hex_to_nprofile(profile_id), do: encode("nprofile", profile_id)
-
   @doc "Decodes a bech32 `nsec` string to hex."
   @spec nsec_to_hex(bech32()) :: {:ok, hex()} | {:error, term()}
   def nsec_to_hex("nsec" <> _data = data), do: decode(data)
@@ -92,8 +94,4 @@ defmodule Nostr.Bech32 do
   @doc "Decodes a bech32 `note` string to hex."
   @spec note_to_hex(bech32()) :: {:ok, hex()} | {:error, term()}
   def note_to_hex("note" <> _data = data), do: decode(data)
-
-  @doc "Decodes a bech32 `nprofile` string to hex."
-  @spec nprofile_to_hex(bech32()) :: {:ok, hex()} | {:error, term()}
-  def nprofile_to_hex("nprofile" <> _data = data), do: decode(data)
 end

@@ -129,9 +129,8 @@ defmodule Nostr.NIP44 do
          {:ok, {nonce, ciphertext, mac}} <- parse_payload(data),
          {chacha_key, chacha_nonce, hmac_key} <- get_message_keys(conversation_key, nonce),
          :ok <- verify_mac(hmac_key, ciphertext, nonce, mac),
-         padded <- chacha20_decrypt(chacha_key, chacha_nonce, ciphertext),
-         {:ok, plaintext} <- unpad(padded) do
-      {:ok, plaintext}
+         padded <- chacha20_decrypt(chacha_key, chacha_nonce, ciphertext) do
+      unpad(padded)
     end
   end
 

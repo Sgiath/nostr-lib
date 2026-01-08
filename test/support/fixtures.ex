@@ -54,8 +54,11 @@ defmodule Nostr.Test.Fixtures do
   @doc "Creates a raw event map with tampered signature"
   def tampered_sig_event do
     event = raw_event_map()
-    # Change last character of signature
-    tampered_sig = String.slice(event["sig"], 0..-2//1) <> "0"
+    # Change last character of signature (use different char than original)
+    sig = event["sig"]
+    last_char = String.last(sig)
+    new_char = if last_char == "0", do: "1", else: "0"
+    tampered_sig = String.slice(sig, 0..-2//1) <> new_char
     Map.put(event, "sig", tampered_sig)
   end
 
