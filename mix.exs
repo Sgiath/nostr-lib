@@ -118,57 +118,102 @@ defmodule Nostr.MixProject do
 
   defp groups_for_modules do
     [
-      "Specific Events": [
-        # NIP-01
+      "Core Events (NIP-01)": [
         Nostr.Event.Metadata,
         Nostr.Event.Note,
-        Nostr.Event.RecommendRelay,
         Nostr.Event.Ephemeral,
         Nostr.Event.Regular,
         Nostr.Event.Replaceable,
+        Nostr.Event.ParameterizedReplaceable,
+        Nostr.Event.Unknown
+      ],
+      "Private Messaging (NIP-17/59)": [
+        Nostr.Event.PrivateMessage,
+        Nostr.Event.FileMessage,
+        Nostr.Event.DMRelayList,
+        Nostr.Event.GiftWrap,
+        Nostr.Event.Seal,
+        Nostr.Event.Rumor
+      ],
+      "Lists (NIP-51)": [
+        Nostr.Event.ListMute,
+        Nostr.Event.PinnedNotes,
+        Nostr.Event.Bookmarks,
+        Nostr.Event.BookmarkSets,
+        Nostr.Event.Communities,
+        Nostr.Event.PublicChats,
+        Nostr.Event.BlockedRelays,
+        Nostr.Event.SearchRelays,
+        Nostr.Event.SimpleGroups,
+        Nostr.Event.RelayFeeds,
+        Nostr.Event.Interests,
+        Nostr.Event.InterestSets,
+        Nostr.Event.MediaFollows,
+        Nostr.Event.EmojiList,
+        Nostr.Event.EmojiSets,
+        Nostr.Event.GoodWikiAuthors,
+        Nostr.Event.GoodWikiRelays,
+        Nostr.Event.FollowSets,
+        Nostr.Event.RelaySets,
+        Nostr.Event.CurationSets,
+        Nostr.Event.KindMuteSets,
+        Nostr.Event.ReleaseArtifactSets,
+        Nostr.Event.AppCurationSets,
+        Nostr.Event.StarterPacks,
+        Nostr.Event.MediaStarterPacks
+      ],
+      "Public Channels (NIP-28)": [
+        Nostr.Event.ChannelCreation,
+        Nostr.Event.ChannelMetadata,
+        Nostr.Event.ChannelMessage,
+        Nostr.Event.ChannelHideMessage,
+        Nostr.Event.ChannelMuteUser
+      ],
+      "Lightning Zaps (NIP-57)": [
+        Nostr.Event.ZapRequest,
+        Nostr.Event.ZapReceipt
+      ],
+      "Other Events": [
         # NIP-02
         Nostr.Event.Contacts,
         # NIP-03
         Nostr.Event.OpenTimestamps,
-        # NIP-04 (deprecated)
-        Nostr.Event.DirectMessage,
         # NIP-09
         Nostr.Event.Deletion,
-        # NIP-17
-        Nostr.Event.DMRelayList,
-        Nostr.Event.FileMessage,
-        Nostr.Event.PrivateMessage,
+        # NIP-22
+        Nostr.Event.Comment,
+        # NIP-23
+        Nostr.Event.Article,
+        # NIP-25
+        Nostr.Event.Reaction,
+        Nostr.Event.ExternalReaction,
+        # NIP-32
+        Nostr.Event.Label,
         # NIP-37
         Nostr.Event.DraftWrap,
         Nostr.Event.PrivateContentRelayList,
-        # NIP-18 (deprecated)
-        Nostr.Event.Repost,
-        # NIP-25
-        Nostr.Event.Reaction,
-        # NIP-28
-        Nostr.Event.ChannelCreation,
-        Nostr.Event.ChannelHideMessage,
-        Nostr.Event.ChannelMessage,
-        Nostr.Event.ChannelMetadata,
-        Nostr.Event.ChannelMuteUser,
-        # NIP-33
-        Nostr.Event.ParameterizedReplaceable,
+        # NIP-38
+        Nostr.Event.UserStatus,
         # NIP-42
         Nostr.Event.ClientAuth,
-        # NIP-51
-        Nostr.Event.ListMute,
+        # NIP-52
+        Nostr.Event.Calendar,
         # NIP-56
         Nostr.Event.Report,
         # NIP-58
         Nostr.Event.BadgeAward,
-        # NIP-59
-        Nostr.Event.GiftWrap,
-        Nostr.Event.Rumor,
-        Nostr.Event.Seal,
+        # NIP-65
+        Nostr.Event.RelayList,
         # NIP-94
-        Nostr.Event.FileMetadata,
-        # Other
-        Nostr.Event.Unknown
+        Nostr.Event.FileMetadata
+      ],
+      "Deprecated Events": [
+        # NIP-01 (deprecated)
+        Nostr.Event.RecommendRelay,
+        # NIP-04 (use NIP-17 instead)
+        Nostr.Event.DirectMessage,
+        # NIP-18 (deprecated)
+        Nostr.Event.Repost
       ]
     ]
   end
