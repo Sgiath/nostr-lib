@@ -10,7 +10,9 @@ defmodule Nostr.Event.RelayFeeds do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, relays: [], relay_sets: []]
 

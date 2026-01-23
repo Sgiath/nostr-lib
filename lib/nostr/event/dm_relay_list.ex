@@ -1,6 +1,6 @@
 defmodule Nostr.Event.DMRelayList do
   @moduledoc """
-  DM Relay List (Kind 10050)
+  DM Relay List (Kind 10_050)
 
   Indicates the user's preferred relays for receiving direct messages per NIP-17.
   This is a replaceable event that clients should publish to help others find
@@ -34,23 +34,23 @@ defmodule Nostr.Event.DMRelayList do
       iex> length(list.relays)
       2
       iex> list.event.kind
-      10050
+      10_050
   """
   @spec create(relays :: [binary()], opts :: Keyword.t()) :: t()
   def create(relays, opts \\ []) when is_list(relays) do
     tags = Enum.map(relays, &Tag.create(:relay, &1))
     opts = Keyword.merge(opts, tags: tags, content: "")
 
-    10050
+    10_050
     |> Nostr.Event.create(opts)
     |> parse()
   end
 
   @doc """
-  Parse a kind 10050 event into a DMRelayList struct
+  Parse a kind 10_050 event into a DMRelayList struct
   """
   @spec parse(Nostr.Event.t()) :: t()
-  def parse(%Nostr.Event{kind: 10050} = event) do
+  def parse(%Nostr.Event{kind: 10_050} = event) do
     %__MODULE__{
       event: event,
       relays: get_relays(event)

@@ -1,9 +1,9 @@
 defmodule Nostr.NIP39Test do
   use ExUnit.Case, async: true
 
+  alias Nostr.Event.Metadata
   alias Nostr.NIP39
   alias Nostr.Tag
-  alias Nostr.Event.Metadata
   alias Nostr.Test.Fixtures
 
   describe "to_tag/1" do

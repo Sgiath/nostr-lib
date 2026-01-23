@@ -30,7 +30,8 @@ defmodule Nostr.Event.Comment do
   """
   @moduledoc tags: [:event, :nip22], nip: 22
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
+  alias Nostr.Tag
 
   defstruct [
     :event,
@@ -344,7 +345,7 @@ defmodule Nostr.Event.Comment do
   defp parse_kind_value(kind_str) do
     case Integer.parse(kind_str) do
       {kind, ""} -> kind
-      _ -> kind_str
+      _parse_fail -> kind_str
     end
   end
 

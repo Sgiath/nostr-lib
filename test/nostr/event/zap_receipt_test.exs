@@ -2,7 +2,8 @@ defmodule Nostr.Event.ZapReceiptTest do
   use ExUnit.Case, async: true
 
   alias Nostr.Event
-  alias Nostr.Event.{ZapReceipt, ZapRequest}
+  alias Nostr.Event.ZapReceipt
+  alias Nostr.Event.ZapRequest
   alias Nostr.Tag
   alias Nostr.Test.Fixtures
 
@@ -81,7 +82,7 @@ defmodule Nostr.Event.ZapReceiptTest do
 
       event = Fixtures.signed_event(kind: 9735, tags: tags)
 
-      assert {:error, "Zap receipt must have a bolt11 tag", _} = ZapReceipt.parse(event)
+      assert {:error, "Zap receipt must have a bolt11 tag", _event} = ZapReceipt.parse(event)
     end
 
     test "returns error for missing description tag" do
@@ -92,13 +93,13 @@ defmodule Nostr.Event.ZapReceiptTest do
 
       event = Fixtures.signed_event(kind: 9735, tags: tags)
 
-      assert {:error, "Zap receipt must have a description tag", _} = ZapReceipt.parse(event)
+      assert {:error, "Zap receipt must have a description tag", _event} = ZapReceipt.parse(event)
     end
 
     test "returns error for wrong kind" do
       event = Fixtures.signed_event(kind: 1)
 
-      assert {:error, "Event is not a zap receipt (expected kind 9735)", _} =
+      assert {:error, "Event is not a zap receipt (expected kind 9735)", _event} =
                ZapReceipt.parse(event)
     end
   end
@@ -200,7 +201,7 @@ defmodule Nostr.Event.ZapReceiptTest do
 
     test "returns error when zap request not parsed" do
       receipt = %ZapReceipt{zap_request: nil}
-      assert {:error, _} = ZapReceipt.get_zap_request(receipt)
+      assert {:error, _reason} = ZapReceipt.get_zap_request(receipt)
     end
   end
 

@@ -39,7 +39,8 @@ defmodule Nostr.Event.ZapRequest do
   """
   @moduledoc tags: [:event, :nip57], nip: 57
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
+  alias Nostr.Tag
 
   @kind 9734
 
@@ -213,7 +214,7 @@ defmodule Nostr.Event.ZapRequest do
   end
 
   defp get_first_tag_value([]), do: nil
-  defp get_first_tag_value([%Tag{data: value} | _]), do: value
+  defp get_first_tag_value([%Tag{data: value} | _rest]), do: value
 
   defp get_relays(tags) do
     case Enum.find(tags, &(&1.type == :relays)) do
@@ -232,7 +233,7 @@ defmodule Nostr.Event.ZapRequest do
   defp parse_amount(str) when is_binary(str) do
     case Integer.parse(str) do
       {amount, ""} -> amount
-      _ -> nil
+      _parse_fail -> nil
     end
   end
 

@@ -138,14 +138,14 @@ defmodule Nostr.Event.Rumor do
     Enum.map(tags, &Nostr.Tag.parse/1)
   end
 
-  defp parse_tags(_), do: []
+  defp parse_tags(_invalid_tags), do: []
 
   defp parse_timestamp(ts) when is_integer(ts) do
     DateTime.from_unix!(ts)
   end
 
   defp parse_timestamp(%DateTime{} = dt), do: dt
-  defp parse_timestamp(_), do: DateTime.utc_now()
+  defp parse_timestamp(_invalid), do: DateTime.utc_now()
 end
 
 defimpl JSON.Encoder, for: Nostr.Event.Rumor do

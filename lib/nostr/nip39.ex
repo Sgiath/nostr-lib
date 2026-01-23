@@ -102,7 +102,7 @@ defmodule Nostr.NIP39 do
     Tag.create(:i, "#{platform}:#{id}", [proof])
   end
 
-  def to_tag(_), do: nil
+  def to_tag(_invalid), do: nil
 
   @doc """
   Parses a "platform:identity" string.
@@ -125,7 +125,7 @@ defmodule Nostr.NIP39 do
       [platform, identity] when platform != "" and identity != "" ->
         {:ok, {platform, identity}}
 
-      _ ->
+      _other ->
         :error
     end
   end
@@ -191,11 +191,11 @@ defmodule Nostr.NIP39 do
     "https://t.me/#{proof}"
   end
 
-  def proof_url(_), do: nil
+  def proof_url(_invalid), do: nil
 
   # Private functions
 
-  defp parse_identity_tag(%Tag{type: :i, data: platform_identity, info: [proof | _]})
+  defp parse_identity_tag(%Tag{type: :i, data: platform_identity, info: [proof | _rest]})
        when is_binary(platform_identity) and is_binary(proof) do
     case parse(platform_identity) do
       {:ok, {platform, identity}} ->
@@ -218,5 +218,5 @@ defmodule Nostr.NIP39 do
     end
   end
 
-  defp parse_identity_tag(_), do: nil
+  defp parse_identity_tag(_tag), do: nil
 end

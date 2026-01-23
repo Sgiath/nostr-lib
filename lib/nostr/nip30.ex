@@ -67,8 +67,8 @@ defmodule Nostr.NIP30 do
     |> Enum.filter(fn %Tag{type: type} -> type == :emoji end)
     |> Enum.reduce(%{}, fn %Tag{data: shortcode, info: info}, acc ->
       case info do
-        [url | _] when is_binary(url) -> Map.put(acc, shortcode, url)
-        _ -> acc
+        [url | _rest] when is_binary(url) -> Map.put(acc, shortcode, url)
+        _no_url -> acc
       end
     end)
   end
@@ -91,7 +91,7 @@ defmodule Nostr.NIP30 do
   def extract_shortcodes(content) when is_binary(content) do
     @emoji_pattern
     |> Regex.scan(content)
-    |> Enum.map(fn [_, shortcode] -> shortcode end)
+    |> Enum.map(fn [_full_match, shortcode] -> shortcode end)
   end
 
   @doc """

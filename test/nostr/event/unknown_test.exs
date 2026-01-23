@@ -7,7 +7,7 @@ defmodule Nostr.Event.UnknownTest do
   describe "parse/1" do
     test "extracts alt tag from event" do
       event = %Nostr.Event{
-        kind: 30078,
+        kind: 30_078,
         tags: [Tag.create(:alt, "Application data event")],
         content: "...",
         created_at: DateTime.utc_now()
@@ -20,7 +20,7 @@ defmodule Nostr.Event.UnknownTest do
 
     test "returns nil alt when no alt tag present" do
       event = %Nostr.Event{
-        kind: 30078,
+        kind: 30_078,
         tags: [],
         content: "...",
         created_at: DateTime.utc_now()
@@ -33,7 +33,7 @@ defmodule Nostr.Event.UnknownTest do
 
     test "handles event with other tags but no alt tag" do
       event = %Nostr.Event{
-        kind: 30078,
+        kind: 30_078,
         tags: [Tag.create(:d, "identifier"), Tag.create(:p, "pubkey123")],
         content: "data",
         created_at: DateTime.utc_now()
@@ -45,7 +45,7 @@ defmodule Nostr.Event.UnknownTest do
 
     test "extracts alt tag when mixed with other tags" do
       event = %Nostr.Event{
-        kind: 30078,
+        kind: 30_078,
         tags: [
           Tag.create(:d, "identifier"),
           Tag.create(:alt, "Custom protocol message"),
@@ -62,26 +62,26 @@ defmodule Nostr.Event.UnknownTest do
 
   describe "create/2" do
     test "creates event with alt tag" do
-      result = Unknown.create(30078, alt: "Custom app data", content: "data")
+      result = Unknown.create(30_078, alt: "Custom app data", content: "data")
 
       assert result.alt == "Custom app data"
-      assert result.event.kind == 30078
+      assert result.event.kind == 30_078
       assert result.event.content == "data"
       assert Enum.any?(result.event.tags, &(&1.type == :alt && &1.data == "Custom app data"))
     end
 
     test "creates event without alt tag when not provided" do
-      result = Unknown.create(30078, content: "data")
+      result = Unknown.create(30_078, content: "data")
 
       assert result.alt == nil
-      assert result.event.kind == 30078
+      assert result.event.kind == 30_078
       assert result.event.content == "data"
       refute Enum.any?(result.event.tags, &(&1.type == :alt))
     end
 
     test "preserves additional tags" do
       tags = [Tag.create(:d, "identifier")]
-      result = Unknown.create(30078, alt: "Description", tags: tags)
+      result = Unknown.create(30_078, alt: "Description", tags: tags)
 
       assert result.alt == "Description"
       assert length(result.event.tags) == 2
@@ -90,20 +90,20 @@ defmodule Nostr.Event.UnknownTest do
     end
 
     test "creates event with default empty content" do
-      result = Unknown.create(30078, alt: "Test")
+      result = Unknown.create(30_078, alt: "Test")
 
       assert result.event.content == ""
     end
 
     test "creates event with custom timestamp" do
       timestamp = ~U[2024-01-15 12:00:00Z]
-      result = Unknown.create(30078, alt: "Test", created_at: timestamp)
+      result = Unknown.create(30_078, alt: "Test", created_at: timestamp)
 
       assert result.event.created_at == timestamp
     end
 
     test "creates event with pubkey" do
-      result = Unknown.create(30078, alt: "Test", pubkey: "abc123")
+      result = Unknown.create(30_078, alt: "Test", pubkey: "abc123")
 
       assert result.event.pubkey == "abc123"
     end

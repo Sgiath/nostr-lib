@@ -129,10 +129,10 @@ defmodule Nostr.Event.ExternalReaction do
 
   defp build_emoji_tag(reaction, emoji_url) do
     with true <- is_binary(emoji_url),
-         [_, shortcode] <- Regex.run(~r/^:([a-zA-Z0-9_]+):$/, reaction) do
+         [_full_match, shortcode] <- Regex.run(~r/^:([a-zA-Z0-9_]+):$/, reaction) do
       [Nostr.Tag.create(:emoji, shortcode, [emoji_url])]
     else
-      _ -> []
+      _other -> []
     end
   end
 
@@ -155,12 +155,12 @@ defmodule Nostr.Event.ExternalReaction do
 
   # Get emoji URL from emoji tag when content is :shortcode:
   defp get_emoji_url(%Nostr.Event{tags: tags, content: content}) do
-    with [_, shortcode] <- Regex.run(~r/^:([a-zA-Z0-9_]+):$/, content),
-         %Nostr.Tag{data: ^shortcode, info: [url | _]} <-
+    with [_full_match, shortcode] <- Regex.run(~r/^:([a-zA-Z0-9_]+):$/, content),
+         %Nostr.Tag{data: ^shortcode, info: [url | _rest]} <-
            Enum.find(tags, &(&1.type == :emoji && &1.data == shortcode)) do
       url
     else
-      _ -> nil
+      _other -> nil
     end
   end
 end

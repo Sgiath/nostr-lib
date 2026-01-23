@@ -1,8 +1,10 @@
 defmodule Nostr.NIP21Test do
   use ExUnit.Case, async: true
 
+  alias Nostr.NIP19.Address
+  alias Nostr.NIP19.Event
+  alias Nostr.NIP19.Profile
   alias Nostr.NIP21
-  alias Nostr.NIP19.{Profile, Event, Address}
 
   # Test vectors from NIP-21 spec
   @spec_npub_uri "nostr:npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9"
@@ -56,7 +58,7 @@ defmodule Nostr.NIP21Test do
     end
 
     test "returns error for invalid bech32 after nostr:" do
-      assert {:error, _} = NIP21.parse("nostr:invalid")
+      assert {:error, _reason} = NIP21.parse("nostr:invalid")
     end
   end
 
@@ -98,7 +100,7 @@ defmodule Nostr.NIP21Test do
     end
 
     test "returns error for invalid pubkey" do
-      assert {:error, _} = NIP21.encode_npub("invalid")
+      assert {:error, _reason} = NIP21.encode_npub("invalid")
     end
   end
 
@@ -155,18 +157,18 @@ defmodule Nostr.NIP21Test do
 
   describe "encode_naddr/4" do
     test "creates naddr URI" do
-      assert {:ok, uri} = NIP21.encode_naddr("my-article", @pubkey, 30023)
+      assert {:ok, uri} = NIP21.encode_naddr("my-article", @pubkey, 30_023)
       assert String.starts_with?(uri, "nostr:naddr1")
 
       assert {:ok, :naddr, %Address{} = addr} = NIP21.parse(uri)
       assert addr.identifier == "my-article"
       assert addr.pubkey == @pubkey
-      assert addr.kind == 30023
+      assert addr.kind == 30_023
     end
 
     test "creates naddr URI with relays" do
       relays = ["wss://relay.example.com"]
-      assert {:ok, uri} = NIP21.encode_naddr("article", @pubkey, 30023, relays)
+      assert {:ok, uri} = NIP21.encode_naddr("article", @pubkey, 30_023, relays)
 
       assert {:ok, :naddr, addr} = NIP21.parse(uri)
       assert addr.relays == relays
@@ -200,11 +202,11 @@ defmodule Nostr.NIP21Test do
       assert event.kind == 1
 
       # naddr
-      {:ok, naddr_uri} = NIP21.encode_naddr("test", @pubkey, 30023)
+      {:ok, naddr_uri} = NIP21.encode_naddr("test", @pubkey, 30_023)
       {:ok, :naddr, addr} = NIP21.parse(naddr_uri)
       assert addr.identifier == "test"
       assert addr.pubkey == @pubkey
-      assert addr.kind == 30023
+      assert addr.kind == 30_023
     end
   end
 end

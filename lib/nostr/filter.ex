@@ -59,44 +59,45 @@ defmodule Nostr.Filter do
   """
   @spec parse(map) :: __MODULE__.t()
   def parse(filter) when is_map(filter) do
-    {known, extra_tags} =
-      Enum.reduce(filter, {%{}, %{}}, fn {key, value}, {known_acc, tags_acc} ->
-        str_key = if is_atom(key), do: Atom.to_string(key), else: key
+    {known, extra_tags} = Enum.reduce(filter, {%{}, %{}}, &classify_key/2)
 
-        cond do
-          # Known field
-          Map.has_key?(@known_keys, str_key) ->
-            atom_key = Map.get(@known_keys, str_key)
-            {Map.put(known_acc, atom_key, value), tags_acc}
+    known
+    |> maybe_add_tags(extra_tags)
+    |> maybe_parse_timestamp(:since)
+    |> maybe_parse_timestamp(:until)
+    |> then(&struct(__MODULE__, &1))
+  end
 
-          # Arbitrary single-letter tag filter (NIP-01)
-          is_binary(str_key) and Regex.match?(@tag_pattern, str_key) ->
-            {known_acc, Map.put(tags_acc, str_key, value)}
+  defp classify_key({key, value}, {known_acc, tags_acc}) do
+    str_key = if is_atom(key), do: Atom.to_string(key), else: key
 
-          # Unknown key, ignore
-          true ->
-            {known_acc, tags_acc}
+    case Map.fetch(@known_keys, str_key) do
+      {:ok, atom_key} ->
+        {Map.put(known_acc, atom_key, value), tags_acc}
+
+      :error ->
+        if Regex.match?(@tag_pattern, str_key) do
+          {known_acc, Map.put(tags_acc, str_key, value)}
+        else
+          {known_acc, tags_acc}
         end
-      end)
+    end
+  end
 
-    # Add extra tags to known fields if any exist
-    known = if map_size(extra_tags) > 0, do: Map.put(known, :tags, extra_tags), else: known
+  defp maybe_add_tags(known, extra_tags) when map_size(extra_tags) > 0 do
+    Map.put(known, :tags, extra_tags)
+  end
 
-    known =
-      if Map.has_key?(known, :since) and known.since != nil do
-        Map.update!(known, :since, &DateTime.from_unix!/1)
-      else
+  defp maybe_add_tags(known, _extra_tags), do: known
+
+  defp maybe_parse_timestamp(known, field) do
+    case Map.fetch(known, field) do
+      {:ok, value} when is_integer(value) ->
+        Map.put(known, field, DateTime.from_unix!(value))
+
+      _not_found ->
         known
-      end
-
-    known =
-      if Map.has_key?(known, :until) and known.until != nil do
-        Map.update!(known, :until, &DateTime.from_unix!/1)
-      else
-        known
-      end
-
-    struct(__MODULE__, known)
+    end
   end
 end
 

@@ -112,7 +112,12 @@ defmodule Nostr.TagTest do
         Tag.create(:e, "event-id", ["wss://relay.example.com"])
       ]
 
-      event = Nostr.Event.create(1, tags: tags, created_at: ~U[2023-06-09 11:07:59.000000Z], content: "Hello")
+      event =
+        Nostr.Event.create(1,
+          tags: tags,
+          created_at: ~U[2023-06-09 11:07:59.000000Z],
+          content: "Hello"
+        )
 
       result = JSON.encode!(event)
       decoded = JSON.decode!(result)

@@ -58,7 +58,7 @@ defmodule Nostr.NIP05 do
       [local_part, domain] when local_part != "" and domain != "" ->
         {:ok, local_part, domain}
 
-      [_] ->
+      [_single] ->
         {:error, "missing @ separator"}
 
       [local_part, _domain] when local_part == "" ->
@@ -67,12 +67,12 @@ defmodule Nostr.NIP05 do
       [_local_part, domain] when domain == "" ->
         {:error, "empty domain"}
 
-      _ ->
+      _multiple ->
         {:error, "multiple @ characters"}
     end
   end
 
-  def parse(_), do: {:error, "identifier must be a string"}
+  def parse(_non_string), do: {:error, "identifier must be a string"}
 
   @doc """
   Check if a NIP-05 identifier has valid format.
@@ -101,12 +101,12 @@ defmodule Nostr.NIP05 do
       {:ok, local_part, _domain} ->
         Regex.match?(@local_part_regex, local_part)
 
-      {:error, _} ->
+      {:error, _reason} ->
         false
     end
   end
 
-  def valid?(_), do: false
+  def valid?(_non_string), do: false
 
   @doc """
   Build the well-known verification URL for a NIP-05 identifier.
@@ -127,7 +127,8 @@ defmodule Nostr.NIP05 do
     case parse(identifier) do
       {:ok, local_part, domain} ->
         url =
-          URI.new!("https://#{domain}/.well-known/nostr.json")
+          "https://#{domain}/.well-known/nostr.json"
+          |> URI.new!()
           |> URI.append_query("name=#{URI.encode_www_form(local_part)}")
 
         {:ok, url}
@@ -156,7 +157,7 @@ defmodule Nostr.NIP05 do
   def display(identifier) when is_binary(identifier) do
     case parse(identifier) do
       {:ok, "_", domain} -> domain
-      _ -> identifier
+      _other -> identifier
     end
   end
 
@@ -201,7 +202,7 @@ defmodule Nostr.NIP05 do
         {:ok, %Req.Response{status: 200, body: body}} when is_binary(body) ->
           case JSON.decode(body) do
             {:ok, decoded} -> extract_from_response(decoded, local_part)
-            {:error, _} -> {:error, "invalid JSON response"}
+            {:error, _reason} -> {:error, "invalid JSON response"}
           end
 
         {:ok, %Req.Response{status: status}} ->
@@ -260,24 +261,24 @@ defmodule Nostr.NIP05 do
         relays = extract_relays(body, pubkey)
         {:ok, pubkey, relays}
 
-      _ ->
+      _invalid ->
         {:error, "invalid pubkey format"}
     end
   end
 
-  defp extract_from_response(_, _), do: {:error, "missing names field"}
+  defp extract_from_response(_body, _local_part), do: {:error, "missing names field"}
 
   defp extract_relays(%{"relays" => relays}, pubkey) when is_map(relays) do
     case Map.get(relays, pubkey) do
       urls when is_list(urls) -> urls
-      _ -> []
+      _other -> []
     end
   end
 
-  defp extract_relays(_, _), do: []
+  defp extract_relays(_body, _pubkey), do: []
 
   defp ensure_req! do
-    unless Code.ensure_loaded?(Req) do
+    if not Code.ensure_loaded?(Req) do
       raise """
       The :req dependency is required for HTTP verification.
       Add {:req, "~> 0.5"} to your mix.exs dependencies.

@@ -22,7 +22,10 @@ defmodule Nostr.Event.DraftWrap do
   """
   @moduledoc tags: [:event, :nip37], nip: 37
 
-  alias Nostr.{Event, Tag, NIP44, Crypto}
+  alias Nostr.Crypto
+  alias Nostr.Event
+  alias Nostr.NIP44
+  alias Nostr.Tag
 
   defstruct [:event, :identifier, :draft_kind, :expiration, :draft]
 
@@ -121,17 +124,12 @@ defmodule Nostr.Event.DraftWrap do
     if event.content == "" do
       {:ok, %{wrap | draft: nil}}
     else
-      pubkey = event.pubkey
-
-      case NIP44.decrypt(event.content, seckey, pubkey) do
-        {:ok, draft_json} ->
-          case JSON.decode(draft_json) do
-            {:ok, draft_map} -> {:ok, %{wrap | draft: draft_map}}
-            {:error, _} -> {:error, :invalid_draft_json}
-          end
-
-        {:error, _} = error ->
-          error
+      with {:ok, draft_json} <- NIP44.decrypt(event.content, seckey, event.pubkey),
+           {:ok, draft_map} <- JSON.decode(draft_json) do
+        {:ok, %{wrap | draft: draft_map}}
+      else
+        {:error, %JSON.DecodeError{}} -> {:error, :invalid_draft_json}
+        {:error, _reason} = error -> error
       end
     end
   end
@@ -160,7 +158,7 @@ defmodule Nostr.Event.DraftWrap do
     pubkey = Keyword.get(opts, :pubkey) || (seckey && Crypto.pubkey(seckey))
     draft_kind = Keyword.get(opts, :draft_kind)
 
-    unless pubkey do
+    if !pubkey do
       raise ArgumentError, "either :pubkey or :seckey must be provided"
     end
 
@@ -188,9 +186,9 @@ defmodule Nostr.Event.DraftWrap do
   @doc """
   Checks if this draft wrap represents a deletion (blanked content).
   """
-  @spec is_deleted?(t()) :: boolean()
-  def is_deleted?(%__MODULE__{event: %{content: ""}}), do: true
-  def is_deleted?(_), do: false
+  @spec deleted?(t()) :: boolean()
+  def deleted?(%__MODULE__{event: %{content: ""}}), do: true
+  def deleted?(_wrap), do: false
 
   # Private functions
 
@@ -249,6 +247,6 @@ defmodule Nostr.Event.DraftWrap do
   end
 
   defp generate_identifier do
-    :crypto.strong_rand_bytes(16) |> Base.encode16(case: :lower)
+    16 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
   end
 end

@@ -20,7 +20,9 @@ defmodule Nostr.Event.RelayList do
   """
   @moduledoc tags: [:event, :nip51, :nip65], nip: 65
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, relays: []]
 
@@ -111,11 +113,11 @@ defmodule Nostr.Event.RelayList do
     %{url: URI.parse(url), marker: :both}
   end
 
-  defp parse_relay_tag(%Tag{data: url, info: ["read" | _]}) do
+  defp parse_relay_tag(%Tag{data: url, info: ["read" | _rest]}) do
     %{url: URI.parse(url), marker: :read}
   end
 
-  defp parse_relay_tag(%Tag{data: url, info: ["write" | _]}) do
+  defp parse_relay_tag(%Tag{data: url, info: ["write" | _rest]}) do
     %{url: URI.parse(url), marker: :write}
   end
 

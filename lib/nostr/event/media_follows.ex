@@ -11,7 +11,9 @@ defmodule Nostr.Event.MediaFollows do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, follows: []]
 
@@ -87,7 +89,7 @@ defmodule Nostr.Event.MediaFollows do
     %{pubkey: pubkey, relay: relay_uri, petname: nil}
   end
 
-  defp parse_follow_tag(%Tag{data: pubkey, info: [relay, petname | _]}) do
+  defp parse_follow_tag(%Tag{data: pubkey, info: [relay, petname | _rest]}) do
     relay_uri = if relay == "", do: nil, else: URI.parse(relay)
     %{pubkey: pubkey, relay: relay_uri, petname: petname}
   end

@@ -23,7 +23,9 @@ defmodule Nostr.Event.ListMute do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [
     :event,
@@ -149,12 +151,12 @@ defmodule Nostr.Event.ListMute do
   def create(items, opts \\ [])
 
   # Backward compatibility: list of pubkey strings
-  def create([first | _] = public_keys, opts) when is_binary(first) do
+  def create([first | _rest] = public_keys, opts) when is_binary(first) do
     create(%{pubkeys: public_keys}, opts)
   end
 
   # Keyword list to map conversion
-  def create([{_, _} | _] = items, opts), do: create(Map.new(items), opts)
+  def create([{_key, _value} | _rest] = items, opts), do: create(Map.new(items), opts)
 
   # Empty list defaults to empty map
   def create([], opts), do: create(%{}, opts)
@@ -206,7 +208,7 @@ defmodule Nostr.Event.ListMute do
       [] ->
         ""
 
-      _tags when is_nil(seckey) ->
+      _private_tags when is_nil(seckey) ->
         raise ArgumentError, "seckey required to encrypt private items"
 
       tags ->

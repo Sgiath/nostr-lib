@@ -31,7 +31,7 @@ defmodule Nostr.Event.Repost do
     %__MODULE__{
       event: event,
       post: tag.data,
-      relay: URI.parse(List.first(tag.info)),
+      relay: tag.info |> List.first() |> URI.parse(),
       author: get_author_tag(event).data,
       content: get_content(event)
     }

@@ -2,8 +2,9 @@ defmodule Nostr.Event.CommentTest do
   use ExUnit.Case, async: true
   doctest Nostr.Event.Comment
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
   alias Nostr.Event.Comment
+  alias Nostr.Tag
   alias Nostr.Test.Fixtures
 
   describe "parse/1" do
@@ -32,11 +33,11 @@ defmodule Nostr.Event.CommentTest do
       assert comment.root_ref.id == "abc123"
       assert comment.root_ref.relay == "wss://relay.example.com"
       assert comment.root_ref.pubkey == "author_pubkey"
-      assert comment.root_kind == 30023
+      assert comment.root_kind == 30_023
       assert comment.root_author.pubkey == "author_pubkey"
       assert comment.parent_ref.type == :e
       assert comment.parent_ref.id == "abc123"
-      assert comment.parent_kind == 30023
+      assert comment.parent_kind == 30_023
       assert comment.parent_author.pubkey == "author_pubkey"
     end
 
@@ -62,7 +63,7 @@ defmodule Nostr.Event.CommentTest do
 
       assert comment.root_ref.type == :A
       assert comment.root_ref.id == "30023:author123:my-guide"
-      assert comment.root_kind == 30023
+      assert comment.root_kind == 30_023
       assert comment.parent_ref.type == :a
     end
 
@@ -124,7 +125,7 @@ defmodule Nostr.Event.CommentTest do
       # Root scope points to original event
       assert comment.root_ref.type == :E
       assert comment.root_ref.id == "original_event_id"
-      assert comment.root_kind == 30023
+      assert comment.root_kind == 30_023
 
       # Parent scope points to comment being replied to
       assert comment.parent_ref.type == :e
@@ -199,7 +200,7 @@ defmodule Nostr.Event.CommentTest do
         Comment.comment_on_event(
           "Great post!",
           "event_id_123",
-          30023,
+          30_023,
           "author_pubkey",
           relay: "wss://relay.example.com"
         )
@@ -212,13 +213,13 @@ defmodule Nostr.Event.CommentTest do
       assert comment.root_ref.id == "event_id_123"
       assert comment.root_ref.relay == "wss://relay.example.com"
       assert comment.root_ref.pubkey == "author_pubkey"
-      assert comment.root_kind == 30023
+      assert comment.root_kind == 30_023
       assert comment.root_author.pubkey == "author_pubkey"
 
       # Parent scope (same as root for top-level comments)
       assert comment.parent_ref.type == :e
       assert comment.parent_ref.id == "event_id_123"
-      assert comment.parent_kind == 30023
+      assert comment.parent_kind == 30_023
       assert comment.parent_author.pubkey == "author_pubkey"
     end
 
@@ -270,7 +271,7 @@ defmodule Nostr.Event.CommentTest do
         Comment.comment_on_address(
           "Great article!",
           "30023:author123:my-article",
-          30023,
+          30_023,
           "author123",
           relay: "wss://relay.example.com"
         )
@@ -280,7 +281,7 @@ defmodule Nostr.Event.CommentTest do
 
       assert comment.root_ref.type == :A
       assert comment.root_ref.id == "30023:author123:my-article"
-      assert comment.root_kind == 30023
+      assert comment.root_kind == 30_023
       assert comment.root_author.pubkey == "author123"
 
       assert comment.parent_ref.type == :a
@@ -332,7 +333,7 @@ defmodule Nostr.Event.CommentTest do
         Comment.comment_on_event(
           "Original comment",
           "original_event_id",
-          30023,
+          30_023,
           "original_author",
           relay: "wss://relay.example.com",
           pubkey: Fixtures.pubkey()
@@ -359,7 +360,7 @@ defmodule Nostr.Event.CommentTest do
       # Root scope stays the same as parent's root (original event)
       assert reply.root_ref.type == :E
       assert reply.root_ref.id == "original_event_id"
-      assert reply.root_kind == 30023
+      assert reply.root_kind == 30_023
       assert reply.root_author.pubkey == "original_author"
 
       # Parent scope points to the comment being replied to
@@ -405,6 +406,8 @@ defmodule Nostr.Event.CommentTest do
   end
 
   describe "roundtrip" do
+    alias Nostr.Event.Parser
+
     test "create -> sign -> serialize -> parse" do
       comment =
         Comment.comment_on_event(
@@ -421,7 +424,7 @@ defmodule Nostr.Event.CommentTest do
       json = JSON.encode!(signed_event)
 
       # Parse back
-      parsed_event = Nostr.Event.Parser.parse(JSON.decode!(json))
+      parsed_event = json |> JSON.decode!() |> Parser.parse()
       parsed_comment = Comment.parse(parsed_event)
 
       assert parsed_comment.content == "Test comment"
@@ -434,6 +437,8 @@ defmodule Nostr.Event.CommentTest do
   end
 
   describe "parser integration" do
+    alias Nostr.Event.Parser
+
     test "Parser.parse_specific routes kind 1111 to Comment" do
       event = %Event{
         kind: 1111,
@@ -452,7 +457,7 @@ defmodule Nostr.Event.CommentTest do
         sig: nil
       }
 
-      result = Nostr.Event.Parser.parse_specific(event)
+      result = Parser.parse_specific(event)
 
       assert %Comment{} = result
       assert result.content == "Test"

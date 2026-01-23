@@ -253,7 +253,7 @@ defmodule Nostr.Event.FileMessage do
     |> Enum.map(&parse_receiver/1)
   end
 
-  defp parse_receiver(%Tag{type: :p, data: pubkey, info: [relay | _]}) do
+  defp parse_receiver(%Tag{type: :p, data: pubkey, info: [relay | _rest]}) do
     %{pubkey: pubkey, relay: URI.parse(relay)}
   end
 
@@ -264,28 +264,28 @@ defmodule Nostr.Event.FileMessage do
   defp get_reply_to(%{tags: tags}) do
     Enum.find_value(tags, fn
       %Tag{type: :e, data: event_id} -> event_id
-      _ -> nil
+      _other -> nil
     end)
   end
 
   defp get_subject(%{tags: tags}) do
     Enum.find_value(tags, fn
       %Tag{type: :subject, data: subject} -> subject
-      _ -> nil
+      _other -> nil
     end)
   end
 
   defp get_tag_value(%{tags: tags}, tag_type) do
     Enum.find_value(tags, fn
       %Tag{type: ^tag_type, data: value} -> value
-      _ -> nil
+      _other -> nil
     end)
   end
 
   defp get_size(%{tags: tags}) do
     Enum.find_value(tags, fn
       %Tag{type: :size, data: size} -> String.to_integer(size)
-      _ -> nil
+      _other -> nil
     end)
   end
 
@@ -295,7 +295,7 @@ defmodule Nostr.Event.FileMessage do
         [w, h] = String.split(dim, "x")
         %{width: String.to_integer(w), height: String.to_integer(h)}
 
-      _ ->
+      _other ->
         nil
     end)
   end

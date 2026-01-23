@@ -37,7 +37,8 @@ defmodule Nostr.NIP57 do
   @moduledoc tags: [:nip57], nip: 57
 
   alias Nostr.Event
-  alias Nostr.Event.{ZapRequest, ZapReceipt}
+  alias Nostr.Event.ZapReceipt
+  alias Nostr.Event.ZapRequest
 
   @doc """
   Creates and signs a zap request.
@@ -89,7 +90,7 @@ defmodule Nostr.NIP57 do
           signed_event = Event.sign(req.event, seckey)
           {:ok, %{req | event: signed_event}}
 
-        {:error, _, _} = error ->
+        {:error, _reason, _event} = error ->
           error
       end
     end
@@ -175,7 +176,7 @@ defmodule Nostr.NIP57 do
   @spec supports_zaps?(map() | struct()) :: boolean()
   def supports_zaps?(%{lud16: lud16}) when is_binary(lud16) and lud16 != "", do: true
   def supports_zaps?(%{lud06: lud06}) when is_binary(lud06) and lud06 != "", do: true
-  def supports_zaps?(_), do: false
+  def supports_zaps?(_metadata), do: false
 
   @doc """
   Returns the zap sender's pubkey from a receipt.
@@ -189,7 +190,7 @@ defmodule Nostr.NIP57 do
       when is_binary(pubkey),
       do: pubkey
 
-  def get_sender(_), do: nil
+  def get_sender(_receipt), do: nil
 
   @doc """
   Returns the zap recipient's pubkey from a receipt.
@@ -204,5 +205,5 @@ defmodule Nostr.NIP57 do
   def get_message(%ZapReceipt{zap_request: %ZapRequest{message: msg}}) when is_binary(msg),
     do: msg
 
-  def get_message(_), do: ""
+  def get_message(_receipt), do: ""
 end

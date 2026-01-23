@@ -42,7 +42,8 @@ defmodule Nostr.Event.UserStatus do
   """
   @moduledoc tags: [:event, :nip38, :nip40], nip: [38, 40]
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
+  alias Nostr.Tag
 
   @kind 30_315
 
@@ -247,35 +248,35 @@ defmodule Nostr.Event.UserStatus do
   defp get_d_tag(%Event{tags: tags}) do
     case Enum.find(tags, &(&1.type == :d)) do
       %Tag{data: d} when is_binary(d) -> d
-      _ -> ""
+      _no_tag -> ""
     end
   end
 
   defp get_r_tag(%Event{tags: tags}) do
     case Enum.find(tags, &(&1.type == :r)) do
       %Tag{data: url} -> url
-      _ -> nil
+      _no_tag -> nil
     end
   end
 
   defp get_p_tag(%Event{tags: tags}) do
     case Enum.find(tags, &(&1.type == :p)) do
       %Tag{data: pubkey} -> pubkey
-      _ -> nil
+      _no_tag -> nil
     end
   end
 
   defp get_e_tag(%Event{tags: tags}) do
     case Enum.find(tags, &(&1.type == :e)) do
       %Tag{data: event_id} -> event_id
-      _ -> nil
+      _no_tag -> nil
     end
   end
 
   defp get_a_tag(%Event{tags: tags}) do
     case Enum.find(tags, &(&1.type == :a)) do
       %Tag{data: address} -> address
-      _ -> nil
+      _no_tag -> nil
     end
   end
 
@@ -284,10 +285,10 @@ defmodule Nostr.Event.UserStatus do
       %Tag{data: timestamp} ->
         case Integer.parse(timestamp) do
           {unix, ""} -> DateTime.from_unix!(unix)
-          _ -> nil
+          _parse_fail -> nil
         end
 
-      _ ->
+      _no_tag ->
         nil
     end
   end

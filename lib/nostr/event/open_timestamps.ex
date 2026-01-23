@@ -64,7 +64,7 @@ defmodule Nostr.Event.OpenTimestamps do
 
   defp get_target_event(%Nostr.Event{tags: tags} = event) do
     case Enum.find(tags, &(&1.type == :e)) do
-      %Nostr.Tag{data: event_id, info: [relay | _]} ->
+      %Nostr.Tag{data: event_id, info: [relay | _rest]} ->
         {:ok, event_id, URI.parse(relay)}
 
       %Nostr.Tag{data: event_id, info: []} ->

@@ -10,7 +10,9 @@ defmodule Nostr.Event.EmojiList do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, emojis: [], emoji_sets: []]
 
@@ -90,7 +92,7 @@ defmodule Nostr.Event.EmojiList do
 
   # Private functions
 
-  defp parse_emoji_tag(%Tag{data: shortcode, info: [url | _]}) do
+  defp parse_emoji_tag(%Tag{data: shortcode, info: [url | _rest]}) do
     %{shortcode: shortcode, url: url}
   end
 

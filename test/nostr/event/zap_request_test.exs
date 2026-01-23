@@ -24,7 +24,7 @@ defmodule Nostr.Event.ZapRequestTest do
       assert %ZapRequest{} = request
       assert request.recipient == Fixtures.pubkey()
       assert request.relays == ["wss://relay1.example.com", "wss://relay2.example.com"]
-      assert request.amount_msats == 21000
+      assert request.amount_msats == 21_000
       assert request.lnurl == "lnurl1dp68gurn8ghj7..."
       assert request.event_id == "event123"
       assert request.address == "30023:pubkey:identifier"
@@ -53,7 +53,7 @@ defmodule Nostr.Event.ZapRequestTest do
       tags = [Tag.create(:relays, "wss://relay.example.com")]
       event = Fixtures.signed_event(kind: 9734, tags: tags)
 
-      assert {:error, "Zap request must have exactly one p tag", _} = ZapRequest.parse(event)
+      assert {:error, "Zap request must have exactly one p tag", _event} = ZapRequest.parse(event)
     end
 
     test "returns error for multiple p tags" do
@@ -65,7 +65,7 @@ defmodule Nostr.Event.ZapRequestTest do
 
       event = Fixtures.signed_event(kind: 9734, tags: tags)
 
-      assert {:error, "Zap request must have exactly one p tag", _} = ZapRequest.parse(event)
+      assert {:error, "Zap request must have exactly one p tag", _event} = ZapRequest.parse(event)
     end
 
     test "returns error for multiple e tags" do
@@ -78,13 +78,13 @@ defmodule Nostr.Event.ZapRequestTest do
 
       event = Fixtures.signed_event(kind: 9734, tags: tags)
 
-      assert {:error, "Zap request must have 0 or 1 e tags", _} = ZapRequest.parse(event)
+      assert {:error, "Zap request must have 0 or 1 e tags", _event} = ZapRequest.parse(event)
     end
 
     test "returns error for wrong kind" do
       event = Fixtures.signed_event(kind: 1, content: "Not a zap")
 
-      assert {:error, "Event is not a zap request (expected kind 9734)", _} =
+      assert {:error, "Event is not a zap request (expected kind 9734)", _event} =
                ZapRequest.parse(event)
     end
   end

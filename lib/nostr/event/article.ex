@@ -31,7 +31,8 @@ defmodule Nostr.Event.Article do
   """
   @moduledoc tags: [:event, :nip23, :nip36], nip: [23, 36]
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
+  alias Nostr.Tag
 
   @kind_published 30_023
   @kind_draft 30_024
@@ -271,7 +272,7 @@ defmodule Nostr.Event.Article do
       %Tag{data: timestamp} ->
         case Integer.parse(timestamp) do
           {unix, ""} -> DateTime.from_unix!(unix)
-          _ -> nil
+          _parse_fail -> nil
         end
 
       nil ->

@@ -2,8 +2,9 @@ defmodule Nostr.Event.LabelTest do
   use ExUnit.Case, async: true
   doctest Nostr.Event.Label
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
   alias Nostr.Event.Label
+  alias Nostr.Tag
   alias Nostr.Test.Fixtures
 
   describe "parse/1" do
@@ -342,6 +343,8 @@ defmodule Nostr.Event.LabelTest do
   end
 
   describe "roundtrip" do
+    alias Nostr.Event.Parser
+
     test "create -> sign -> serialize -> parse" do
       label =
         Label.create(
@@ -356,7 +359,7 @@ defmodule Nostr.Event.LabelTest do
       json = JSON.encode!(signed_event)
 
       # Parse back
-      parsed_event = Nostr.Event.Parser.parse(JSON.decode!(json))
+      parsed_event = json |> JSON.decode!() |> Parser.parse()
       parsed_label = Label.parse(parsed_event)
 
       assert parsed_label.namespaces == ["license"]
@@ -367,6 +370,8 @@ defmodule Nostr.Event.LabelTest do
   end
 
   describe "parser integration" do
+    alias Nostr.Event.Parser
+
     test "Parser.parse_specific routes kind 1985 to Label" do
       event = %Event{
         kind: 1985,
@@ -382,7 +387,7 @@ defmodule Nostr.Event.LabelTest do
         sig: nil
       }
 
-      result = Nostr.Event.Parser.parse_specific(event)
+      result = Parser.parse_specific(event)
 
       assert %Label{} = result
       assert result.labels == [{"test", "ugc"}]

@@ -2,7 +2,9 @@ defmodule Nostr.NIP19Test do
   use ExUnit.Case, async: true
 
   alias Nostr.NIP19
-  alias Nostr.NIP19.{Profile, Event, Address}
+  alias Nostr.NIP19.Address
+  alias Nostr.NIP19.Event
+  alias Nostr.NIP19.Profile
 
   # Test vectors from NIP-19 spec
   @spec_pubkey "3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d"
@@ -199,7 +201,7 @@ defmodule Nostr.NIP19Test do
 
   describe "encode_naddr/4 and decode_naddr/1" do
     @identifier "my-article"
-    @kind 30023
+    @kind 30_023
 
     test "encodes addressable event" do
       assert {:ok, naddr} = NIP19.encode_naddr(@identifier, @spec_pubkey, @kind)
@@ -255,7 +257,7 @@ defmodule Nostr.NIP19Test do
     end
 
     test "decodes naddr through generic decode" do
-      {:ok, naddr} = NIP19.encode_naddr("test", @spec_pubkey, 30023)
+      {:ok, naddr} = NIP19.encode_naddr("test", @spec_pubkey, 30_023)
       assert {:ok, :naddr, %Address{identifier: "test"}} = NIP19.decode(naddr)
     end
   end
@@ -308,12 +310,12 @@ defmodule Nostr.NIP19Test do
 
     test "naddr roundtrip preserves all data" do
       relays = [@spec_relay1, @spec_relay2]
-      {:ok, encoded} = NIP19.encode_naddr("article-id", @spec_pubkey, 30023, relays)
+      {:ok, encoded} = NIP19.encode_naddr("article-id", @spec_pubkey, 30_023, relays)
       {:ok, decoded} = NIP19.decode_naddr(encoded)
 
       assert decoded.identifier == "article-id"
       assert decoded.pubkey == @spec_pubkey
-      assert decoded.kind == 30023
+      assert decoded.kind == 30_023
       assert decoded.relays == relays
     end
   end

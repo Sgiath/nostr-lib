@@ -2,9 +2,9 @@ defmodule Nostr.NIP59Test do
   use ExUnit.Case, async: true
 
   alias Nostr.Event
+  alias Nostr.Event.GiftWrap
   alias Nostr.Event.Rumor
   alias Nostr.Event.Seal
-  alias Nostr.Event.GiftWrap
   alias Nostr.Test.Fixtures
 
   # Test vectors from NIP-59 spec
@@ -177,7 +177,7 @@ defmodule Nostr.NIP59Test do
       # Try to unwrap with a different key
       result = Seal.unwrap(seal, Fixtures.seckey())
 
-      assert {:error, _} = result
+      assert {:error, _reason} = result
     end
 
     test "seal has empty tags per NIP-59 spec" do

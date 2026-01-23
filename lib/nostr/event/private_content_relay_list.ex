@@ -23,7 +23,9 @@ defmodule Nostr.Event.PrivateContentRelayList do
   """
   @moduledoc tags: [:event, :nip37], nip: 37
 
-  alias Nostr.{Event, NIP44, Crypto}
+  alias Nostr.Crypto
+  alias Nostr.Event
+  alias Nostr.NIP44
 
   defstruct [:event, :relays]
 
@@ -104,21 +106,13 @@ defmodule Nostr.Event.PrivateContentRelayList do
     if event.content == "" do
       {:ok, %{list | relays: []}}
     else
-      pubkey = event.pubkey
-
-      case NIP44.decrypt(event.content, seckey, pubkey) do
-        {:ok, tags_json} ->
-          case JSON.decode(tags_json) do
-            {:ok, private_tags} ->
-              relays = extract_relays(private_tags)
-              {:ok, %{list | relays: relays}}
-
-            {:error, _} ->
-              {:error, :invalid_private_tags_json}
-          end
-
-        {:error, _} = error ->
-          error
+      with {:ok, tags_json} <- NIP44.decrypt(event.content, seckey, event.pubkey),
+           {:ok, private_tags} <- JSON.decode(tags_json) do
+        relays = extract_relays(private_tags)
+        {:ok, %{list | relays: relays}}
+      else
+        {:error, %JSON.DecodeError{}} -> {:error, :invalid_private_tags_json}
+        {:error, _reason} = error -> error
       end
     end
   end
@@ -127,9 +121,9 @@ defmodule Nostr.Event.PrivateContentRelayList do
   defp extract_relays(private_tags) when is_list(private_tags) do
     private_tags
     |> Enum.filter(fn
-      ["relay", _url | _] -> true
-      _ -> false
+      ["relay", _url | _rest] -> true
+      _other -> false
     end)
-    |> Enum.map(fn ["relay", url | _] -> url end)
+    |> Enum.map(fn ["relay", url | _rest] -> url end)
   end
 end

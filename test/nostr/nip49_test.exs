@@ -34,7 +34,7 @@ defmodule Nostr.NIP49Test do
 
   describe "encrypt/3 and decrypt/2" do
     test "round-trip encryption with default log_n" do
-      private_key = :crypto.strong_rand_bytes(32) |> Base.encode16(case: :lower)
+      private_key = 32 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
       password = "test-password-123"
 
       assert {:ok, ncryptsec} = NIP49.encrypt(private_key, password)
@@ -43,7 +43,7 @@ defmodule Nostr.NIP49Test do
     end
 
     test "round-trip encryption with custom log_n" do
-      private_key = :crypto.strong_rand_bytes(32) |> Base.encode16(case: :lower)
+      private_key = 32 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
       password = "another-password"
 
       assert {:ok, ncryptsec} = NIP49.encrypt(private_key, password, log_n: 16)
@@ -51,7 +51,7 @@ defmodule Nostr.NIP49Test do
     end
 
     test "round-trip encryption with all security levels" do
-      private_key = :crypto.strong_rand_bytes(32) |> Base.encode16(case: :lower)
+      private_key = 32 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
       password = "password"
 
       for security <- [:insecure, :secure, :unknown] do
@@ -61,7 +61,7 @@ defmodule Nostr.NIP49Test do
     end
 
     test "encrypted output varies due to random nonce/salt" do
-      private_key = :crypto.strong_rand_bytes(32) |> Base.encode16(case: :lower)
+      private_key = 32 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
       password = "test"
 
       {:ok, ncryptsec1} = NIP49.encrypt(private_key, password)
@@ -88,7 +88,7 @@ defmodule Nostr.NIP49Test do
     end
 
     test "returns error for invalid log_n" do
-      private_key = :crypto.strong_rand_bytes(32) |> Base.encode16(case: :lower)
+      private_key = 32 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
       assert {:error, :invalid_log_n} = NIP49.encrypt(private_key, "password", log_n: 30)
     end
   end

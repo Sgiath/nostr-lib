@@ -197,7 +197,7 @@ defmodule Nostr.NIP19 do
   """
   @spec decode_nprofile(String.t()) ::
           {:ok, Profile.t()} | {:error, term()}
-  def decode_nprofile("nprofile" <> _ = bech32) do
+  def decode_nprofile("nprofile" <> _rest = bech32) do
     # NIP-19 strings can exceed BIP-173's 90 char limit when including relays
     with {:ok, "nprofile", data} <- Bechamel.decode(bech32, ignore_length: true),
          {:ok, entries} <- TLV.decode_tlvs(data) do
@@ -214,13 +214,13 @@ defmodule Nostr.NIP19 do
              relays: relays
            }}
 
-        _ ->
+        _other ->
           {:error, :invalid_pubkey}
       end
     end
   end
 
-  def decode_nprofile(_), do: {:error, :invalid_prefix}
+  def decode_nprofile(_other), do: {:error, :invalid_prefix}
 
   @doc """
   Decodes an nevent bech32 string to an Event struct.
@@ -234,7 +234,7 @@ defmodule Nostr.NIP19 do
   """
   @spec decode_nevent(String.t()) ::
           {:ok, Event.t()} | {:error, term()}
-  def decode_nevent("nevent" <> _ = bech32) do
+  def decode_nevent("nevent" <> _rest = bech32) do
     # NIP-19 strings can exceed BIP-173's 90 char limit when including relays
     with {:ok, "nevent", data} <- Bechamel.decode(bech32, ignore_length: true),
          {:ok, entries} <- TLV.decode_tlvs(data) do
@@ -268,13 +268,13 @@ defmodule Nostr.NIP19 do
              kind: kind
            }}
 
-        _ ->
+        _other ->
           {:error, :invalid_event_id}
       end
     end
   end
 
-  def decode_nevent(_), do: {:error, :invalid_prefix}
+  def decode_nevent(_other), do: {:error, :invalid_prefix}
 
   @doc """
   Decodes an naddr bech32 string to an Address struct.
@@ -290,7 +290,7 @@ defmodule Nostr.NIP19 do
   """
   @spec decode_naddr(String.t()) ::
           {:ok, Address.t()} | {:error, term()}
-  def decode_naddr("naddr" <> _ = bech32) do
+  def decode_naddr("naddr" <> _rest = bech32) do
     # NIP-19 strings can exceed BIP-173's 90 char limit when including relays
     with {:ok, "naddr", data} <- Bechamel.decode(bech32, ignore_length: true),
          {:ok, entries} <- TLV.decode_tlvs(data) do
@@ -326,7 +326,7 @@ defmodule Nostr.NIP19 do
     end
   end
 
-  def decode_naddr(_), do: {:error, :invalid_prefix}
+  def decode_naddr(_other), do: {:error, :invalid_prefix}
 
   @doc """
   Decodes any NIP-19 bech32 string and returns the appropriate struct or hex value.
@@ -352,50 +352,50 @@ defmodule Nostr.NIP19 do
           | {:ok, :nevent, Event.t()}
           | {:ok, :naddr, Address.t()}
           | {:error, term()}
-  def decode("npub" <> _ = bech32) do
+  def decode("npub" <> _rest = bech32) do
     with {:ok, "npub", data} <- Bechamel.decode(bech32) do
       {:ok, :npub, Base.encode16(data, case: :lower)}
     end
   end
 
-  def decode("nsec" <> _ = bech32) do
+  def decode("nsec" <> _rest = bech32) do
     with {:ok, "nsec", data} <- Bechamel.decode(bech32) do
       {:ok, :nsec, Base.encode16(data, case: :lower)}
     end
   end
 
-  def decode("note" <> _ = bech32) do
+  def decode("note" <> _rest = bech32) do
     with {:ok, "note", data} <- Bechamel.decode(bech32) do
       {:ok, :note, Base.encode16(data, case: :lower)}
     end
   end
 
-  def decode("nprofile" <> _ = bech32) do
+  def decode("nprofile" <> _rest = bech32) do
     with {:ok, profile} <- decode_nprofile(bech32) do
       {:ok, :nprofile, profile}
     end
   end
 
-  def decode("nevent" <> _ = bech32) do
+  def decode("nevent" <> _rest = bech32) do
     with {:ok, event} <- decode_nevent(bech32) do
       {:ok, :nevent, event}
     end
   end
 
-  def decode("naddr" <> _ = bech32) do
+  def decode("naddr" <> _rest = bech32) do
     with {:ok, addr} <- decode_naddr(bech32) do
       {:ok, :naddr, addr}
     end
   end
 
-  def decode(_), do: {:error, :unknown_prefix}
+  def decode(_other), do: {:error, :unknown_prefix}
 
   # Private helpers
 
   defp decode_hex(hex, expected_size, error_type \\ :invalid_pubkey) do
     case Base.decode16(hex, case: :lower) do
       {:ok, bin} when byte_size(bin) == expected_size -> {:ok, bin}
-      {:ok, _} -> {:error, error_type}
+      {:ok, _bin} -> {:error, error_type}
       :error -> {:error, error_type}
     end
   end
@@ -405,7 +405,7 @@ defmodule Nostr.NIP19 do
   defp maybe_decode_hex(hex, expected_size) do
     case decode_hex(hex, expected_size) do
       {:ok, bin} -> {:ok, bin}
-      {:error, _} -> {:error, :invalid_author}
+      {:error, _reason} -> {:error, :invalid_author}
     end
   end
 

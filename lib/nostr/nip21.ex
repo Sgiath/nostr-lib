@@ -45,7 +45,7 @@ defmodule Nostr.NIP21 do
 
   """
   @spec to_uri(String.t()) :: {:ok, String.t()} | {:error, :nsec_not_allowed | term()}
-  def to_uri("nsec" <> _), do: {:error, :nsec_not_allowed}
+  def to_uri("nsec" <> _rest), do: {:error, :nsec_not_allowed}
 
   def to_uri(bech32) when is_binary(bech32) do
     {:ok, @uri_scheme <> bech32}
@@ -163,11 +163,11 @@ defmodule Nostr.NIP21 do
           | {:ok, :nevent, NIP19.Event.t()}
           | {:ok, :naddr, NIP19.Address.t()}
           | {:error, :nsec_not_allowed | :invalid_uri_scheme | term()}
-  def parse(@uri_scheme <> "nsec" <> _), do: {:error, :nsec_not_allowed}
+  def parse(@uri_scheme <> "nsec" <> _rest), do: {:error, :nsec_not_allowed}
 
   def parse(@uri_scheme <> bech32) do
     NIP19.decode(bech32)
   end
 
-  def parse(_), do: {:error, :invalid_uri_scheme}
+  def parse(_other), do: {:error, :invalid_uri_scheme}
 end

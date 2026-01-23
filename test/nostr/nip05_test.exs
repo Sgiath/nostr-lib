@@ -97,7 +97,7 @@ defmodule Nostr.NIP05Test do
     end
 
     test "returns error for invalid identifier" do
-      assert {:error, _} = NIP05.verification_url("invalid")
+      assert {:error, _reason} = NIP05.verification_url("invalid")
     end
   end
 

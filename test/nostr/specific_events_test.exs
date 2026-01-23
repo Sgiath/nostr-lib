@@ -1,6 +1,7 @@
 defmodule Nostr.SpecificEventsTest do
   use ExUnit.Case, async: true
 
+  alias Nostr.Tag
   alias Nostr.Test.Fixtures
 
   doctest Nostr.Event.Metadata
@@ -32,8 +33,8 @@ defmodule Nostr.SpecificEventsTest do
 
     test "extracts participants from p tags" do
       tags = [
-        Nostr.Tag.create(:p, "pubkey1"),
-        Nostr.Tag.create(:p, "pubkey2")
+        Tag.create(:p, "pubkey1"),
+        Tag.create(:p, "pubkey2")
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -54,7 +55,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses single root tag (top-level reply)" do
       tags = [
-        Nostr.Tag.create(:e, "root_event", ["wss://relay.example.com", "root"])
+        Tag.create(:e, "root_event", ["wss://relay.example.com", "root"])
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -70,8 +71,8 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses root + reply tags (nested reply)" do
       tags = [
-        Nostr.Tag.create(:e, "root_event", ["wss://relay1.com", "root"]),
-        Nostr.Tag.create(:e, "parent_event", ["wss://relay2.com", "reply"])
+        Tag.create(:e, "root_event", ["wss://relay1.com", "root"]),
+        Tag.create(:e, "parent_event", ["wss://relay2.com", "reply"])
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -87,9 +88,9 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses e tags without markers as mentions" do
       tags = [
-        Nostr.Tag.create(:e, "root_event", ["", "root"]),
-        Nostr.Tag.create(:e, "mentioned_event", [""]),
-        Nostr.Tag.create(:e, "another_mention")
+        Tag.create(:e, "root_event", ["", "root"]),
+        Tag.create(:e, "mentioned_event", [""]),
+        Tag.create(:e, "another_mention")
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -104,7 +105,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "extracts relay hints from e tags" do
       tags = [
-        Nostr.Tag.create(:e, "event1", ["wss://relay.example.com", "root"])
+        Tag.create(:e, "event1", ["wss://relay.example.com", "root"])
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -115,7 +116,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "extracts pubkey hints from e tags" do
       tags = [
-        Nostr.Tag.create(:e, "event1", ["wss://relay.example.com", "root", "author123"])
+        Tag.create(:e, "event1", ["wss://relay.example.com", "root", "author123"])
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -126,7 +127,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "handles empty relay hint" do
       tags = [
-        Nostr.Tag.create(:e, "event1", ["", "root"])
+        Tag.create(:e, "event1", ["", "root"])
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -150,7 +151,7 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "one e tag = reply to that event (as root)" do
-      tags = [Nostr.Tag.create(:e, "only_event")]
+      tags = [Tag.create(:e, "only_event")]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
       note = Note.parse(event)
@@ -163,8 +164,8 @@ defmodule Nostr.SpecificEventsTest do
 
     test "two e tags = [root, reply]" do
       tags = [
-        Nostr.Tag.create(:e, "root_event"),
-        Nostr.Tag.create(:e, "reply_event")
+        Tag.create(:e, "root_event"),
+        Tag.create(:e, "reply_event")
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -178,10 +179,10 @@ defmodule Nostr.SpecificEventsTest do
 
     test "many e tags = [root, mentions..., reply]" do
       tags = [
-        Nostr.Tag.create(:e, "root_event"),
-        Nostr.Tag.create(:e, "mention1"),
-        Nostr.Tag.create(:e, "mention2"),
-        Nostr.Tag.create(:e, "reply_event")
+        Tag.create(:e, "root_event"),
+        Tag.create(:e, "mention1"),
+        Tag.create(:e, "mention2"),
+        Tag.create(:e, "reply_event")
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -201,7 +202,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses q tags with full info" do
       tags = [
-        Nostr.Tag.create(:q, "quoted_event", ["wss://relay.example.com", "quoted_author"])
+        Tag.create(:q, "quoted_event", ["wss://relay.example.com", "quoted_author"])
       ]
 
       event = Fixtures.signed_event(kind: 1, content: "Check this: nostr:nevent1...", tags: tags)
@@ -215,7 +216,7 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "parses q tags with only id" do
-      tags = [Nostr.Tag.create(:q, "quoted_event")]
+      tags = [Tag.create(:q, "quoted_event")]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
       note = Note.parse(event)
@@ -229,8 +230,8 @@ defmodule Nostr.SpecificEventsTest do
 
     test "handles multiple q tags" do
       tags = [
-        Nostr.Tag.create(:q, "quote1"),
-        Nostr.Tag.create(:q, "quote2", ["wss://relay.com"])
+        Tag.create(:q, "quote1"),
+        Tag.create(:q, "quote2", ["wss://relay.com"])
       ]
 
       event = Fixtures.signed_event(kind: 1, tags: tags)
@@ -311,7 +312,7 @@ defmodule Nostr.SpecificEventsTest do
       assert reply.root.id == root_note.event.id
       assert reply.root.pubkey == root_note.author
       assert reply.reply_to == nil
-      assert Note.is_top_level_reply?(reply)
+      assert Note.top_level_reply?(reply)
     end
 
     test "reply to nested note uses root + reply markers" do
@@ -321,7 +322,7 @@ defmodule Nostr.SpecificEventsTest do
 
       assert nested_reply.root.id == root_note.event.id
       assert nested_reply.reply_to.id == first_reply.event.id
-      refute Note.is_top_level_reply?(nested_reply)
+      refute Note.top_level_reply?(nested_reply)
     end
 
     test "carries forward participants as p tags" do
@@ -371,24 +372,24 @@ defmodule Nostr.SpecificEventsTest do
   describe "Nostr.Event.Note utility functions" do
     alias Nostr.Event.Note
 
-    test "is_reply?/1 returns true for replies" do
+    test "reply?/1 returns true for replies" do
       reply = Note.create("Reply", root: %{id: "root123"})
-      assert Note.is_reply?(reply)
+      assert Note.reply?(reply)
     end
 
-    test "is_reply?/1 returns false for non-replies" do
+    test "reply?/1 returns false for non-replies" do
       note = Note.create("Just a note")
-      refute Note.is_reply?(note)
+      refute Note.reply?(note)
     end
 
-    test "is_top_level_reply?/1 for top-level reply" do
+    test "top_level_reply?/1 for top-level reply" do
       reply = Note.create("Top-level", root: %{id: "root123"})
-      assert Note.is_top_level_reply?(reply)
+      assert Note.top_level_reply?(reply)
     end
 
-    test "is_top_level_reply?/1 for nested reply" do
+    test "top_level_reply?/1 for nested reply" do
       reply = Note.create("Nested", root: %{id: "root123"}, reply_to: %{id: "parent456"})
-      refute Note.is_top_level_reply?(reply)
+      refute Note.top_level_reply?(reply)
     end
 
     test "has_quotes?/1" do
@@ -427,7 +428,7 @@ defmodule Nostr.SpecificEventsTest do
     alias Nostr.Event.Note
 
     test "parses subject tag" do
-      tags = [Nostr.Tag.create(:subject, "Meeting Notes")]
+      tags = [Tag.create(:subject, "Meeting Notes")]
       event = Fixtures.signed_event(kind: 1, content: "Let's discuss", tags: tags)
       note = Note.parse(event)
 
@@ -489,14 +490,16 @@ defmodule Nostr.SpecificEventsTest do
   end
 
   describe "Nostr.Event.Metadata" do
+    alias Nostr.Event.Metadata
+
     test "parses metadata with all fields" do
       content =
         ~s({"name":"Alice","about":"Developer","picture":"https://example.com/pic.jpg","nip05":"alice@example.com"})
 
       event = Fixtures.signed_event(kind: 0, content: content)
-      meta = Nostr.Event.Metadata.parse(event)
+      meta = Metadata.parse(event)
 
-      assert %Nostr.Event.Metadata{} = meta
+      assert %Metadata{} = meta
       assert meta.name == "Alice"
       assert meta.about == "Developer"
       assert meta.picture.host == "example.com"
@@ -506,7 +509,7 @@ defmodule Nostr.SpecificEventsTest do
     test "parses metadata with minimal fields" do
       content = ~s({"name":"Bob"})
       event = Fixtures.signed_event(kind: 0, content: content)
-      meta = Nostr.Event.Metadata.parse(event)
+      meta = Metadata.parse(event)
 
       assert meta.name == "Bob"
       assert meta.about == nil
@@ -517,7 +520,7 @@ defmodule Nostr.SpecificEventsTest do
         ~s({"name":"Carol","lud16":"carol@wallet.com","lud06":"lnurl..."})
 
       event = Fixtures.signed_event(kind: 0, content: content)
-      meta = Nostr.Event.Metadata.parse(event)
+      meta = Metadata.parse(event)
 
       assert meta.other["lud16"] == "carol@wallet.com"
       assert meta.other["lud06"] == "lnurl..."
@@ -525,14 +528,14 @@ defmodule Nostr.SpecificEventsTest do
 
     test "returns error for invalid JSON content" do
       event = Fixtures.signed_event(kind: 0, content: "not json")
-      result = Nostr.Event.Metadata.parse(event)
+      result = Metadata.parse(event)
 
-      assert {:error, "Cannot decode content field", _} = result
+      assert {:error, "Cannot decode content field", _event} = result
     end
 
     test "create/5 creates metadata event" do
       meta =
-        Nostr.Event.Metadata.create(
+        Metadata.create(
           "Alice",
           "About me",
           "https://pic.com/a.jpg",
@@ -676,12 +679,15 @@ defmodule Nostr.SpecificEventsTest do
   end
 
   describe "Nostr.Event.DirectMessage" do
-    test "parses DM with recipient" do
-      tags = [Nostr.Tag.create(:p, Fixtures.pubkey2())]
-      event = Fixtures.signed_event(kind: 4, content: "encrypted content", tags: tags)
-      dm = Nostr.Event.DirectMessage.parse(event)
+    alias Nostr.Event.DirectMessage
+    alias Nostr.Tag
 
-      assert %Nostr.Event.DirectMessage{} = dm
+    test "parses DM with recipient" do
+      tags = [Tag.create(:p, Fixtures.pubkey2())]
+      event = Fixtures.signed_event(kind: 4, content: "encrypted content", tags: tags)
+      dm = DirectMessage.parse(event)
+
+      assert %DirectMessage{} = dm
       assert dm.from == Fixtures.pubkey()
       assert dm.to == Fixtures.pubkey2()
       assert dm.cipher_text == "encrypted content"
@@ -693,11 +699,11 @@ defmodule Nostr.SpecificEventsTest do
       message = "Secret message"
       encrypted = Nostr.Crypto.encrypt(message, Fixtures.seckey(), Fixtures.pubkey2())
 
-      tags = [Nostr.Tag.create(:p, Fixtures.pubkey2())]
+      tags = [Tag.create(:p, Fixtures.pubkey2())]
       event = Fixtures.signed_event(kind: 4, content: encrypted, tags: tags)
-      dm = Nostr.Event.DirectMessage.parse(event)
+      dm = DirectMessage.parse(event)
 
-      decrypted_dm = Nostr.Event.DirectMessage.decrypt(dm, Fixtures.seckey())
+      decrypted_dm = DirectMessage.decrypt(dm, Fixtures.seckey())
       assert decrypted_dm.plain_text == message
     end
 
@@ -706,35 +712,35 @@ defmodule Nostr.SpecificEventsTest do
       message = "Secret message"
       encrypted = Nostr.Crypto.encrypt(message, Fixtures.seckey(), Fixtures.pubkey2())
 
-      tags = [Nostr.Tag.create(:p, Fixtures.pubkey2())]
+      tags = [Tag.create(:p, Fixtures.pubkey2())]
       event = Fixtures.signed_event(kind: 4, content: encrypted, tags: tags)
-      dm = Nostr.Event.DirectMessage.parse(event)
+      dm = DirectMessage.parse(event)
 
-      decrypted_dm = Nostr.Event.DirectMessage.decrypt(dm, Fixtures.seckey2())
+      decrypted_dm = DirectMessage.decrypt(dm, Fixtures.seckey2())
       assert decrypted_dm.plain_text == message
     end
 
     @tag :ecdh
     test "decrypt/2 returns not_decrypted for wrong key" do
-      tags = [Nostr.Tag.create(:p, Fixtures.pubkey2())]
+      tags = [Tag.create(:p, Fixtures.pubkey2())]
       encrypted = Nostr.Crypto.encrypt("test", Fixtures.seckey(), Fixtures.pubkey2())
       event = Fixtures.signed_event(kind: 4, content: encrypted, tags: tags)
-      dm = Nostr.Event.DirectMessage.parse(event)
+      dm = DirectMessage.parse(event)
 
       # Use a third key that's neither sender nor recipient
       third_key = "3333333333333333333333333333333333333333333333333333333333333333"
-      result = Nostr.Event.DirectMessage.decrypt(dm, third_key)
+      result = DirectMessage.decrypt(dm, third_key)
       assert result.plain_text == :not_decrypted
     end
 
     test "parses DM with p tag not first (reply thread)" do
       tags = [
-        Nostr.Tag.create(:e, "previous_event_id"),
-        Nostr.Tag.create(:p, Fixtures.pubkey2())
+        Tag.create(:e, "previous_event_id"),
+        Tag.create(:p, Fixtures.pubkey2())
       ]
 
       event = Fixtures.signed_event(kind: 4, content: "encrypted", tags: tags)
-      dm = Nostr.Event.DirectMessage.parse(event)
+      dm = DirectMessage.parse(event)
 
       assert dm.to == Fixtures.pubkey2()
     end
@@ -742,13 +748,13 @@ defmodule Nostr.SpecificEventsTest do
     @tag :ecdh
     test "create/4 creates encrypted DM" do
       dm =
-        Nostr.Event.DirectMessage.create(
+        DirectMessage.create(
           "Hello, secret message!",
           Fixtures.seckey(),
           Fixtures.pubkey2()
         )
 
-      assert %Nostr.Event.DirectMessage{} = dm
+      assert %DirectMessage{} = dm
       assert dm.event.kind == 4
       assert dm.from == Fixtures.pubkey()
       assert dm.to == Fixtures.pubkey2()
@@ -759,7 +765,7 @@ defmodule Nostr.SpecificEventsTest do
     @tag :ecdh
     test "create/4 with reply_to option" do
       dm =
-        Nostr.Event.DirectMessage.create(
+        DirectMessage.create(
           "Reply message",
           Fixtures.seckey(),
           Fixtures.pubkey2(),
@@ -774,32 +780,35 @@ defmodule Nostr.SpecificEventsTest do
     @tag :ecdh
     test "create/4 message can be decrypted by recipient" do
       dm =
-        Nostr.Event.DirectMessage.create(
+        DirectMessage.create(
           "Secret for recipient",
           Fixtures.seckey(),
           Fixtures.pubkey2()
         )
 
       # Parse fresh from event (simulating recipient receiving it)
-      received = Nostr.Event.DirectMessage.parse(dm.event)
-      decrypted = Nostr.Event.DirectMessage.decrypt(received, Fixtures.seckey2())
+      received = DirectMessage.parse(dm.event)
+      decrypted = DirectMessage.decrypt(received, Fixtures.seckey2())
 
       assert decrypted.plain_text == "Secret for recipient"
     end
   end
 
   describe "Nostr.Event.Contacts" do
+    alias Nostr.Event.Contacts
+    alias Nostr.Tag
+
     test "parses contact list" do
       tags = [
-        Nostr.Tag.create(:p, "pubkey1", ["wss://relay1.com", "alice"]),
-        Nostr.Tag.create(:p, "pubkey2", ["wss://relay2.com"]),
-        Nostr.Tag.create(:p, "pubkey3")
+        Tag.create(:p, "pubkey1", ["wss://relay1.com", "alice"]),
+        Tag.create(:p, "pubkey2", ["wss://relay2.com"]),
+        Tag.create(:p, "pubkey3")
       ]
 
       event = Fixtures.signed_event(kind: 3, tags: tags)
-      contacts = Nostr.Event.Contacts.parse(event)
+      contacts = Contacts.parse(event)
 
-      assert %Nostr.Event.Contacts{} = contacts
+      assert %Contacts{} = contacts
       assert length(contacts.contacts) == 3
 
       [c1, c2, c3] = contacts.contacts
@@ -817,19 +826,19 @@ defmodule Nostr.SpecificEventsTest do
 
     test "handles empty contact list" do
       event = Fixtures.signed_event(kind: 3, tags: [])
-      contacts = Nostr.Event.Contacts.parse(event)
+      contacts = Contacts.parse(event)
       assert contacts.contacts == []
     end
 
     test "create/2 creates contact list event" do
       contacts =
-        Nostr.Event.Contacts.create([
+        Contacts.create([
           %{user: "pubkey1", relay: "wss://relay1.com", petname: "alice"},
           %{user: "pubkey2", relay: "wss://relay2.com"},
           %{user: "pubkey3"}
         ])
 
-      assert %Nostr.Event.Contacts{} = contacts
+      assert %Contacts{} = contacts
       assert contacts.event.kind == 3
       assert contacts.event.content == ""
       assert length(contacts.contacts) == 3
@@ -848,36 +857,39 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "create/2 with empty list" do
-      contacts = Nostr.Event.Contacts.create([])
+      contacts = Contacts.create([])
 
-      assert %Nostr.Event.Contacts{} = contacts
+      assert %Contacts{} = contacts
       assert contacts.event.kind == 3
       assert contacts.contacts == []
     end
   end
 
   describe "Nostr.Event.Deletion" do
+    alias Nostr.Event.Deletion
+    alias Nostr.Tag
+
     test "parses deletion request with e tags" do
       tags = [
-        Nostr.Tag.create(:e, "event_to_delete1"),
-        Nostr.Tag.create(:e, "event_to_delete2")
+        Tag.create(:e, "event_to_delete1"),
+        Tag.create(:e, "event_to_delete2")
       ]
 
       event = Fixtures.signed_event(kind: 5, tags: tags)
-      deletion = Nostr.Event.Deletion.parse(event)
+      deletion = Deletion.parse(event)
 
-      assert %Nostr.Event.Deletion{} = deletion
+      assert %Deletion{} = deletion
       assert deletion.to_delete == ["event_to_delete1", "event_to_delete2"]
     end
 
     test "parses deletion request with a tags (replaceable events)" do
       tags = [
-        Nostr.Tag.create(:a, "30023:pubkey123:article-slug"),
-        Nostr.Tag.create(:a, "10000:pubkey456:settings")
+        Tag.create(:a, "30023:pubkey123:article-slug"),
+        Tag.create(:a, "10000:pubkey456:settings")
       ]
 
       event = Fixtures.signed_event(kind: 5, tags: tags)
-      deletion = Nostr.Event.Deletion.parse(event)
+      deletion = Deletion.parse(event)
 
       assert deletion.to_delete_naddr == [
                "30023:pubkey123:article-slug",
@@ -887,27 +899,27 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses deletion request with k tags (kinds)" do
       tags = [
-        Nostr.Tag.create(:e, "event1"),
-        Nostr.Tag.create(:k, "1"),
-        Nostr.Tag.create(:k, "30023")
+        Tag.create(:e, "event1"),
+        Tag.create(:k, "1"),
+        Tag.create(:k, "30023")
       ]
 
       event = Fixtures.signed_event(kind: 5, tags: tags)
-      deletion = Nostr.Event.Deletion.parse(event)
+      deletion = Deletion.parse(event)
 
-      assert deletion.kinds == [1, 30023]
+      assert deletion.kinds == [1, 30_023]
     end
 
     test "parses deletion reason from content" do
       event = Fixtures.signed_event(kind: 5, content: "posted by mistake", tags: [])
-      deletion = Nostr.Event.Deletion.parse(event)
+      deletion = Deletion.parse(event)
 
       assert deletion.reason == "posted by mistake"
     end
 
     test "handles empty deletion list" do
       event = Fixtures.signed_event(kind: 5, content: "", tags: [])
-      deletion = Nostr.Event.Deletion.parse(event)
+      deletion = Deletion.parse(event)
 
       assert deletion.to_delete == []
       assert deletion.to_delete_naddr == []
@@ -917,13 +929,13 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/2 creates deletion request" do
       deletion =
-        Nostr.Event.Deletion.create(
+        Deletion.create(
           ["event1", "event2"],
           reason: "test deletion",
           kinds: [1]
         )
 
-      assert %Nostr.Event.Deletion{} = deletion
+      assert %Deletion{} = deletion
       assert deletion.event.kind == 5
       assert deletion.to_delete == ["event1", "event2"]
       assert deletion.kinds == [1]
@@ -932,18 +944,18 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/2 with replaceable events (a tags)" do
       deletion =
-        Nostr.Event.Deletion.create(
+        Deletion.create(
           [],
           naddrs: ["30023:pubkey:article"],
-          kinds: [30023]
+          kinds: [30_023]
         )
 
       assert deletion.to_delete_naddr == ["30023:pubkey:article"]
-      assert deletion.kinds == [30023]
+      assert deletion.kinds == [30_023]
     end
 
     test "create/2 with no options" do
-      deletion = Nostr.Event.Deletion.create(["event1"])
+      deletion = Deletion.create(["event1"])
 
       assert deletion.to_delete == ["event1"]
       assert deletion.reason == nil
@@ -951,16 +963,19 @@ defmodule Nostr.SpecificEventsTest do
   end
 
   describe "Nostr.Event.Reaction" do
+    alias Nostr.Event.Reaction
+    alias Nostr.Tag
+
     test "parses reaction with like" do
       tags = [
-        Nostr.Tag.create(:e, "reacted_event"),
-        Nostr.Tag.create(:p, "author_pubkey")
+        Tag.create(:e, "reacted_event"),
+        Tag.create(:p, "author_pubkey")
       ]
 
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
-      assert %Nostr.Event.Reaction{} = reaction
+      assert %Reaction{} = reaction
       assert reaction.reaction == "+"
       assert reaction.post == "reacted_event"
       assert reaction.author == "author_pubkey"
@@ -968,51 +983,51 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses reaction with relay hint" do
       tags = [
-        Nostr.Tag.create(:e, "reacted_event", ["wss://relay.example.com", "author_pubkey"]),
-        Nostr.Tag.create(:p, "author_pubkey", ["wss://relay.example.com"])
+        Tag.create(:e, "reacted_event", ["wss://relay.example.com", "author_pubkey"]),
+        Tag.create(:p, "author_pubkey", ["wss://relay.example.com"])
       ]
 
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
       assert reaction.relay_hint == "wss://relay.example.com"
     end
 
     test "parses reaction with k tag (kind of reacted event)" do
       tags = [
-        Nostr.Tag.create(:e, "reacted_event"),
-        Nostr.Tag.create(:p, "author_pubkey"),
-        Nostr.Tag.create(:k, "1")
+        Tag.create(:e, "reacted_event"),
+        Tag.create(:p, "author_pubkey"),
+        Tag.create(:k, "1")
       ]
 
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
       assert reaction.kind == 1
     end
 
     test "parses reaction with a tag (addressable event)" do
       tags = [
-        Nostr.Tag.create(:e, "reacted_event"),
-        Nostr.Tag.create(:p, "author_pubkey"),
-        Nostr.Tag.create(:a, "30023:pubkey:article-slug", ["wss://relay.example.com"])
+        Tag.create(:e, "reacted_event"),
+        Tag.create(:p, "author_pubkey"),
+        Tag.create(:a, "30023:pubkey:article-slug", ["wss://relay.example.com"])
       ]
 
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
       assert reaction.address == "30023:pubkey:article-slug"
     end
 
     test "parses custom emoji reaction" do
       tags = [
-        Nostr.Tag.create(:e, "reacted_event"),
-        Nostr.Tag.create(:p, "author_pubkey"),
-        Nostr.Tag.create(:emoji, "soapbox", ["https://example.com/soapbox.png"])
+        Tag.create(:e, "reacted_event"),
+        Tag.create(:p, "author_pubkey"),
+        Tag.create(:emoji, "soapbox", ["https://example.com/soapbox.png"])
       ]
 
       event = Fixtures.signed_event(kind: 7, content: ":soapbox:", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
       assert reaction.reaction == ":soapbox:"
       assert reaction.emoji_url == "https://example.com/soapbox.png"
@@ -1020,51 +1035,51 @@ defmodule Nostr.SpecificEventsTest do
 
     test "uses last e tag when multiple e tags exist (per NIP-25)" do
       tags = [
-        Nostr.Tag.create(:e, "first_event"),
-        Nostr.Tag.create(:e, "target_event")
+        Tag.create(:e, "first_event"),
+        Tag.create(:e, "target_event")
       ]
 
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
       assert reaction.post == "target_event"
     end
 
     test "uses last p tag when multiple p tags exist (per NIP-25)" do
       tags = [
-        Nostr.Tag.create(:e, "event"),
-        Nostr.Tag.create(:p, "first_author"),
-        Nostr.Tag.create(:p, "target_author")
+        Tag.create(:e, "event"),
+        Tag.create(:p, "first_author"),
+        Tag.create(:p, "target_author")
       ]
 
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
       assert reaction.author == "target_author"
     end
 
     test "p tag is optional (author is nil when missing)" do
-      tags = [Nostr.Tag.create(:e, "event")]
+      tags = [Tag.create(:e, "event")]
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      reaction = Nostr.Event.Reaction.parse(event)
+      reaction = Reaction.parse(event)
 
-      assert %Nostr.Event.Reaction{} = reaction
+      assert %Reaction{} = reaction
       assert reaction.author == nil
       assert reaction.post == "event"
     end
 
     test "returns error when missing e tag" do
-      tags = [Nostr.Tag.create(:p, "pubkey")]
+      tags = [Tag.create(:p, "pubkey")]
       event = Fixtures.signed_event(kind: 7, content: "+", tags: tags)
-      result = Nostr.Event.Reaction.parse(event)
+      result = Reaction.parse(event)
 
-      assert {:error, "Cannot find post tag", _} = result
+      assert {:error, "Cannot find post tag", _event} = result
     end
 
     test "create/3 creates basic like reaction" do
-      reaction = Nostr.Event.Reaction.create("event_id", "+", author: "author_pubkey")
+      reaction = Reaction.create("event_id", "+", author: "author_pubkey")
 
-      assert %Nostr.Event.Reaction{} = reaction
+      assert %Reaction{} = reaction
       assert reaction.event.kind == 7
       assert reaction.reaction == "+"
       assert reaction.post == "event_id"
@@ -1073,7 +1088,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/3 with relay hint and kind" do
       reaction =
-        Nostr.Event.Reaction.create("event_id", "+",
+        Reaction.create("event_id", "+",
           author: "author_pubkey",
           relay_hint: "wss://relay.example.com",
           kind: 1
@@ -1092,7 +1107,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/3 with addressable event" do
       reaction =
-        Nostr.Event.Reaction.create("event_id", "+",
+        Reaction.create("event_id", "+",
           author: "author_pubkey",
           address: "30023:pubkey:article"
         )
@@ -1102,7 +1117,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/3 with custom emoji" do
       reaction =
-        Nostr.Event.Reaction.create("event_id", ":fire:",
+        Reaction.create("event_id", ":fire:",
           author: "author_pubkey",
           emoji_url: "https://example.com/fire.png"
         )
@@ -1116,23 +1131,25 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "create/3 defaults to + reaction" do
-      reaction = Nostr.Event.Reaction.create("event_id")
+      reaction = Reaction.create("event_id")
 
       assert reaction.reaction == "+"
     end
   end
 
   describe "Nostr.Event.ExternalReaction" do
+    alias Nostr.Event.ExternalReaction
+
     test "parses external reaction to website" do
       tags = [
-        Nostr.Tag.create(:k, "web"),
-        Nostr.Tag.create(:i, "https://example.com")
+        Tag.create(:k, "web"),
+        Tag.create(:i, "https://example.com")
       ]
 
       event = Fixtures.signed_event(kind: 17, content: "⭐", tags: tags)
-      reaction = Nostr.Event.ExternalReaction.parse(event)
+      reaction = ExternalReaction.parse(event)
 
-      assert %Nostr.Event.ExternalReaction{} = reaction
+      assert %ExternalReaction{} = reaction
       assert reaction.reaction == "⭐"
       assert reaction.content_type == "web"
       assert [%{id: "https://example.com", hint: nil}] = reaction.identifiers
@@ -1140,12 +1157,12 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses external reaction with hint" do
       tags = [
-        Nostr.Tag.create(:k, "podcast:guid"),
-        Nostr.Tag.create(:i, "podcast:guid:12345", ["https://fountain.fm/show/abc"])
+        Tag.create(:k, "podcast:guid"),
+        Tag.create(:i, "podcast:guid:12345", ["https://fountain.fm/show/abc"])
       ]
 
       event = Fixtures.signed_event(kind: 17, content: "+", tags: tags)
-      reaction = Nostr.Event.ExternalReaction.parse(event)
+      reaction = ExternalReaction.parse(event)
 
       assert reaction.content_type == "podcast:guid"
 
@@ -1155,43 +1172,43 @@ defmodule Nostr.SpecificEventsTest do
 
     test "parses external reaction with multiple i tags" do
       tags = [
-        Nostr.Tag.create(:k, "podcast:guid"),
-        Nostr.Tag.create(:i, "podcast:guid:show123", ["https://example.com/show"]),
-        Nostr.Tag.create(:k, "podcast:item:guid"),
-        Nostr.Tag.create(:i, "podcast:item:guid:ep456", ["https://example.com/episode"])
+        Tag.create(:k, "podcast:guid"),
+        Tag.create(:i, "podcast:guid:show123", ["https://example.com/show"]),
+        Tag.create(:k, "podcast:item:guid"),
+        Tag.create(:i, "podcast:item:guid:ep456", ["https://example.com/episode"])
       ]
 
       event = Fixtures.signed_event(kind: 17, content: "+", tags: tags)
-      reaction = Nostr.Event.ExternalReaction.parse(event)
+      reaction = ExternalReaction.parse(event)
 
       assert length(reaction.identifiers) == 2
     end
 
     test "parses custom emoji in external reaction" do
       tags = [
-        Nostr.Tag.create(:k, "web"),
-        Nostr.Tag.create(:i, "https://example.com"),
-        Nostr.Tag.create(:emoji, "fire", ["https://example.com/fire.png"])
+        Tag.create(:k, "web"),
+        Tag.create(:i, "https://example.com"),
+        Tag.create(:emoji, "fire", ["https://example.com/fire.png"])
       ]
 
       event = Fixtures.signed_event(kind: 17, content: ":fire:", tags: tags)
-      reaction = Nostr.Event.ExternalReaction.parse(event)
+      reaction = ExternalReaction.parse(event)
 
       assert reaction.emoji_url == "https://example.com/fire.png"
     end
 
     test "returns error when missing i tag" do
-      tags = [Nostr.Tag.create(:k, "web")]
+      tags = [Tag.create(:k, "web")]
       event = Fixtures.signed_event(kind: 17, content: "+", tags: tags)
-      result = Nostr.Event.ExternalReaction.parse(event)
+      result = ExternalReaction.parse(event)
 
-      assert {:error, "Cannot find external content identifier (i tag)", _} = result
+      assert {:error, "Cannot find external content identifier (i tag)", _event} = result
     end
 
     test "create/4 creates external reaction" do
-      reaction = Nostr.Event.ExternalReaction.create("web", "https://example.com", "⭐")
+      reaction = ExternalReaction.create("web", "https://example.com", "⭐")
 
-      assert %Nostr.Event.ExternalReaction{} = reaction
+      assert %ExternalReaction{} = reaction
       assert reaction.event.kind == 17
       assert reaction.reaction == "⭐"
       assert reaction.content_type == "web"
@@ -1200,7 +1217,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/4 with hint" do
       reaction =
-        Nostr.Event.ExternalReaction.create(
+        ExternalReaction.create(
           "podcast:guid",
           "podcast:guid:12345",
           "+",
@@ -1213,7 +1230,7 @@ defmodule Nostr.SpecificEventsTest do
 
     test "create/4 with custom emoji" do
       reaction =
-        Nostr.Event.ExternalReaction.create("web", "https://example.com", ":star:",
+        ExternalReaction.create("web", "https://example.com", ":star:",
           emoji_url: "https://example.com/star.png"
         )
 
@@ -1221,34 +1238,38 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "create/4 defaults to + reaction" do
-      reaction = Nostr.Event.ExternalReaction.create("web", "https://example.com")
+      reaction = ExternalReaction.create("web", "https://example.com")
 
       assert reaction.reaction == "+"
     end
   end
 
   describe "Nostr.Event.RecommendRelay" do
+    alias Nostr.Event.RecommendRelay
+
     test "parses relay recommendation" do
       event = Fixtures.signed_event(kind: 2, content: "wss://relay.example.com")
-      relay = Nostr.Event.RecommendRelay.parse(event)
+      relay = RecommendRelay.parse(event)
 
-      assert %Nostr.Event.RecommendRelay{} = relay
+      assert %RecommendRelay{} = relay
       assert relay.relay.host == "relay.example.com"
       assert relay.relay.scheme == "wss"
     end
   end
 
   describe "Nostr.Event.OpenTimestamps" do
+    alias Nostr.Event.OpenTimestamps
+
     test "parses OTS attestation with all fields" do
       tags = [
-        Nostr.Tag.create(:e, "target_event_id", ["wss://relay.example.com"]),
-        Nostr.Tag.create(:k, "1")
+        Tag.create(:e, "target_event_id", ["wss://relay.example.com"]),
+        Tag.create(:k, "1")
       ]
 
       event = Fixtures.signed_event(kind: 1040, content: "base64otsdata", tags: tags)
-      ots = Nostr.Event.OpenTimestamps.parse(event)
+      ots = OpenTimestamps.parse(event)
 
-      assert %Nostr.Event.OpenTimestamps{} = ots
+      assert %OpenTimestamps{} = ots
       assert ots.target_event == "target_event_id"
       assert ots.target_relay.host == "relay.example.com"
       assert ots.target_kind == 1
@@ -1256,34 +1277,34 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "parses OTS attestation with minimal fields" do
-      tags = [Nostr.Tag.create(:e, "target_event_id")]
+      tags = [Tag.create(:e, "target_event_id")]
       event = Fixtures.signed_event(kind: 1040, content: "base64otsdata", tags: tags)
-      ots = Nostr.Event.OpenTimestamps.parse(event)
+      ots = OpenTimestamps.parse(event)
 
-      assert %Nostr.Event.OpenTimestamps{} = ots
+      assert %OpenTimestamps{} = ots
       assert ots.target_event == "target_event_id"
       assert ots.target_relay == nil
       assert ots.target_kind == nil
     end
 
     test "returns error when missing e tag" do
-      tags = [Nostr.Tag.create(:k, "1")]
+      tags = [Tag.create(:k, "1")]
       event = Fixtures.signed_event(kind: 1040, content: "base64otsdata", tags: tags)
-      result = Nostr.Event.OpenTimestamps.parse(event)
+      result = OpenTimestamps.parse(event)
 
-      assert {:error, "Cannot find target event tag", _} = result
+      assert {:error, "Cannot find target event tag", _event} = result
     end
 
     test "create/3 creates OTS attestation event" do
       ots =
-        Nostr.Event.OpenTimestamps.create(
+        OpenTimestamps.create(
           "target_event_id",
           "base64otsdata",
           target_relay: "wss://relay.example.com",
           target_kind: 1
         )
 
-      assert %Nostr.Event.OpenTimestamps{} = ots
+      assert %OpenTimestamps{} = ots
       assert ots.event.kind == 1040
       assert ots.target_event == "target_event_id"
       assert ots.target_relay.host == "relay.example.com"
@@ -1292,9 +1313,9 @@ defmodule Nostr.SpecificEventsTest do
     end
 
     test "create/3 with minimal options" do
-      ots = Nostr.Event.OpenTimestamps.create("target_event_id", "base64otsdata")
+      ots = OpenTimestamps.create("target_event_id", "base64otsdata")
 
-      assert %Nostr.Event.OpenTimestamps{} = ots
+      assert %OpenTimestamps{} = ots
       assert ots.event.kind == 1040
       assert ots.target_event == "target_event_id"
       assert ots.target_relay == nil
@@ -1303,61 +1324,68 @@ defmodule Nostr.SpecificEventsTest do
   end
 
   describe "Event kind ranges" do
+    alias Nostr.Event.Ephemeral
+    alias Nostr.Event.ParameterizedReplaceable
+    alias Nostr.Event.Regular
+    alias Nostr.Event.Replaceable
+
     test "Regular events (1000-9999)" do
       event = Fixtures.signed_event(kind: 5000)
-      regular = Nostr.Event.Regular.parse(event)
+      regular = Regular.parse(event)
 
-      assert %Nostr.Event.Regular{} = regular
+      assert %Regular{} = regular
       assert regular.event.kind == 5000
     end
 
     test "Replaceable events (10000-19999)" do
-      event = Fixtures.signed_event(kind: 15000)
-      replaceable = Nostr.Event.Replaceable.parse(event)
+      event = Fixtures.signed_event(kind: 15_000)
+      replaceable = Replaceable.parse(event)
 
-      assert %Nostr.Event.Replaceable{} = replaceable
+      assert %Replaceable{} = replaceable
       assert replaceable.user == Fixtures.pubkey()
     end
 
     test "Ephemeral events (20000-29999)" do
-      event = Fixtures.signed_event(kind: 25000)
-      ephemeral = Nostr.Event.Ephemeral.parse(event)
+      event = Fixtures.signed_event(kind: 25_000)
+      ephemeral = Ephemeral.parse(event)
 
-      assert %Nostr.Event.Ephemeral{} = ephemeral
+      assert %Ephemeral{} = ephemeral
       assert ephemeral.user == Fixtures.pubkey()
     end
 
     test "Parameterized replaceable events (30000-39999)" do
-      tags = [Nostr.Tag.create(:d, "identifier")]
-      event = Fixtures.signed_event(kind: 35000, tags: tags)
-      param = Nostr.Event.ParameterizedReplaceable.parse(event)
+      tags = [Tag.create(:d, "identifier")]
+      event = Fixtures.signed_event(kind: 35_000, tags: tags)
+      param = ParameterizedReplaceable.parse(event)
 
-      assert %Nostr.Event.ParameterizedReplaceable{} = param
+      assert %ParameterizedReplaceable{} = param
       assert param.d == "identifier"
     end
 
     test "Parameterized replaceable with empty d tag" do
-      tags = [Nostr.Tag.create(:d, nil)]
-      event = Fixtures.signed_event(kind: 35000, tags: tags)
-      param = Nostr.Event.ParameterizedReplaceable.parse(event)
+      tags = [Tag.create(:d, nil)]
+      event = Fixtures.signed_event(kind: 35_000, tags: tags)
+      param = ParameterizedReplaceable.parse(event)
 
       assert param.d == ""
     end
 
     test "Parameterized replaceable without d tag" do
-      event = Fixtures.signed_event(kind: 35000, tags: [])
-      param = Nostr.Event.ParameterizedReplaceable.parse(event)
+      event = Fixtures.signed_event(kind: 35_000, tags: [])
+      param = ParameterizedReplaceable.parse(event)
 
       assert param.d == ""
     end
   end
 
-  describe "Nostr.Event.Unknown" do
-    test "wraps unknown event kinds" do
-      event = Fixtures.signed_event(kind: 99999)
-      unknown = %Nostr.Event.Unknown{event: event}
+  describe "Unknown" do
+    alias Nostr.Event.Unknown
 
-      assert unknown.event.kind == 99999
+    test "wraps unknown event kinds" do
+      event = Fixtures.signed_event(kind: 99_999)
+      unknown = %Unknown{event: event}
+
+      assert unknown.event.kind == 99_999
     end
   end
 end

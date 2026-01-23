@@ -3,9 +3,9 @@ defmodule Nostr.TLV.Decoder do
 
   @compile {:inline, accumulate_tag: 2, constructed_tag?: 1}
 
-  alias Nostr.TLV
-
   import Bitwise
+
+  alias Nostr.TLV
 
   def decode(tlv) do
     with {tag, constructed, lv} <- decode_tag(tlv),

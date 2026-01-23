@@ -139,7 +139,7 @@ defmodule Nostr.Bolt11 do
   defp decode_bech32(invoice) do
     case Bechamel.decode(invoice, ignore_length: true) do
       {:ok, hrp, data} -> {:ok, {hrp, data}}
-      {:error, _} -> {:error, :invalid_bech32}
+      {:error, _reason} -> {:error, :invalid_bech32}
     end
   end
 
@@ -149,7 +149,7 @@ defmodule Nostr.Bolt11 do
       "lnbc" <> rest -> parse_amount("lnbc", :mainnet, rest)
       "lntb" <> rest -> parse_amount("lntb", :testnet, rest)
       "lnbcrt" <> rest -> parse_amount("lnbcrt", :regtest, rest)
-      _ -> {:error, :invalid_prefix}
+      _hrp -> {:error, :invalid_prefix}
     end
   end
 
@@ -167,26 +167,26 @@ defmodule Nostr.Bolt11 do
   defp parse_amount_string(str) do
     # Amount format: digits followed by optional multiplier (m, u, n, p)
     case Regex.run(~r/^(\d+)([munp])?$/, str) do
-      [_, digits] ->
+      [_full_match, digits] ->
         # No multiplier means BTC
         {:ok, String.to_integer(digits) * 100_000_000_000}
 
-      [_, digits, <<mult>>] ->
+      [_full_match, digits, <<mult>>] ->
         case Map.get(@multipliers, mult) do
           nil -> :error
           factor -> {:ok, String.to_integer(digits) * factor}
         end
 
-      _ ->
+      _no_match ->
         :error
     end
   end
 
-  # Parse data part: timestamp (35 bits) + tagged fields + signature (520 bits) + recovery (5 bits)
+  # Parse data: timestamp (35 bits) + tagged fields + signature (520 bits) + recovery (5 bits)
   defp parse_data(data) when is_list(data) do
     # Convert 5-bit values to binary
     bits =
-      data |> Enum.map(&(Integer.to_string(&1, 2) |> String.pad_leading(5, "0"))) |> Enum.join()
+      Enum.map_join(data, &(&1 |> Integer.to_string(2) |> String.pad_leading(5, "0")))
 
     # Total length must be at least timestamp (35) + signature (520) + recovery (5) = 560 bits
     if String.length(bits) < 560 do

@@ -27,7 +27,8 @@ defmodule Nostr.NIP36 do
   """
   @moduledoc tags: [:nip36], nip: 36
 
-  alias Nostr.{Event, Tag}
+  alias Nostr.Event
+  alias Nostr.Tag
 
   @tag_type :"content-warning"
 

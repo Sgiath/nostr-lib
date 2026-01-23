@@ -1,7 +1,9 @@
 defmodule Nostr.NIP51Test do
   use ExUnit.Case, async: true
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
   alias Nostr.Test.Fixtures
 
   describe "NIP51 encryption utilities" do
@@ -486,11 +488,15 @@ defmodule Nostr.NIP51Test do
   end
 
   describe "roundtrip tests" do
+    alias Nostr.Event.FollowSets
+    alias Nostr.Event.ListMute
+    alias Nostr.Event.RelayList
+
     test "ListMute roundtrip with encryption" do
       seckey = Fixtures.seckey()
 
       original =
-        Nostr.Event.ListMute.create(
+        ListMute.create(
           %{
             pubkeys: ["public1"],
             hashtags: ["spam"],
@@ -509,14 +515,14 @@ defmodule Nostr.NIP51Test do
       assert parsed.hashtags == ["spam"]
       assert parsed.private_pubkeys == :not_loaded
 
-      decrypted = Nostr.Event.ListMute.decrypt_private(parsed, seckey)
+      decrypted = ListMute.decrypt_private(parsed, seckey)
       assert decrypted.private_pubkeys == ["private1"]
       assert decrypted.private_words == ["secret"]
     end
 
     test "RelayList roundtrip" do
       original =
-        Nostr.Event.RelayList.create([
+        RelayList.create([
           "wss://relay1.com",
           {"wss://relay2.com", :read},
           {"wss://relay3.com", :write}
@@ -534,7 +540,7 @@ defmodule Nostr.NIP51Test do
 
     test "FollowSets roundtrip with metadata" do
       original =
-        Nostr.Event.FollowSets.create("test-set", ["pk1", "pk2"],
+        FollowSets.create("test-set", ["pk1", "pk2"],
           title: "Test Set",
           description: "A test"
         )

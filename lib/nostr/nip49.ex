@@ -106,7 +106,7 @@ defmodule Nostr.NIP49 do
 
       case xchacha20_poly1305_decrypt(ciphertext, symmetric_key, nonce, security_byte) do
         {:ok, private_key} -> {:ok, Base.encode16(private_key, case: :lower)}
-        {:error, _} = error -> error
+        {:error, _reason} = error -> error
       end
     end
   end
@@ -130,16 +130,16 @@ defmodule Nostr.NIP49 do
     end
   end
 
-  defp decode_hex(_), do: {:error, :invalid_private_key_length}
+  defp decode_hex(_hex), do: {:error, :invalid_private_key_length}
 
   defp validate_log_n(log_n) when log_n >= 1 and log_n <= 22, do: :ok
-  defp validate_log_n(_), do: {:error, :invalid_log_n}
+  defp validate_log_n(_log_n), do: {:error, :invalid_log_n}
 
   defp decode_ncryptsec(ncryptsec) do
     case Bechamel.decode(ncryptsec, ignore_length: true) do
       {:ok, "ncryptsec", payload} -> {:ok, payload}
-      {:ok, _, _} -> {:error, :invalid_hrp}
-      {:error, _} -> {:error, :invalid_bech32}
+      {:ok, _hrp, _payload} -> {:error, :invalid_hrp}
+      {:error, _reason} -> {:error, :invalid_bech32}
     end
   end
 
@@ -151,11 +151,11 @@ defmodule Nostr.NIP49 do
     {:ok, {log_n, salt, nonce, security_byte, ciphertext}}
   end
 
-  defp parse_payload(<<version, _::binary>>) when version != @version do
+  defp parse_payload(<<version, _rest::binary>>) when version != @version do
     {:error, :unsupported_version}
   end
 
-  defp parse_payload(_), do: {:error, :invalid_payload}
+  defp parse_payload(_payload), do: {:error, :invalid_payload}
 
   defp encode_security_byte(:insecure), do: <<0x00>>
   defp encode_security_byte(:secure), do: <<0x01>>
@@ -233,10 +233,10 @@ defmodule Nostr.NIP49 do
     }
 
     # Run 20 rounds (10 double rounds)
-    state = Enum.reduce(1..10, state, fn _, s -> double_round(s) end)
+    state = Enum.reduce(1..10, state, fn _round, s -> double_round(s) end)
 
     # Extract words 0-3 and 12-15 as output
-    {s0, s1, s2, s3, _, _, _, _, _, _, _, _, s12, s13, s14, s15} = state
+    {s0, s1, s2, s3, _s4, _s5, _s6, _s7, _s8, _s9, _s10, _s11, s12, s13, s14, s15} = state
 
     <<s0::little-32, s1::little-32, s2::little-32, s3::little-32, s12::little-32, s13::little-32,
       s14::little-32, s15::little-32>>

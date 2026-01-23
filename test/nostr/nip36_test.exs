@@ -1,9 +1,10 @@
 defmodule Nostr.NIP36Test do
   use ExUnit.Case, async: true
 
-  alias Nostr.Tag
-  alias Nostr.Event.{Note, Article}
+  alias Nostr.Event.Article
+  alias Nostr.Event.Note
   alias Nostr.NIP36
+  alias Nostr.Tag
   alias Nostr.Test.Fixtures
 
   describe "from_tags/1" do

@@ -252,7 +252,7 @@ defmodule Nostr.EventTest do
     end
 
     test "parses unknown kind as Unknown" do
-      raw = Fixtures.raw_event_map(kind: 99999)
+      raw = Fixtures.raw_event_map(kind: 99_999)
       result = Nostr.Event.parse_specific(raw)
 
       assert %Nostr.Event.Unknown{} = result

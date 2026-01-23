@@ -67,7 +67,7 @@ defmodule Nostr.Event.UserStatusTest do
     test "returns error for wrong kind" do
       event = Fixtures.signed_event(kind: 1, content: "Not a status")
 
-      assert {:error, "Event is not a user status (expected kind 30315)", _} =
+      assert {:error, "Event is not a user status (expected kind 30315)", _event} =
                UserStatus.parse(event)
     end
   end
@@ -212,7 +212,7 @@ defmodule Nostr.Event.UserStatusTest do
       json = JSON.encode!(signed_event)
 
       # Parse back
-      parsed_event = Nostr.Event.Parser.parse(JSON.decode!(json))
+      parsed_event = json |> JSON.decode!() |> Nostr.Event.Parser.parse()
       parsed_status = UserStatus.parse(parsed_event)
 
       assert parsed_status.status_type == "music"

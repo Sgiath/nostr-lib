@@ -42,8 +42,11 @@ defmodule Nostr.Event.ZapReceipt do
   """
   @moduledoc tags: [:event, :nip57], nip: 57
 
-  alias Nostr.{Bolt11, Event, Tag}
+  alias Nostr.Bolt11
+  alias Nostr.Event
+  alias Nostr.Event.Parser
   alias Nostr.Event.ZapRequest
+  alias Nostr.Tag
 
   @kind 9735
 
@@ -246,8 +249,8 @@ defmodule Nostr.Event.ZapReceipt do
     end
   end
 
-  defp amounts_match?(nil, _), do: true
-  defp amounts_match?(_, nil), do: true
+  defp amounts_match?(nil, _request), do: true
+  defp amounts_match?(_invoice, nil), do: true
 
   defp amounts_match?(_invoice, %ZapRequest{amount_msats: nil}), do: true
 
@@ -285,7 +288,7 @@ defmodule Nostr.Event.ZapReceipt do
       str when is_binary(str) ->
         case Integer.parse(str) do
           {kind, ""} -> kind
-          _ -> nil
+          _parse_fail -> nil
         end
     end
   end
@@ -293,7 +296,7 @@ defmodule Nostr.Event.ZapReceipt do
   defp parse_invoice(bolt11) do
     case Bolt11.decode(bolt11) do
       {:ok, invoice} -> invoice
-      {:error, _} -> nil
+      {:error, _reason} -> nil
     end
   end
 
@@ -303,14 +306,14 @@ defmodule Nostr.Event.ZapReceipt do
          %ZapRequest{} = request <- ZapRequest.parse(event) do
       request
     else
-      _ -> nil
+      _error -> nil
     end
   end
 
   defp safe_parse_event(event_map) do
-    Nostr.Event.Parser.parse(event_map)
+    Parser.parse(event_map)
   rescue
-    _ -> nil
+    _error -> nil
   end
 
   @doc """

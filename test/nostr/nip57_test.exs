@@ -1,8 +1,9 @@
 defmodule Nostr.NIP57Test do
   use ExUnit.Case, async: true
 
+  alias Nostr.Event.ZapReceipt
+  alias Nostr.Event.ZapRequest
   alias Nostr.NIP57
-  alias Nostr.Event.{ZapRequest, ZapReceipt}
   alias Nostr.Tag
   alias Nostr.Test.Fixtures
 

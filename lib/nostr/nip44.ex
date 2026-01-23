@@ -11,12 +11,12 @@ defmodule Nostr.NIP44 do
 
   @version 2
   @min_plaintext_size 1
-  @max_plaintext_size 65535
+  @max_plaintext_size 65_535
   # Payload constraints
   @min_payload_size 132
-  @max_payload_size 87472
+  @max_payload_size 87_472
   @min_decoded_size 99
-  @max_decoded_size 65603
+  @max_decoded_size 65_603
 
   # HKDF salt for NIP-44 v2
   @hkdf_salt "nip44-v2"
@@ -189,7 +189,7 @@ defmodule Nostr.NIP44 do
     hash_len = 32
     n = ceil(length / hash_len)
 
-    {output, _} =
+    {output, _last_t} =
       Enum.reduce(1..n, {<<>>, <<>>}, fn i, {acc, prev} ->
         t = :crypto.mac(:hmac, :sha256, prk, <<prev::binary, info::binary, i::8>>)
         {<<acc::binary, t::binary>>, t}
@@ -232,7 +232,7 @@ defmodule Nostr.NIP44 do
     :crypto.hash_equals(a, b)
   end
 
-  defp constant_time_compare(_, _), do: false
+  defp constant_time_compare(_a, _b), do: false
 
   # Calculate padded length based on power-of-two chunks
   @doc false
@@ -253,7 +253,7 @@ defmodule Nostr.NIP44 do
   end
 
   defp next_power_of_two(n) do
-    exp = :math.log2(n) |> floor()
+    exp = n |> :math.log2() |> floor()
     :erlang.bsl(1, exp + 1)
   end
 

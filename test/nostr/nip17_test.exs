@@ -193,11 +193,11 @@ defmodule Nostr.NIP17Test do
   end
 
   describe "DMRelayList" do
-    test "create/2 creates kind 10050 event" do
+    test "create/2 creates kind 10_050 event" do
       relays = ["wss://relay1.example.com", "wss://relay2.example.com"]
       list = DMRelayList.create(relays, pubkey: @sender_pubkey)
 
-      assert list.event.kind == 10050
+      assert list.event.kind == 10_050
       assert list.event.content == ""
       assert length(list.relays) == 2
     end
@@ -212,7 +212,7 @@ defmodule Nostr.NIP17Test do
     test "parse/1 extracts relays from event" do
       event =
         Fixtures.signed_event(
-          kind: 10050,
+          kind: 10_050,
           content: "",
           tags: [
             Tag.create(:relay, "wss://inbox.example.com"),
@@ -386,9 +386,9 @@ defmodule Nostr.NIP17Test do
       assert %FileMessage{} = parsed
     end
 
-    test "parse_specific routes kind 10050 to DMRelayList" do
+    test "parse_specific routes kind 10_050 to DMRelayList" do
       tags = [Tag.create(:relay, "wss://relay.example.com")]
-      event = Fixtures.signed_event(kind: 10050, content: "", tags: tags)
+      event = Fixtures.signed_event(kind: 10_050, content: "", tags: tags)
       parsed = Event.Parser.parse_specific(event)
 
       assert %DMRelayList{} = parsed
@@ -421,7 +421,7 @@ defmodule Nostr.NIP17Test do
 
       # Alice can also read her own sent message from her sent folder
       alice_sent_wrap = Enum.find(alice_wraps, &(&1.recipient == @sender_pubkey))
-      {:ok, sent_msg, _} = NIP17.receive_dm(alice_sent_wrap, @sender_seckey)
+      {:ok, sent_msg, _extra} = NIP17.receive_dm(alice_sent_wrap, @sender_seckey)
       assert sent_msg.content == "Hi Bob!"
     end
   end

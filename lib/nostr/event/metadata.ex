@@ -145,14 +145,14 @@ defmodule Nostr.Event.Metadata do
           identities: Nostr.NIP39.from_tags(event.tags)
         }
 
-      {:error, _} ->
+      {:error, _reason} ->
         {:error, "Cannot decode content field", event}
     end
   end
 
   defp parse_url(nil), do: nil
   defp parse_url(url) when is_binary(url), do: URI.parse(url)
-  defp parse_url(_), do: nil
+  defp parse_url(_other), do: nil
 
   defp parse_birthday(nil), do: nil
 
@@ -164,7 +164,7 @@ defmodule Nostr.Event.Metadata do
     }
   end
 
-  defp parse_birthday(_), do: nil
+  defp parse_birthday(_other), do: nil
 
   @doc """
   Create new `Nostr.Event.Metadata` struct.

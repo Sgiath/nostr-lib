@@ -1,8 +1,10 @@
 defmodule Nostr.NIP30Test do
   use ExUnit.Case, async: true
-  doctest Nostr.NIP30
 
-  alias Nostr.{Tag, NIP30}
+  alias Nostr.NIP30
+  alias Nostr.Tag
+
+  doctest Nostr.NIP30
 
   describe "to_tag/2" do
     test "creates emoji tag" do

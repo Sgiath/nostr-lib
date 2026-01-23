@@ -27,10 +27,10 @@ defmodule Nostr.Event.Validator do
 
   # Verifies the Schnorr signature against the event ID and pubkey
   defp valid_sig?(%Nostr.Event{id: id, sig: sig, pubkey: pubkey}) do
-    Secp256k1.schnorr_valid?(
-      Base.decode16!(sig, case: :lower),
-      Base.decode16!(id, case: :lower),
-      Base.decode16!(pubkey, case: :lower)
-    )
+    sig_bytes = Base.decode16!(sig, case: :lower)
+    id_bytes = Base.decode16!(id, case: :lower)
+    pubkey_bytes = Base.decode16!(pubkey, case: :lower)
+
+    Secp256k1.schnorr_valid?(sig_bytes, id_bytes, pubkey_bytes)
   end
 end

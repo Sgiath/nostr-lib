@@ -2,7 +2,8 @@ defmodule Nostr.NIP37Test do
   use ExUnit.Case, async: true
 
   alias Nostr.Event
-  alias Nostr.Event.{DraftWrap, PrivateContentRelayList}
+  alias Nostr.Event.DraftWrap
+  alias Nostr.Event.PrivateContentRelayList
   alias Nostr.Test.Fixtures
 
   describe "DraftWrap.create/3" do
@@ -22,7 +23,7 @@ defmodule Nostr.NIP37Test do
     test "creates draft wrap with expiration" do
       draft = %{kind: 1, content: "Expiring draft", tags: []}
       seckey = Fixtures.seckey()
-      expiration = DateTime.utc_now() |> DateTime.add(86400) |> DateTime.to_unix()
+      expiration = DateTime.utc_now() |> DateTime.add(86_400) |> DateTime.to_unix()
 
       assert {:ok, wrap} =
                DraftWrap.create(draft, seckey, identifier: "exp-draft", expiration: expiration)
@@ -56,7 +57,7 @@ defmodule Nostr.NIP37Test do
     end
 
     test "includes k tag with draft kind" do
-      draft = %{kind: 30023, content: "Article draft", tags: []}
+      draft = %{kind: 30_023, content: "Article draft", tags: []}
       seckey = Fixtures.seckey()
 
       assert {:ok, wrap} = DraftWrap.create(draft, seckey, identifier: "article")
@@ -138,8 +139,8 @@ defmodule Nostr.NIP37Test do
     test "includes draft kind when provided" do
       seckey = Fixtures.seckey()
 
-      {:ok, deletion} = DraftWrap.delete("my-draft", seckey: seckey, draft_kind: 30023)
-      assert deletion.draft_kind == 30023
+      {:ok, deletion} = DraftWrap.delete("my-draft", seckey: seckey, draft_kind: 30_023)
+      assert deletion.draft_kind == 30_023
 
       k_tag = Enum.find(deletion.event.tags, &(&1.type == :k))
       assert k_tag.data == "30023"
@@ -152,18 +153,18 @@ defmodule Nostr.NIP37Test do
     end
   end
 
-  describe "DraftWrap.is_deleted?/1" do
+  describe "DraftWrap.deleted?/1" do
     test "returns true for blanked content" do
       seckey = Fixtures.seckey()
       {:ok, deletion} = DraftWrap.delete("my-draft", seckey: seckey)
-      assert DraftWrap.is_deleted?(deletion) == true
+      assert DraftWrap.deleted?(deletion) == true
     end
 
     test "returns false for non-empty content" do
       draft = %{kind: 1, content: "Not deleted", tags: []}
       seckey = Fixtures.seckey()
       {:ok, wrap} = DraftWrap.create(draft, seckey)
-      assert DraftWrap.is_deleted?(wrap) == false
+      assert DraftWrap.deleted?(wrap) == false
     end
   end
 
@@ -231,7 +232,8 @@ defmodule Nostr.NIP37Test do
 
       # Create an event with empty content manually
       event =
-        Event.create(10_013, content: "", tags: [], pubkey: pubkey)
+        10_013
+        |> Event.create(content: "", tags: [], pubkey: pubkey)
         |> Event.sign(seckey)
 
       parsed = PrivateContentRelayList.parse(event)

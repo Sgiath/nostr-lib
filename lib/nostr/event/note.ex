@@ -227,7 +227,7 @@ defmodule Nostr.Event.Note do
     create(content, opts)
   end
 
-  def reply(content, %{id: _} = parent_ref, opts) do
+  def reply(content, %{id: _id} = parent_ref, opts) do
     opts = Keyword.merge(opts, root: parent_ref)
     create(content, opts)
   end
@@ -261,29 +261,29 @@ defmodule Nostr.Event.Note do
   # Utility functions
 
   @doc "Check if this note is a reply (has root reference)"
-  @spec is_reply?(t()) :: boolean()
-  def is_reply?(%__MODULE__{root: root}), do: root != nil
+  @spec reply?(t()) :: boolean()
+  def reply?(%__MODULE__{root: root}), do: root != nil
 
   @doc "Check if this note is a top-level reply (direct reply to root, no intermediate parent)"
-  @spec is_top_level_reply?(t()) :: boolean()
-  def is_top_level_reply?(%__MODULE__{root: root, reply_to: nil}) when root != nil, do: true
-  def is_top_level_reply?(_), do: false
+  @spec top_level_reply?(t()) :: boolean()
+  def top_level_reply?(%__MODULE__{root: root, reply_to: nil}) when root != nil, do: true
+  def top_level_reply?(_note), do: false
 
   @doc "Check if this note quotes other events"
   @spec has_quotes?(t()) :: boolean()
-  def has_quotes?(%__MODULE__{quotes: [_ | _]}), do: true
-  def has_quotes?(_), do: false
+  def has_quotes?(%__MODULE__{quotes: [_first | _rest]}), do: true
+  def has_quotes?(_note), do: false
 
   @doc "Get the thread root event ID"
   @spec thread_root_id(t()) :: binary() | nil
   def thread_root_id(%__MODULE__{root: %{id: id}}), do: id
-  def thread_root_id(_), do: nil
+  def thread_root_id(_note), do: nil
 
   @doc "Get the direct parent event ID (reply_to if present, otherwise root)"
   @spec parent_id(t()) :: binary() | nil
   def parent_id(%__MODULE__{reply_to: %{id: id}}), do: id
   def parent_id(%__MODULE__{root: %{id: id}}), do: id
-  def parent_id(_), do: nil
+  def parent_id(_note), do: nil
 
   # E-tag parsing
 
@@ -302,15 +302,17 @@ defmodule Nostr.Event.Note do
     }
   end
 
-  defp get_relay([relay | _]) when is_binary(relay) and byte_size(relay) > 0, do: relay
-  defp get_relay(_), do: nil
+  defp get_relay([relay | _rest]) when is_binary(relay) and byte_size(relay) > 0, do: relay
+  defp get_relay(_info), do: nil
 
-  defp get_marker([_, "root" | _]), do: :root
-  defp get_marker([_, "reply" | _]), do: :reply
-  defp get_marker(_), do: nil
+  defp get_marker([_relay, "root" | _rest]), do: :root
+  defp get_marker([_relay, "reply" | _rest]), do: :reply
+  defp get_marker(_info), do: nil
 
-  defp get_pubkey([_, _, pubkey | _]) when is_binary(pubkey) and byte_size(pubkey) > 0, do: pubkey
-  defp get_pubkey(_), do: nil
+  defp get_pubkey([_relay, _marker, pubkey | _rest])
+       when is_binary(pubkey) and byte_size(pubkey) > 0, do: pubkey
+
+  defp get_pubkey(_info), do: nil
 
   # Thread resolution - marked tags (preferred NIP-10 format)
 
@@ -343,8 +345,8 @@ defmodule Nostr.Event.Note do
   defp parse_q_tag(%Tag{data: id, info: info}) do
     %{
       id: id,
-      relay: Enum.at(info, 0) |> empty_to_nil(),
-      pubkey: Enum.at(info, 1) |> empty_to_nil()
+      relay: info |> Enum.at(0) |> empty_to_nil(),
+      pubkey: info |> Enum.at(1) |> empty_to_nil()
     }
   end
 
@@ -438,9 +440,9 @@ defmodule Nostr.Event.Note do
   # NIP-14 subject handling
 
   defp derive_reply_subject(explicit, _parent_subject) when is_binary(explicit), do: explicit
-  defp derive_reply_subject(_, nil), do: nil
+  defp derive_reply_subject(_explicit, nil), do: nil
 
-  defp derive_reply_subject(_, parent_subject) when is_binary(parent_subject) do
+  defp derive_reply_subject(_explicit, parent_subject) when is_binary(parent_subject) do
     if String.starts_with?(parent_subject, "Re:") do
       parent_subject
     else

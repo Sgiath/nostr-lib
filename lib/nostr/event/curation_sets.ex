@@ -18,7 +18,9 @@ defmodule Nostr.Event.CurationSets do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, :kind, :identifier, :title, :image, :description, items: []]
 

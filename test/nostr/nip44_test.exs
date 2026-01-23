@@ -92,7 +92,7 @@ defmodule Nostr.NIP44Test do
         {512, 512},
         {515, 640},
         {1024, 1024},
-        {65535, 65536}
+        {65_535, 65_536}
       ]
 
       for {input, expected} <- test_cases do
@@ -188,8 +188,8 @@ defmodule Nostr.NIP44Test do
 
     test "returns error for payload too short" do
       conversation_key = :crypto.strong_rand_bytes(32)
-      short_payload = Base.encode64(:crypto.strong_rand_bytes(50))
-      assert {:error, _} = Nostr.NIP44.decrypt(short_payload, conversation_key)
+      short_payload = 50 |> :crypto.strong_rand_bytes() |> Base.encode64()
+      assert {:error, _reason} = Nostr.NIP44.decrypt(short_payload, conversation_key)
     end
 
     test "returns error for invalid MAC" do

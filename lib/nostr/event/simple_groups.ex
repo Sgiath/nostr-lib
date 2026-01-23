@@ -10,7 +10,9 @@ defmodule Nostr.Event.SimpleGroups do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, groups: [], relays: []]
 
@@ -102,11 +104,11 @@ defmodule Nostr.Event.SimpleGroups do
     %{id: id, relay: URI.parse(relay), name: nil}
   end
 
-  defp parse_group_tag(%Tag{data: id, info: [relay, name | _]}) do
+  defp parse_group_tag(%Tag{data: id, info: [relay, name | _rest]}) do
     %{id: id, relay: URI.parse(relay), name: name}
   end
 
-  defp build_group_tag(%{id: id, relay: relay, name: name}) when not is_nil(name) do
+  defp build_group_tag(%{id: id, relay: relay, name: name}) when is_binary(name) do
     Tag.create(:group, id, [to_string(relay), name])
   end
 

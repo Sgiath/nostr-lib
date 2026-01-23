@@ -12,7 +12,9 @@ defmodule Nostr.Event.ReleaseArtifactSets do
   """
   @moduledoc tags: [:event, :nip51], nip: 51
 
-  alias Nostr.{Event, Tag, NIP51}
+  alias Nostr.Event
+  alias Nostr.NIP51
+  alias Nostr.Tag
 
   defstruct [:event, :identifier, :release_notes, artifacts: [], application: nil]
 
@@ -32,7 +34,7 @@ defmodule Nostr.Event.ReleaseArtifactSets do
     # The 'a' tag points to the parent software application
     application =
       case NIP51.get_tag_values(event, :a) do
-        [app | _] -> app
+        [app | _rest] -> app
         [] -> nil
       end
 

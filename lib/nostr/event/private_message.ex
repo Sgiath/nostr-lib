@@ -185,7 +185,7 @@ defmodule Nostr.Event.PrivateMessage do
     |> Enum.map(&parse_receiver/1)
   end
 
-  defp parse_receiver(%Tag{type: :p, data: pubkey, info: [relay | _]}) do
+  defp parse_receiver(%Tag{type: :p, data: pubkey, info: [relay | _rest]}) do
     %{pubkey: pubkey, relay: URI.parse(relay)}
   end
 
@@ -196,14 +196,14 @@ defmodule Nostr.Event.PrivateMessage do
   defp get_reply_to(%{tags: tags}) do
     Enum.find_value(tags, fn
       %Tag{type: :e, data: event_id} -> event_id
-      _ -> nil
+      _other -> nil
     end)
   end
 
   defp get_subject(%{tags: tags}) do
     Enum.find_value(tags, fn
       %Tag{type: :subject, data: subject} -> subject
-      _ -> nil
+      _other -> nil
     end)
   end
 
@@ -213,7 +213,7 @@ defmodule Nostr.Event.PrivateMessage do
     |> Enum.map(&parse_quote/1)
   end
 
-  defp parse_quote(%Tag{type: :q, data: id, info: [relay, pubkey | _]}) do
+  defp parse_quote(%Tag{type: :q, data: id, info: [relay, pubkey | _rest]}) do
     %{id: id, relay: relay, pubkey: pubkey}
   end
 

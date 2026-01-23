@@ -69,7 +69,7 @@ defmodule Nostr.Event.ArticleTest do
     test "returns error for wrong kind" do
       event = Fixtures.signed_event(kind: 1, content: "Not an article")
 
-      assert {:error, "Event is not an article (expected kind 30023 or 30024)", _} =
+      assert {:error, "Event is not an article (expected kind 30023 or 30024)", _event} =
                Article.parse(event)
     end
   end

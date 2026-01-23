@@ -6,7 +6,7 @@ defmodule Nostr.Bolt11Test do
   describe "decode/1" do
     test "returns error for invalid prefix" do
       # Invalid prefix should return error
-      assert {:error, _} =
+      assert {:error, _reason} =
                Bolt11.decode(
                  "lnxx1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq5qw8xv"
                )

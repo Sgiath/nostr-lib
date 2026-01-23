@@ -150,7 +150,7 @@ defmodule Nostr.NIP51 do
   @spec get_identifier(Nostr.Event.t()) :: binary() | nil
   def get_identifier(event) do
     case get_tags_by_type(event, :d) do
-      [%Tag{data: identifier} | _] -> identifier
+      [%Tag{data: identifier} | _rest] -> identifier
       [] -> nil
     end
   end
@@ -200,23 +200,21 @@ defmodule Nostr.NIP51 do
 
   defp get_first_tag_value(event, type) do
     case get_tags_by_type(event, type) do
-      [%Tag{data: value} | _] -> value
+      [%Tag{data: value} | _rest] -> value
       [] -> nil
     end
   end
 
   defp decrypt_nip04(content, seckey, pubkey) do
-    try do
-      tags =
-        content
-        |> Nostr.Crypto.decrypt(seckey, pubkey)
-        |> JSON.decode!()
-        |> Enum.map(&Tag.parse/1)
+    tags =
+      content
+      |> Nostr.Crypto.decrypt(seckey, pubkey)
+      |> JSON.decode!()
+      |> Enum.map(&Tag.parse/1)
 
-      {:ok, tags}
-    rescue
-      e -> {:error, {:nip04_decrypt_failed, e}}
-    end
+    {:ok, tags}
+  rescue
+    e -> {:error, {:nip04_decrypt_failed, e}}
   end
 
   defp decrypt_nip44(content, seckey, pubkey) do
