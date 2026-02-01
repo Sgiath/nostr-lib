@@ -1,5 +1,5 @@
 defmodule Nostr.TagTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   doctest Nostr.Tag
 

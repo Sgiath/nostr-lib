@@ -18,8 +18,10 @@
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
               elixir
+              elixir-ls
               git
               autoreconfHook
+              prettier
             ];
 
             env = {

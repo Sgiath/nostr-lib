@@ -253,7 +253,11 @@ defmodule Nostr.NIP44 do
   end
 
   defp next_power_of_two(n) do
-    exp = n |> :math.log2() |> floor()
+    exp =
+      n
+      |> :math.log2()
+      |> floor()
+
     :erlang.bsl(1, exp + 1)
   end
 

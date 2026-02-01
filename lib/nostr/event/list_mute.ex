@@ -187,10 +187,25 @@ defmodule Nostr.Event.ListMute do
   # Private functions
 
   defp build_public_tags(items) do
-    p_tags = items |> Map.get(:pubkeys, []) |> Enum.map(&Tag.create(:p, &1))
-    t_tags = items |> Map.get(:hashtags, []) |> Enum.map(&Tag.create(:t, &1))
-    word_tags = items |> Map.get(:words, []) |> Enum.map(&Tag.create(:word, &1))
-    e_tags = items |> Map.get(:threads, []) |> Enum.map(&Tag.create(:e, &1))
+    p_tags =
+      items
+      |> Map.get(:pubkeys, [])
+      |> Enum.map(&Tag.create(:p, &1))
+
+    t_tags =
+      items
+      |> Map.get(:hashtags, [])
+      |> Enum.map(&Tag.create(:t, &1))
+
+    word_tags =
+      items
+      |> Map.get(:words, [])
+      |> Enum.map(&Tag.create(:word, &1))
+
+    e_tags =
+      items
+      |> Map.get(:threads, [])
+      |> Enum.map(&Tag.create(:e, &1))
 
     p_tags ++ t_tags ++ word_tags ++ e_tags
   end

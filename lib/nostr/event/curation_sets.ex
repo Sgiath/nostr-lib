@@ -84,8 +84,15 @@ defmodule Nostr.Event.CurationSets do
   def create_articles(identifier, items, opts \\ []) do
     items = if is_list(items), do: Map.new(items), else: items
 
-    a_tags = items |> Map.get(:articles, []) |> Enum.map(&Tag.create(:a, &1))
-    e_tags = items |> Map.get(:notes, []) |> Enum.map(&Tag.create(:e, &1))
+    a_tags =
+      items
+      |> Map.get(:articles, [])
+      |> Enum.map(&Tag.create(:a, &1))
+
+    e_tags =
+      items
+      |> Map.get(:notes, [])
+      |> Enum.map(&Tag.create(:e, &1))
 
     create_set(@article_kind, identifier, a_tags ++ e_tags, opts)
   end

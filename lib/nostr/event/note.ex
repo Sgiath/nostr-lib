@@ -343,10 +343,20 @@ defmodule Nostr.Event.Note do
   end
 
   defp parse_q_tag(%Tag{data: id, info: info}) do
+    relay =
+      info
+      |> Enum.at(0)
+      |> empty_to_nil()
+
+    pubkey =
+      info
+      |> Enum.at(1)
+      |> empty_to_nil()
+
     %{
       id: id,
-      relay: info |> Enum.at(0) |> empty_to_nil(),
-      pubkey: info |> Enum.at(1) |> empty_to_nil()
+      relay: relay,
+      pubkey: pubkey
     }
   end
 

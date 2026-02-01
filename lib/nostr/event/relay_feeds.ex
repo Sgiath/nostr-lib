@@ -65,8 +65,16 @@ defmodule Nostr.Event.RelayFeeds do
   def create(items, opts) when is_list(items), do: create(Map.new(items), opts)
 
   def create(items, opts) when is_map(items) do
-    relay_tags = items |> Map.get(:relays, []) |> Enum.map(&Tag.create(:relay, &1))
-    set_tags = items |> Map.get(:relay_sets, []) |> Enum.map(&Tag.create(:a, &1))
+    relay_tags =
+      items
+      |> Map.get(:relays, [])
+      |> Enum.map(&Tag.create(:relay, &1))
+
+    set_tags =
+      items
+      |> Map.get(:relay_sets, [])
+      |> Enum.map(&Tag.create(:a, &1))
+
     tags = relay_tags ++ set_tags
 
     opts = Keyword.merge(opts, tags: tags, content: "")

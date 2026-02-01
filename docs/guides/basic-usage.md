@@ -61,6 +61,7 @@ signed_event =
 ```
 
 The `sign/2` function automatically:
+
 - Derives and sets the public key from the secret key
 - Computes the event ID (SHA256 hash)
 - Creates the Schnorr signature

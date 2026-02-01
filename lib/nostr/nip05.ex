@@ -192,25 +192,9 @@ defmodule Nostr.NIP05 do
          {:ok, url} <- verification_url(identifier) do
       req_opts = Keyword.merge([redirect: false, url: URI.to_string(url)], opts)
 
-      case Req.get(req_opts) do
-        {:ok, %Req.Response{status: status}} when status in 300..399 ->
-          {:error, "redirects not allowed"}
-
-        {:ok, %Req.Response{status: 200, body: body}} when is_map(body) ->
-          extract_from_response(body, local_part)
-
-        {:ok, %Req.Response{status: 200, body: body}} when is_binary(body) ->
-          case JSON.decode(body) do
-            {:ok, decoded} -> extract_from_response(decoded, local_part)
-            {:error, _reason} -> {:error, "invalid JSON response"}
-          end
-
-        {:ok, %Req.Response{status: status}} ->
-          {:error, "HTTP #{status}"}
-
-        {:error, reason} ->
-          {:error, "request failed: #{inspect(reason)}"}
-      end
+      req_opts
+      |> Req.get()
+      |> handle_response(local_part)
     end
   end
 
@@ -251,6 +235,32 @@ defmodule Nostr.NIP05 do
   end
 
   # Private helpers
+
+  defp handle_response({:ok, %Req.Response{status: status}}, _local_part)
+       when status in 300..399 do
+    {:error, "redirects not allowed"}
+  end
+
+  defp handle_response({:ok, %Req.Response{status: 200, body: body}}, local_part)
+       when is_map(body) do
+    extract_from_response(body, local_part)
+  end
+
+  defp handle_response({:ok, %Req.Response{status: 200, body: body}}, local_part)
+       when is_binary(body) do
+    case JSON.decode(body) do
+      {:ok, decoded} -> extract_from_response(decoded, local_part)
+      {:error, _reason} -> {:error, "invalid JSON response"}
+    end
+  end
+
+  defp handle_response({:ok, %Req.Response{status: status}}, _local_part) do
+    {:error, "HTTP #{status}"}
+  end
+
+  defp handle_response({:error, reason}, _local_part) do
+    {:error, "request failed: #{inspect(reason)}"}
+  end
 
   defp extract_from_response(%{"names" => names} = body, local_part) when is_map(names) do
     case Map.get(names, local_part) do

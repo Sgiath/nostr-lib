@@ -109,7 +109,14 @@ defmodule Nostr.Message do
     message
     |> Tuple.to_list()
     |> List.flatten()
-    |> then(fn [name | rest] -> [name |> Atom.to_string() |> String.upcase() | rest] end)
+    |> then(fn [name | rest] ->
+      name_str =
+        name
+        |> Atom.to_string()
+        |> String.upcase()
+
+      [name_str | rest]
+    end)
     |> JSON.encode!()
   end
 
@@ -118,15 +125,22 @@ defmodule Nostr.Message do
   `Nostr.Event.t()` struct
   """
   @spec parse(msg :: String.t()) :: t()
-  def parse(msg) when is_binary(msg), do: msg |> JSON.decode!() |> do_parse(:general)
+  def parse(msg) when is_binary(msg) do
+    msg
+    |> JSON.decode!()
+    |> do_parse(:general)
+  end
 
   @doc """
   Parse binary message to Elixir tuple, if message contains event it will be returned as specific
   `Nostr.Event.t()` struct dependent of type of Event
   """
   @spec parse_specific(String.t()) :: t() | struct()
-  def parse_specific(msg) when is_binary(msg),
-    do: msg |> JSON.decode!() |> do_parse(:specific)
+  def parse_specific(msg) when is_binary(msg) do
+    msg
+    |> JSON.decode!()
+    |> do_parse(:specific)
+  end
 
   # Client to relay
   defp do_parse(["EVENT", event], :general) when is_map(event) do

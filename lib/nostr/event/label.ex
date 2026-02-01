@@ -142,8 +142,16 @@ defmodule Nostr.Event.Label do
     event_tags = build_target_tags(:e, Map.get(targets, :events, []))
     pubkey_tags = build_target_tags(:p, Map.get(targets, :pubkeys, []))
     address_tags = build_target_tags(:a, Map.get(targets, :addresses, []))
-    relay_tags = targets |> Map.get(:relays, []) |> Enum.map(&Tag.create(:r, &1))
-    topic_tags = targets |> Map.get(:topics, []) |> Enum.map(&Tag.create(:t, &1))
+
+    relay_tags =
+      targets
+      |> Map.get(:relays, [])
+      |> Enum.map(&Tag.create(:r, &1))
+
+    topic_tags =
+      targets
+      |> Map.get(:topics, [])
+      |> Enum.map(&Tag.create(:t, &1))
 
     tags =
       namespace_tags ++

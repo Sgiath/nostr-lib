@@ -244,21 +244,8 @@ defmodule Nostr.NIP19 do
 
         event_id_bin when byte_size(event_id_bin) == 32 ->
           relays = TLV.find_all(entries, TLV.relay())
-          author_bin = TLV.find_first(entries, TLV.author())
-          kind_bin = TLV.find_first(entries, TLV.kind())
-
-          author =
-            if author_bin && byte_size(author_bin) == 32,
-              do: Base.encode16(author_bin, case: :lower),
-              else: nil
-
-          kind =
-            if kind_bin && byte_size(kind_bin) == 4 do
-              <<k::unsigned-big-integer-32>> = kind_bin
-              k
-            else
-              nil
-            end
+          author = parse_author(TLV.find_first(entries, TLV.author()))
+          kind = parse_kind(TLV.find_first(entries, TLV.kind()))
 
           {:ok,
            %Event{
@@ -418,4 +405,13 @@ defmodule Nostr.NIP19 do
 
   defp maybe_kind_entry(nil), do: []
   defp maybe_kind_entry(kind), do: [{TLV.kind(), <<kind::unsigned-big-integer-32>>}]
+
+  defp parse_author(bin) when is_binary(bin) and byte_size(bin) == 32 do
+    Base.encode16(bin, case: :lower)
+  end
+
+  defp parse_author(_other), do: nil
+
+  defp parse_kind(<<k::unsigned-big-integer-32>>), do: k
+  defp parse_kind(_other), do: nil
 end

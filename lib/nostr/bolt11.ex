@@ -186,7 +186,11 @@ defmodule Nostr.Bolt11 do
   defp parse_data(data) when is_list(data) do
     # Convert 5-bit values to binary
     bits =
-      Enum.map_join(data, &(&1 |> Integer.to_string(2) |> String.pad_leading(5, "0")))
+      Enum.map_join(data, fn val ->
+        val
+        |> Integer.to_string(2)
+        |> String.pad_leading(5, "0")
+      end)
 
     # Total length must be at least timestamp (35) + signature (520) + recovery (5) = 560 bits
     if String.length(bits) < 560 do
@@ -238,7 +242,12 @@ defmodule Nostr.Bolt11 do
 
   # Payment hash (type 1): 52 * 5 = 260 bits = 32 bytes + 4 padding bits
   defp parse_tagged_field(@tag_payment_hash, data, acc) do
-    hash = data |> String.slice(0, 256) |> bits_to_binary() |> Base.encode16(case: :lower)
+    hash =
+      data
+      |> String.slice(0, 256)
+      |> bits_to_binary()
+      |> Base.encode16(case: :lower)
+
     Map.put(acc, :payment_hash, hash)
   end
 
@@ -254,13 +263,23 @@ defmodule Nostr.Bolt11 do
   # Payee pubkey (type 19): 53 * 5 = 265 bits = 33 bytes + 1 padding bit
   defp parse_tagged_field(@tag_payee_pubkey, data, acc) do
     # Take first 264 bits (33 bytes)
-    pubkey = data |> String.slice(0, 264) |> bits_to_binary() |> Base.encode16(case: :lower)
+    pubkey =
+      data
+      |> String.slice(0, 264)
+      |> bits_to_binary()
+      |> Base.encode16(case: :lower)
+
     Map.put(acc, :payee_pubkey, pubkey)
   end
 
   # Description hash (type 23): 52 * 5 = 260 bits = 32 bytes + 4 padding bits
   defp parse_tagged_field(@tag_description_hash, data, acc) do
-    hash = data |> String.slice(0, 256) |> bits_to_binary() |> Base.encode16(case: :lower)
+    hash =
+      data
+      |> String.slice(0, 256)
+      |> bits_to_binary()
+      |> Base.encode16(case: :lower)
+
     Map.put(acc, :description_hash, hash)
   end
 
@@ -279,7 +298,9 @@ defmodule Nostr.Bolt11 do
     |> String.graphemes()
     |> Enum.chunk_every(8)
     |> Enum.map(fn chunk ->
-      chunk |> Enum.join() |> String.to_integer(2)
+      chunk
+      |> Enum.join()
+      |> String.to_integer(2)
     end)
     |> :binary.list_to_bin()
   end

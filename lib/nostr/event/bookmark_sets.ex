@@ -91,8 +91,15 @@ defmodule Nostr.Event.BookmarkSets do
     {image, opts} = Keyword.pop(opts, :image)
     {description, opts} = Keyword.pop(opts, :description)
 
-    e_tags = items |> Map.get(:notes, []) |> Enum.map(&Tag.create(:e, &1))
-    a_tags = items |> Map.get(:articles, []) |> Enum.map(&Tag.create(:a, &1))
+    e_tags =
+      items
+      |> Map.get(:notes, [])
+      |> Enum.map(&Tag.create(:e, &1))
+
+    a_tags =
+      items
+      |> Map.get(:articles, [])
+      |> Enum.map(&Tag.create(:a, &1))
 
     tags =
       [Tag.create(:d, identifier)] ++

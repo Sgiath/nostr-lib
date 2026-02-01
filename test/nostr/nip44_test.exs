@@ -188,7 +188,12 @@ defmodule Nostr.NIP44Test do
 
     test "returns error for payload too short" do
       conversation_key = :crypto.strong_rand_bytes(32)
-      short_payload = 50 |> :crypto.strong_rand_bytes() |> Base.encode64()
+
+      short_payload =
+        50
+        |> :crypto.strong_rand_bytes()
+        |> Base.encode64()
+
       assert {:error, _reason} = Nostr.NIP44.decrypt(short_payload, conversation_key)
     end
 

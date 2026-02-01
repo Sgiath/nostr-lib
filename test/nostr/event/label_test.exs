@@ -359,7 +359,11 @@ defmodule Nostr.Event.LabelTest do
       json = JSON.encode!(signed_event)
 
       # Parse back
-      parsed_event = json |> JSON.decode!() |> Parser.parse()
+      parsed_event =
+        json
+        |> JSON.decode!()
+        |> Parser.parse()
+
       parsed_label = Label.parse(parsed_event)
 
       assert parsed_label.namespaces == ["license"]

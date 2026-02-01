@@ -8,4 +8,4 @@ connections and workflow of messages.
 
 ## Useful links
 
-* [Nostr Specification](https://github.com/nostr-protocol/nips)
+- [Nostr Specification](https://github.com/nostr-protocol/nips)

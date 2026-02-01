@@ -205,7 +205,9 @@ defmodule Nostr.Event.GiftWrap do
 
   # Generate a random secret key
   defp generate_seckey do
-    32 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
+    32
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode16(case: :lower)
   end
 
   # Generate a random timestamp within the past 2 days

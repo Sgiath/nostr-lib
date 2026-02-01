@@ -60,8 +60,16 @@ defmodule Nostr.Event.Interests do
   def create(items, opts) when is_list(items), do: create(Map.new(items), opts)
 
   def create(items, opts) when is_map(items) do
-    t_tags = items |> Map.get(:hashtags, []) |> Enum.map(&Tag.create(:t, &1))
-    a_tags = items |> Map.get(:interest_sets, []) |> Enum.map(&Tag.create(:a, &1))
+    t_tags =
+      items
+      |> Map.get(:hashtags, [])
+      |> Enum.map(&Tag.create(:t, &1))
+
+    a_tags =
+      items
+      |> Map.get(:interest_sets, [])
+      |> Enum.map(&Tag.create(:a, &1))
+
     tags = t_tags ++ a_tags
 
     opts = Keyword.merge(opts, tags: tags, content: "")

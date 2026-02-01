@@ -15,7 +15,6 @@ defmodule Nostr.MixProject do
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :test,
-      aliases: aliases(),
       deps: deps(),
 
       # Documentation
@@ -36,12 +35,6 @@ defmodule Nostr.MixProject do
     ]
   end
 
-  def cli do
-    [
-      preferred_envs: [precommit: :test]
-    ]
-  end
-
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
@@ -59,12 +52,6 @@ defmodule Nostr.MixProject do
       {:ex_doc, "~> 0.40", only: :dev, runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.4", only: [:dev], runtime: false}
-    ]
-  end
-
-  defp aliases do
-    [
-      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 

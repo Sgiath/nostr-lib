@@ -3,6 +3,7 @@
 This guide covers sending and receiving encrypted private messages using the NIP-17 protocol.
 
 NIP-17 provides strong privacy through three layers of encryption:
+
 - **Rumor**: Unsigned message (deniable)
 - **Seal**: Encrypted rumor, signed by sender
 - **Gift Wrap**: Encrypted seal, signed with ephemeral key
@@ -255,11 +256,11 @@ sent_wrap = Enum.find(alice_wraps, &(&1.recipient == alice_pubkey))
 
 NIP-17 replaces the deprecated NIP-04 direct messages (kind 4). Key differences:
 
-| Feature | NIP-04 | NIP-17 |
-|---------|--------|--------|
-| Encryption | AES-CBC | NIP-44 (ChaCha20) |
-| Metadata privacy | Sender/receiver visible | Hidden by gift wrap |
-| Deniability | Signed (non-deniable) | Unsigned rumor (deniable) |
-| Group support | No | Yes (multiple p tags) |
+| Feature          | NIP-04                  | NIP-17                    |
+| ---------------- | ----------------------- | ------------------------- |
+| Encryption       | AES-CBC                 | NIP-44 (ChaCha20)         |
+| Metadata privacy | Sender/receiver visible | Hidden by gift wrap       |
+| Deniability      | Signed (non-deniable)   | Unsigned rumor (deniable) |
+| Group support    | No                      | Yes (multiple p tags)     |
 
 To migrate, use `Nostr.NIP17.send_dm/4` instead of `Nostr.Event.DirectMessage.create/4`.

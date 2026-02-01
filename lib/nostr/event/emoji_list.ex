@@ -79,8 +79,16 @@ defmodule Nostr.Event.EmojiList do
   def create(items, opts) when is_list(items), do: create(Map.new(items), opts)
 
   def create(items, opts) when is_map(items) do
-    emoji_tags = items |> Map.get(:emojis, []) |> Enum.map(&build_emoji_tag/1)
-    set_tags = items |> Map.get(:emoji_sets, []) |> Enum.map(&Tag.create(:a, &1))
+    emoji_tags =
+      items
+      |> Map.get(:emojis, [])
+      |> Enum.map(&build_emoji_tag/1)
+
+    set_tags =
+      items
+      |> Map.get(:emoji_sets, [])
+      |> Enum.map(&Tag.create(:a, &1))
+
     tags = emoji_tags ++ set_tags
 
     opts = Keyword.merge(opts, tags: tags, content: "")

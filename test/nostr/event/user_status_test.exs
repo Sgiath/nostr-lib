@@ -212,7 +212,11 @@ defmodule Nostr.Event.UserStatusTest do
       json = JSON.encode!(signed_event)
 
       # Parse back
-      parsed_event = json |> JSON.decode!() |> Nostr.Event.Parser.parse()
+      parsed_event =
+        json
+        |> JSON.decode!()
+        |> Nostr.Event.Parser.parse()
+
       parsed_status = UserStatus.parse(parsed_event)
 
       assert parsed_status.status_type == "music"

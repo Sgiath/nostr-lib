@@ -28,7 +28,7 @@ defmodule Nostr.Event.ChannelMessage do
         channel: channel,
         relay: URI.parse(relay),
         message: event.content,
-        type: String.to_atom(type),
+        type: parse_type(type),
         reply_to: reply_to
       }
     end
@@ -50,4 +50,8 @@ defmodule Nostr.Event.ChannelMessage do
       nil -> {:ok, nil}
     end
   end
+
+  defp parse_type("root"), do: :root
+  defp parse_type("reply"), do: :reply
+  defp parse_type(nil), do: :root
 end

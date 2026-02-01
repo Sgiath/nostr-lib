@@ -424,7 +424,11 @@ defmodule Nostr.Event.CommentTest do
       json = JSON.encode!(signed_event)
 
       # Parse back
-      parsed_event = json |> JSON.decode!() |> Parser.parse()
+      parsed_event =
+        json
+        |> JSON.decode!()
+        |> Parser.parse()
+
       parsed_comment = Comment.parse(parsed_event)
 
       assert parsed_comment.content == "Test comment"

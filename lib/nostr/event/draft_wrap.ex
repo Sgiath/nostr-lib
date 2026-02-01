@@ -247,6 +247,8 @@ defmodule Nostr.Event.DraftWrap do
   end
 
   defp generate_identifier do
-    16 |> :crypto.strong_rand_bytes() |> Base.encode16(case: :lower)
+    16
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode16(case: :lower)
   end
 end

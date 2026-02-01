@@ -27,7 +27,9 @@ defmodule Nostr.TLV.Decoder do
 
   defp decode_tag_number(acc, constructed, <<tag::unsigned-big-integer-size(8), rest::binary>>)
        when (tag &&& 0x80) == 0x80 do
-    acc |> accumulate_tag(tag) |> decode_tag_number(constructed, rest)
+    acc
+    |> accumulate_tag(tag)
+    |> decode_tag_number(constructed, rest)
   end
 
   defp decode_tag_number(acc, constructed, <<tag::unsigned-big-integer-size(8), rest::binary>>) do

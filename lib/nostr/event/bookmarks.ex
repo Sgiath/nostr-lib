@@ -117,8 +117,16 @@ defmodule Nostr.Event.Bookmarks do
     {seckey, opts} = Keyword.pop(opts, :seckey)
 
     # Build public tags
-    e_tags = items |> Map.get(:notes, []) |> Enum.map(&Tag.create(:e, &1))
-    a_tags = items |> Map.get(:articles, []) |> Enum.map(&Tag.create(:a, &1))
+    e_tags =
+      items
+      |> Map.get(:notes, [])
+      |> Enum.map(&Tag.create(:e, &1))
+
+    a_tags =
+      items
+      |> Map.get(:articles, [])
+      |> Enum.map(&Tag.create(:a, &1))
+
     public_tags = e_tags ++ a_tags
 
     # Build encrypted content for private items
@@ -134,8 +142,16 @@ defmodule Nostr.Event.Bookmarks do
   # Private functions
 
   defp build_private_content(items, seckey, opts) do
-    private_e_tags = items |> Map.get(:private_notes, []) |> Enum.map(&Tag.create(:e, &1))
-    private_a_tags = items |> Map.get(:private_articles, []) |> Enum.map(&Tag.create(:a, &1))
+    private_e_tags =
+      items
+      |> Map.get(:private_notes, [])
+      |> Enum.map(&Tag.create(:e, &1))
+
+    private_a_tags =
+      items
+      |> Map.get(:private_articles, [])
+      |> Enum.map(&Tag.create(:a, &1))
+
     private_tags = private_e_tags ++ private_a_tags
 
     case private_tags do

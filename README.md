@@ -82,87 +82,87 @@ filter = %Nostr.Filter{
 
 ## Implemented NIPs
 
-| NIP | Status | Description | Event Kinds |
-|-----|--------|-------------|-------------|
-| [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md) | Full | Basic protocol | 0, 1 |
-| [NIP-02](https://github.com/nostr-protocol/nips/blob/master/02.md) | Full | Follow list | 3 |
-| [NIP-03](https://github.com/nostr-protocol/nips/blob/master/03.md) | Full | OpenTimestamps | 1040 |
-| [NIP-04](https://github.com/nostr-protocol/nips/blob/master/04.md) | Deprecated | Encrypted DMs (use NIP-17) | 4 |
-| [NIP-05](https://github.com/nostr-protocol/nips/blob/master/05.md) | Full | DNS-based identifiers | - |
-| [NIP-09](https://github.com/nostr-protocol/nips/blob/master/09.md) | Full | Event deletion | 5 |
-| [NIP-16](https://github.com/nostr-protocol/nips/blob/master/16.md) | Full | Event kind ranges | 1000-39999 |
-| [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md) | Full | Private direct messages | 14, 15, 10050 |
-| [NIP-18](https://github.com/nostr-protocol/nips/blob/master/18.md) | Deprecated | Reposts | 6 |
-| [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) | Full | Bech32 encoding | - |
-| [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md) | Full | nostr: URI scheme | - |
-| [NIP-22](https://github.com/nostr-protocol/nips/blob/master/22.md) | Full | Comments | 1111 |
-| [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) | Full | Long-form content | 30023, 30024 |
-| [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full | Reactions | 7, 17 |
-| [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full | Public chat channels | 40-44 |
-| [NIP-30](https://github.com/nostr-protocol/nips/blob/master/30.md) | Full | Custom emoji | - |
-| [NIP-32](https://github.com/nostr-protocol/nips/blob/master/32.md) | Full | Labeling | 1985 |
-| [NIP-36](https://github.com/nostr-protocol/nips/blob/master/36.md) | Full | Sensitive content | - |
-| [NIP-37](https://github.com/nostr-protocol/nips/blob/master/37.md) | Full | Draft events | 31234 |
-| [NIP-38](https://github.com/nostr-protocol/nips/blob/master/38.md) | Full | User statuses | 30315 |
-| [NIP-39](https://github.com/nostr-protocol/nips/blob/master/39.md) | Full | External identities | - |
-| [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full | Relay authentication | 22242 |
-| [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full | Versioned encryption | - |
-| [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial | Event counting | - |
-| [NIP-49](https://github.com/nostr-protocol/nips/blob/master/49.md) | Full | Private key encryption | - |
-| [NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md) | Full | Lists | 10001-10030, 30000-30030 |
-| [NIP-52](https://github.com/nostr-protocol/nips/blob/master/52.md) | Full | Calendar | 31924 |
-| [NIP-56](https://github.com/nostr-protocol/nips/blob/master/56.md) | Full | Reporting | 1984 |
-| [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) | Full | Lightning zaps | 9734, 9735 |
-| [NIP-58](https://github.com/nostr-protocol/nips/blob/master/58.md) | Full | Badges | 8 |
-| [NIP-59](https://github.com/nostr-protocol/nips/blob/master/59.md) | Full | Gift wrap | 13, 1059 |
-| [NIP-65](https://github.com/nostr-protocol/nips/blob/master/65.md) | Full | Relay list metadata | 10002 |
-| [NIP-94](https://github.com/nostr-protocol/nips/blob/master/94.md) | Full | File metadata | 1063 |
+| NIP                                                                | Status     | Description                | Event Kinds              |
+| ------------------------------------------------------------------ | ---------- | -------------------------- | ------------------------ |
+| [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md) | Full       | Basic protocol             | 0, 1                     |
+| [NIP-02](https://github.com/nostr-protocol/nips/blob/master/02.md) | Full       | Follow list                | 3                        |
+| [NIP-03](https://github.com/nostr-protocol/nips/blob/master/03.md) | Full       | OpenTimestamps             | 1040                     |
+| [NIP-04](https://github.com/nostr-protocol/nips/blob/master/04.md) | Deprecated | Encrypted DMs (use NIP-17) | 4                        |
+| [NIP-05](https://github.com/nostr-protocol/nips/blob/master/05.md) | Full       | DNS-based identifiers      | -                        |
+| [NIP-09](https://github.com/nostr-protocol/nips/blob/master/09.md) | Full       | Event deletion             | 5                        |
+| [NIP-16](https://github.com/nostr-protocol/nips/blob/master/16.md) | Full       | Event kind ranges          | 1000-39999               |
+| [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md) | Full       | Private direct messages    | 14, 15, 10050            |
+| [NIP-18](https://github.com/nostr-protocol/nips/blob/master/18.md) | Deprecated | Reposts                    | 6                        |
+| [NIP-19](https://github.com/nostr-protocol/nips/blob/master/19.md) | Full       | Bech32 encoding            | -                        |
+| [NIP-21](https://github.com/nostr-protocol/nips/blob/master/21.md) | Full       | nostr: URI scheme          | -                        |
+| [NIP-22](https://github.com/nostr-protocol/nips/blob/master/22.md) | Full       | Comments                   | 1111                     |
+| [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) | Full       | Long-form content          | 30023, 30024             |
+| [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) | Full       | Reactions                  | 7, 17                    |
+| [NIP-28](https://github.com/nostr-protocol/nips/blob/master/28.md) | Full       | Public chat channels       | 40-44                    |
+| [NIP-30](https://github.com/nostr-protocol/nips/blob/master/30.md) | Full       | Custom emoji               | -                        |
+| [NIP-32](https://github.com/nostr-protocol/nips/blob/master/32.md) | Full       | Labeling                   | 1985                     |
+| [NIP-36](https://github.com/nostr-protocol/nips/blob/master/36.md) | Full       | Sensitive content          | -                        |
+| [NIP-37](https://github.com/nostr-protocol/nips/blob/master/37.md) | Full       | Draft events               | 31234                    |
+| [NIP-38](https://github.com/nostr-protocol/nips/blob/master/38.md) | Full       | User statuses              | 30315                    |
+| [NIP-39](https://github.com/nostr-protocol/nips/blob/master/39.md) | Full       | External identities        | -                        |
+| [NIP-42](https://github.com/nostr-protocol/nips/blob/master/42.md) | Full       | Relay authentication       | 22242                    |
+| [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md) | Full       | Versioned encryption       | -                        |
+| [NIP-45](https://github.com/nostr-protocol/nips/blob/master/45.md) | Partial    | Event counting             | -                        |
+| [NIP-49](https://github.com/nostr-protocol/nips/blob/master/49.md) | Full       | Private key encryption     | -                        |
+| [NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md) | Full       | Lists                      | 10001-10030, 30000-30030 |
+| [NIP-52](https://github.com/nostr-protocol/nips/blob/master/52.md) | Full       | Calendar                   | 31924                    |
+| [NIP-56](https://github.com/nostr-protocol/nips/blob/master/56.md) | Full       | Reporting                  | 1984                     |
+| [NIP-57](https://github.com/nostr-protocol/nips/blob/master/57.md) | Full       | Lightning zaps             | 9734, 9735               |
+| [NIP-58](https://github.com/nostr-protocol/nips/blob/master/58.md) | Full       | Badges                     | 8                        |
+| [NIP-59](https://github.com/nostr-protocol/nips/blob/master/59.md) | Full       | Gift wrap                  | 13, 1059                 |
+| [NIP-65](https://github.com/nostr-protocol/nips/blob/master/65.md) | Full       | Relay list metadata        | 10002                    |
+| [NIP-94](https://github.com/nostr-protocol/nips/blob/master/94.md) | Full       | File metadata              | 1063                     |
 
 ## Core Modules
 
-| Module | Description |
-|--------|-------------|
-| `Nostr.Event` | Core event struct with create, parse, serialize, sign, validate |
-| `Nostr.Crypto` | Cryptographic operations (keys, signing, encryption) |
-| `Nostr.Message` | WebSocket protocol messages (EVENT, REQ, CLOSE, etc.) |
-| `Nostr.Filter` | Subscription filter building |
-| `Nostr.Bech32` | NIP-19 bech32 encoding/decoding |
-| `Nostr.NIP44` | Versioned encrypted payloads |
-| `Nostr.NIP17` | Private message convenience functions |
-| `Nostr.NIP05` | DNS-based identifier verification |
+| Module          | Description                                                     |
+| --------------- | --------------------------------------------------------------- |
+| `Nostr.Event`   | Core event struct with create, parse, serialize, sign, validate |
+| `Nostr.Crypto`  | Cryptographic operations (keys, signing, encryption)            |
+| `Nostr.Message` | WebSocket protocol messages (EVENT, REQ, CLOSE, etc.)           |
+| `Nostr.Filter`  | Subscription filter building                                    |
+| `Nostr.Bech32`  | NIP-19 bech32 encoding/decoding                                 |
+| `Nostr.NIP44`   | Versioned encrypted payloads                                    |
+| `Nostr.NIP17`   | Private message convenience functions                           |
+| `Nostr.NIP05`   | DNS-based identifier verification                               |
 
 ## Event Types
 
 Each event kind has a dedicated module in `Nostr.Event.*`:
 
-| Kind | Module | Description |
-|------|--------|-------------|
-| 0 | `Metadata` | User profile metadata |
-| 1 | `Note` | Text notes/posts |
-| 3 | `Contacts` | Follow list |
-| 4 | `DirectMessage` | Encrypted DMs (deprecated) |
-| 5 | `Deletion` | Event deletion requests |
-| 6 | `Repost` | Reposts (deprecated) |
-| 7 | `Reaction` | Reactions to events |
-| 8 | `BadgeAward` | Badge awards |
-| 13 | `Seal` | Sealed/encrypted events |
-| 14 | `PrivateMessage` | Private chat messages |
-| 15 | `FileMessage` | Encrypted file messages |
-| 17 | `ExternalReaction` | Reactions to external content |
-| 40-44 | `Channel*` | Public chat channels |
-| 1040 | `OpenTimestamps` | Timestamp attestations |
-| 1059 | `GiftWrap` | Gift wrapped events |
-| 1063 | `FileMetadata` | File metadata |
-| 1111 | `Comment` | Threaded comments |
-| 1984 | `Report` | Content reports |
-| 1985 | `Label` | Content labels |
-| 9734 | `ZapRequest` | Lightning zap requests |
-| 9735 | `ZapReceipt` | Lightning zap receipts |
-| 10002 | `RelayList` | Relay list metadata |
-| 10050 | `DMRelayList` | DM relay preferences |
-| 22242 | `ClientAuth` | Client authentication |
-| 30023 | `Article` | Long-form content |
-| 30315 | `UserStatus` | User status updates |
+| Kind  | Module             | Description                   |
+| ----- | ------------------ | ----------------------------- |
+| 0     | `Metadata`         | User profile metadata         |
+| 1     | `Note`             | Text notes/posts              |
+| 3     | `Contacts`         | Follow list                   |
+| 4     | `DirectMessage`    | Encrypted DMs (deprecated)    |
+| 5     | `Deletion`         | Event deletion requests       |
+| 6     | `Repost`           | Reposts (deprecated)          |
+| 7     | `Reaction`         | Reactions to events           |
+| 8     | `BadgeAward`       | Badge awards                  |
+| 13    | `Seal`             | Sealed/encrypted events       |
+| 14    | `PrivateMessage`   | Private chat messages         |
+| 15    | `FileMessage`      | Encrypted file messages       |
+| 17    | `ExternalReaction` | Reactions to external content |
+| 40-44 | `Channel*`         | Public chat channels          |
+| 1040  | `OpenTimestamps`   | Timestamp attestations        |
+| 1059  | `GiftWrap`         | Gift wrapped events           |
+| 1063  | `FileMetadata`     | File metadata                 |
+| 1111  | `Comment`          | Threaded comments             |
+| 1984  | `Report`           | Content reports               |
+| 1985  | `Label`            | Content labels                |
+| 9734  | `ZapRequest`       | Lightning zap requests        |
+| 9735  | `ZapReceipt`       | Lightning zap receipts        |
+| 10002 | `RelayList`        | Relay list metadata           |
+| 10050 | `DMRelayList`      | DM relay preferences          |
+| 22242 | `ClientAuth`       | Client authentication         |
+| 30023 | `Article`          | Long-form content             |
+| 30315 | `UserStatus`       | User status updates           |
 
 ## Related Packages
 

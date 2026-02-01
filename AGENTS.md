@@ -28,14 +28,14 @@ nips/                    # Git submodule: official NIP specs (authoritative refe
 
 ## Where to Look
 
-| Task | Location | Notes |
-|------|----------|-------|
-| Add new event kind | `lib/nostr/event/` + `parser.ex` | Create module, register in Parser |
-| Modify encryption | `lib/nostr/nip44.ex` | NIP-44 modern, `crypto.ex` for legacy NIP-04 |
-| Change bech32 encoding | `lib/nostr/nip19.ex` | Uses `nip19/tlv.ex` for metadata |
-| WebSocket messages | `lib/nostr/message.ex` | Tuple-based API |
-| Test fixtures | `test/support/fixtures.ex` | `signed_event/1`, `raw_event_map/1` |
-| NIP specification | `nips/{number}.md` | Authoritative source |
+| Task                   | Location                         | Notes                                        |
+| ---------------------- | -------------------------------- | -------------------------------------------- |
+| Add new event kind     | `lib/nostr/event/` + `parser.ex` | Create module, register in Parser            |
+| Modify encryption      | `lib/nostr/nip44.ex`             | NIP-44 modern, `crypto.ex` for legacy NIP-04 |
+| Change bech32 encoding | `lib/nostr/nip19.ex`             | Uses `nip19/tlv.ex` for metadata             |
+| WebSocket messages     | `lib/nostr/message.ex`           | Tuple-based API                              |
+| Test fixtures          | `test/support/fixtures.ex`       | `signed_event/1`, `raw_event_map/1`          |
+| NIP specification      | `nips/{number}.md`               | Authoritative source                         |
 
 ## Commands
 
@@ -51,24 +51,30 @@ mix test --exclude ecdh           # Skip ECDH tests
 ## Conventions
 
 ### Module Documentation
+
 - `@moduledoc tags: [:event, :nip01], nip: 1` for NIP references
 - `@doc sender: :client` or `@doc sender: :relay` for message direction
 
 ### JSON Handling
+
 - Uses **Elixir 1.18+ built-in `JSON` module** (not Jason)
 - Custom `JSON.Encoder` protocol implementations in: `Event`, `Tag`, `Filter`, `Rumor`
 
 ### Error Handling
+
 - Returns tuples: `{:ok, result}` or `{:error, reason}` or `{:error, reason, event}`
 - Validation failures return `nil` from `parse/1`
 
 ### Event Module Pattern
+
 Each event type in `lib/nostr/event/` implements:
+
 - `parse/1` — Convert generic `Nostr.Event` to typed struct
 - `create/n` — Build event with domain-specific options
 - `@type t()` — Type specification for the struct
 
 ### Test Conventions
+
 - `use ExUnit.Case, async: true` (all tests async)
 - `doctest ModuleName` for documentation examples
 - Use `Nostr.Test.Fixtures.*` for test data (never hardcode keys)
@@ -77,6 +83,7 @@ Each event type in `lib/nostr/event/` implements:
 ## Anti-Patterns
 
 ### Do Not
+
 - Use test keypairs in production (`1111...` from fixtures)
 - Use `Nostr.Event.DirectMessage` (NIP-04 deprecated → use NIP-17)
 - Use `Nostr.Event.Repost` (NIP-18 deprecated → use NIP-27)
@@ -84,32 +91,36 @@ Each event type in `lib/nostr/event/` implements:
 - Suppress warnings with `# credo:disable-for-this-file`
 
 ### Deprecated Event Types
-| Kind | Module | Use Instead |
-|------|--------|-------------|
-| 4 | `DirectMessage` | NIP-17: `PrivateMessage`, `Nostr.NIP17` |
-| 6 | `Repost` | NIP-27: text note references |
-| 2 | `RecommendRelay` | NIP-65: `RelayList` |
+
+| Kind | Module           | Use Instead                             |
+| ---- | ---------------- | --------------------------------------- |
+| 4    | `DirectMessage`  | NIP-17: `PrivateMessage`, `Nostr.NIP17` |
+| 6    | `Repost`         | NIP-27: text note references            |
+| 2    | `RecommendRelay` | NIP-65: `RelayList`                     |
 
 ## Key Dependencies
 
-| Package | Purpose |
-|---------|---------|
-| `lib_secp256k1` | Schnorr signatures, ECDH |
-| `bechamel` | Bech32 encoding |
-| `scrypt` | NIP-49 key derivation |
-| `req` | Optional: NIP-05 HTTP verification |
+| Package         | Purpose                            |
+| --------------- | ---------------------------------- |
+| `lib_secp256k1` | Schnorr signatures, ECDH           |
+| `bechamel`      | Bech32 encoding                    |
+| `scrypt`        | NIP-49 key derivation              |
+| `req`           | Optional: NIP-05 HTTP verification |
 
 ## NIP Implementation Status
 
 ### Fully Implemented (33 NIPs)
+
 Core: 01, 02, 03, 09, 16 | Messaging: 04 (deprecated), 17, 44, 59 | Encoding: 05, 19, 21 | Content: 18 (deprecated), 22, 23, 25 | Channels: 28, 32, 42 | Lists: 37, 38, 51, 52, 65 | Zaps: 57, 58 | Tags: 30, 36, 39 | Keys: 49 | Files: 94
 
 ### Partial
+
 - NIP-45: Event counting (messages only, no relay logic)
 
 ## Architecture Notes
 
 ### Event Lifecycle
+
 ```
 create(kind, opts) → Event struct (unsigned)
     ↓
@@ -119,6 +130,7 @@ serialize(event) → JSON string
 ```
 
 ### Parsing Flow
+
 ```
 JSON string → Event.parse(map) → generic Nostr.Event
                     ↓
@@ -126,6 +138,7 @@ JSON string → Event.parse(map) → generic Nostr.Event
 ```
 
 ### Encryption Hierarchy
+
 ```
 NIP-17 (private messages)
   └─ NIP-44 (modern encryption: ChaCha20 + HMAC)

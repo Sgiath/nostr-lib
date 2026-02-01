@@ -23,7 +23,11 @@ defmodule Nostr.NIP37Test do
     test "creates draft wrap with expiration" do
       draft = %{kind: 1, content: "Expiring draft", tags: []}
       seckey = Fixtures.seckey()
-      expiration = DateTime.utc_now() |> DateTime.add(86_400) |> DateTime.to_unix()
+
+      expiration =
+        DateTime.utc_now()
+        |> DateTime.add(86_400)
+        |> DateTime.to_unix()
 
       assert {:ok, wrap} =
                DraftWrap.create(draft, seckey, identifier: "exp-draft", expiration: expiration)

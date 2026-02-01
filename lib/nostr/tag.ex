@@ -31,6 +31,7 @@ defmodule Nostr.Tag do
   @spec parse(tag :: nonempty_maybe_improper_list()) :: t()
   def parse([type, data | info]) do
     %__MODULE__{
+      # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
       type: String.to_atom(type),
       data: data,
       info: info
@@ -55,8 +56,10 @@ defmodule Nostr.Tag do
   @spec create(type :: atom() | binary(), data :: binary(), other_data :: [binary()]) :: t()
   def create(type, data, other_data \\ [])
 
-  def create(type, data, other_data) when is_binary(type),
-    do: create(String.to_atom(type), data, other_data)
+  def create(type, data, other_data) when is_binary(type) do
+    # credo:disable-for-next-line Credo.Check.Warning.UnsafeToAtom
+    create(String.to_atom(type), data, other_data)
+  end
 
   def create(type, data, other_data) when is_atom(type) do
     %__MODULE__{
