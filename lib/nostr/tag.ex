@@ -72,6 +72,6 @@ end
 
 defimpl JSON.Encoder, for: Nostr.Tag do
   def encode(%Nostr.Tag{} = tag, encoder) do
-    :elixir_json.encode_list([Atom.to_string(tag.type), tag.data | tag.info], encoder)
+    encoder.([Atom.to_string(tag.type), tag.data | tag.info], encoder)
   end
 end

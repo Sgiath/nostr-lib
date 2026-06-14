@@ -114,7 +114,7 @@ defimpl JSON.Encoder, for: Nostr.Filter do
     |> Enum.reject(fn {_key, val} -> is_nil(val) end)
     |> Enum.into(%{})
     |> Map.merge(extra_tags)
-    |> :elixir_json.encode_map(encoder)
+    |> encoder.(encoder)
   end
 
   defp encode_unix(nil), do: nil
