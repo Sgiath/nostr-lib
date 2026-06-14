@@ -186,7 +186,7 @@ defmodule Nostr.NIP49 do
 
     # Split ciphertext and tag (tag is 16 bytes)
     ciphertext_len = byte_size(ciphertext_with_tag) - 16
-    <<ciphertext::binary-size(ciphertext_len), tag::binary-16>> = ciphertext_with_tag
+    <<ciphertext::binary-size(^ciphertext_len), tag::binary-16>> = ciphertext_with_tag
 
     # 7-arity: cipher, key, nonce, ciphertext, aad, tag, encrypt_flag
     case :crypto.crypto_one_time_aead(

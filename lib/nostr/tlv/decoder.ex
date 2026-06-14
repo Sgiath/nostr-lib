@@ -60,7 +60,7 @@ defmodule Nostr.TLV.Decoder do
     len_of_len = len_of_len &&& 0x7F
 
     if byte_size(lv) >= len_of_len do
-      <<len::unsigned-big-integer-size(len_of_len)-unit(8), rest::binary>> = lv
+      <<len::unsigned-big-integer-size(^len_of_len)-unit(8), rest::binary>> = lv
       {len, rest}
     else
       :no_tlv
@@ -71,7 +71,7 @@ defmodule Nostr.TLV.Decoder do
 
   defp decode_value(false, len, v) do
     if byte_size(v) >= len do
-      <<value::binary-size(len), rest::binary>> = v
+      <<value::binary-size(^len), rest::binary>> = v
       {value, rest}
     else
       :no_tlv

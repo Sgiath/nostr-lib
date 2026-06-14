@@ -107,7 +107,7 @@ defmodule Nostr.NIP19.TLV do
 
   defp decode_tlvs_acc(<<type::8, length::8, rest::binary>>, acc) do
     if byte_size(rest) >= length do
-      <<value::binary-size(length), remaining::binary>> = rest
+      <<value::binary-size(^length), remaining::binary>> = rest
       decode_tlvs_acc(remaining, [{type, value} | acc])
     else
       {:error, :incomplete_tlv}

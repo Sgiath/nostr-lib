@@ -323,7 +323,7 @@ defmodule Nostr.NIP44 do
     data_len = byte_size(data)
     ciphertext_len = data_len - 1 - 32 - 32
 
-    <<version::8, nonce::binary-32, ciphertext::binary-size(ciphertext_len), mac::binary-32>> =
+    <<version::8, nonce::binary-32, ciphertext::binary-size(^ciphertext_len), mac::binary-32>> =
       data
 
     if version != @version do
