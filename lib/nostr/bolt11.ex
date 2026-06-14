@@ -80,7 +80,8 @@ defmodule Nostr.Bolt11 do
 
     with {:ok, {hrp, data}} <- decode_bech32(invoice),
          {:ok, prefix, network, amount_msats} <- parse_hrp(hrp),
-         {:ok, timestamp, tagged_fields, signature, recovery_flag} <- parse_data(data) do
+         {:ok, timestamp, tagged_fields, signature, recovery_flag} <-
+           data |> :binary.bin_to_list() |> parse_data() do
       {:ok,
        %__MODULE__{
          raw: invoice,

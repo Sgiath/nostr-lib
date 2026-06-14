@@ -12,6 +12,16 @@ defmodule Nostr.Bolt11Test do
                )
     end
 
+    test "returns decode invoice" do
+      invoice = "lnbc1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq9qrsgq357wnc5r2ueh7ck6q93dj32dlqnls087fxdwk8qakdyafkq3yap9us6v52vjjsrvywa6rt52cm9r9zqt8r2t7mlcwspyetp5h2tztugp9lfyql"
+      assert {:ok, decoded = %Nostr.Bolt11{}} = Bolt11.decode(invoice)
+      assert decoded.prefix == "lnbc"
+      assert decoded.network == :mainnet
+      assert decoded.timestamp == 12448614721
+      assert decoded.recovery_flag == 0
+      assert decoded.expiry == 3600
+    end
+
     test "returns error for invalid bech32" do
       assert {:error, :invalid_bech32} = Bolt11.decode("notavalidinvoice")
     end
